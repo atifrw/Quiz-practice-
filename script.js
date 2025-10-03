@@ -20,7 +20,7 @@ fetch("mcqs.json")
 
 function startQuiz() {
   correctCount = 0;
-wrongCount = 0;
+  wrongCount = 0;
   const chapter = document.getElementById("chapterSelect").value;
   currentQuestions = [];
 
@@ -33,6 +33,10 @@ wrongCount = 0;
   shuffle(currentQuestions);
   currentIndex = 0;
   document.getElementById("quizArea").style.display = "block";
+
+  // Quit button show karo
+  document.getElementById("quitBtn").style.display = "inline-block";
+
   showQuestion();
 }
 
@@ -50,11 +54,11 @@ function showQuestion() {
     btn.textContent = opt;
     btn.onclick = () => {
       if (opt === q.answer) {
-  correctCount++;
-  document.getElementById("resultBox").innerText = "✅ सही उत्तर!";
-} else {
-  wrongCount++;
-  document.getElementById("resultBox").innerText = `❌ गलत! सही उत्तर: ${q.answer}`;
+        correctCount++;
+        document.getElementById("resultBox").innerText = "✅ सही उत्तर!";
+      } else {
+        wrongCount++;
+        document.getElementById("resultBox").innerText = `❌ गलत! सही उत्तर: ${q.answer}`;
       }
       document.getElementById("nextBtn").style.display = "block";
     };
@@ -67,14 +71,25 @@ function showNext() {
   if (currentIndex < currentQuestions.length) {
     showQuestion();
   } else {
-    document.getElementById("questionBox").innerHTML = "🎉 आपने सभी प्रश्न हल कर लिए!";
-document.getElementById("optionsBox").innerHTML = "";
-document.getElementById("resultBox").innerHTML = `
-✅ सही जवाब: ${correctCount}<br>
-❌ गलत जवाब: ${wrongCount}<br>
-📊 कुल प्रश्न: ${currentQuestions.length}
-`;
-document.getElementById("nextBtn").style.display = "none";
+    endQuiz();
+  }
+}
+
+function endQuiz() {
+  document.getElementById("questionBox").innerHTML = "🎉 Quiz khatam!";
+  document.getElementById("optionsBox").innerHTML = "";
+  document.getElementById("resultBox").innerHTML =
+    `✅ सही जवाब: ${correctCount}<br>` +
+    `❌ गलत जवाब: ${wrongCount}<br>` +
+    `📊 कुल प्रश्न: ${currentQuestions.length}`;
+  
+  document.getElementById("nextBtn").style.display = "none";
+  document.getElementById("quitBtn").style.display = "none";
+}
+
+function quitQuiz() {
+  if (confirm("Kya aap sach me quiz chhodna chahte hain?")) {
+    endQuiz();
   }
 }
 
@@ -83,4 +98,4 @@ function shuffle(array) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
-}
+      }
