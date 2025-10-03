@@ -33,10 +33,6 @@ function startQuiz() {
   shuffle(currentQuestions);
   currentIndex = 0;
   document.getElementById("quizArea").style.display = "block";
-
-  // Quit button show karo
-  document.getElementById("quitBtn").style.display = "inline-block";
-
   showQuestion();
 }
 
@@ -71,25 +67,14 @@ function showNext() {
   if (currentIndex < currentQuestions.length) {
     showQuestion();
   } else {
-    endQuiz();
-  }
-}
-
-function endQuiz() {
-  document.getElementById("questionBox").innerHTML = "🎉 Quiz khatam!";
-  document.getElementById("optionsBox").innerHTML = "";
-  document.getElementById("resultBox").innerHTML =
-    `✅ सही जवाब: ${correctCount}<br>` +
-    `❌ गलत जवाब: ${wrongCount}<br>` +
-    `📊 कुल प्रश्न: ${currentQuestions.length}`;
-  
-  document.getElementById("nextBtn").style.display = "none";
-  document.getElementById("quitBtn").style.display = "none";
-}
-
-function quitQuiz() {
-  if (confirm("Kya aap sach me quiz chhodna chahte hain?")) {
-    endQuiz();
+    document.getElementById("questionBox").innerHTML = "🎉 आपने सभी प्रश्न हल कर लिए!";
+    document.getElementById("optionsBox").innerHTML = "";
+    document.getElementById("resultBox").innerHTML = `
+✅ सही जवाब: ${correctCount}<br>
+❌ गलत जवाब: ${wrongCount}<br>
+📊 कुल प्रश्न: ${currentQuestions.length}
+`;
+    document.getElementById("nextBtn").style.display = "none";
   }
 }
 
