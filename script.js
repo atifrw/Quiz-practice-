@@ -1,6 +1,8 @@
 let data = {};
 let currentQuestions = [];
 let currentIndex = 0;
+let correctCount = 0;
+let wrongCount = 0;
 
 fetch("mcqs.json")
   .then(res => res.json())
@@ -17,6 +19,8 @@ fetch("mcqs.json")
   });
 
 function startQuiz() {
+  correctCount = 0;
+wrongCount = 0;
   const chapter = document.getElementById("chapterSelect").value;
   currentQuestions = [];
 
@@ -45,8 +49,13 @@ function showQuestion() {
     btn.className = "option-btn";
     btn.textContent = opt;
     btn.onclick = () => {
-      document.getElementById("resultBox").innerText =
-        (opt === q.answer) ? "✅ सही उत्तर!" : `❌ गलत! सही उत्तर: ${q.answer}`;
+      if (opt === q.answer) {
+  correctCount++;
+  document.getElementById("resultBox").innerText = "✅ सही उत्तर!";
+} else {
+  wrongCount++;
+  document.getElementById("resultBox").innerText = `❌ गलत! सही उत्तर: ${q.answer}`;
+      }
       document.getElementById("nextBtn").style.display = "block";
     };
     box.appendChild(btn);
@@ -59,9 +68,13 @@ function showNext() {
     showQuestion();
   } else {
     document.getElementById("questionBox").innerHTML = "🎉 आपने सभी प्रश्न हल कर लिए!";
-    document.getElementById("optionsBox").innerHTML = "";
-    document.getElementById("resultBox").innerText = "";
-    document.getElementById("nextBtn").style.display = "none";
+document.getElementById("optionsBox").innerHTML = "";
+document.getElementById("resultBox").innerHTML = `
+✅ सही जवाब: ${correctCount}<br>
+❌ गलत जवाब: ${wrongCount}<br>
+📊 कुल प्रश्न: ${currentQuestions.length}
+`;
+document.getElementById("nextBtn").style.display = "none";
   }
 }
 
