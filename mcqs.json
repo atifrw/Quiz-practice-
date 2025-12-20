@@ -1790,10 +1790,46 @@
     "question": "सुमेलित युग्मों पर विचार कीजिए:(प्रसिद्ध स्थान - वर्तमान राज्य)<br>1. भीलसा - मध्य प्रदेश<br>2. द्वारसमुद्र - महाराष्ट्र<br>3. गिरिनगर - गुजरात<br>4. स्थानेश्वर - उत्तर प्रदेश",
     "options": ["केवल 1 और 3", "केवल 1 और 4", "केवल 2 और 3", "केवल 2 और 4"],
     "answer": "केवल 1 और 3"
+  },
+  {
+    "question": "15. सुमेलित कीजिए:<br>A. धनंजय &nbsp;&nbsp; 1. कुस्तलपुर<br>B. नीलराज &nbsp;&nbsp; 2. अवमुक्त<br>C. उग्रसेन &nbsp;&nbsp;&nbsp; 3. पालक्का<br>D. विष्णुगोप &nbsp; 4. कांची",
+    "options": ["A1 B2 C4 D3", "A3 B2 C4 D1", "A1 B2 C3 D4", "A2 B3 C4 D1"],
+    "answer": "A1 B2 C3 D4"
+  },
+  {
+    "question": "33. सुमेलित कीजिए (शासक और रानियां):<br>A. चंद्रगुप्त &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. दत्तादेवी<br>B. समुद्रगुप्त &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. कुबेरनागा<br>C. चंद्रगुप्त द्वितीय &nbsp;&nbsp; 3. कुमारदेवी<br>D. कुमारगुप्त प्रथम &nbsp; 4. अनन्तदेवी",
+    "options": ["A3 B1 C2 D4", "A3 B2 C4 D1", "A3 B1 C4 D2", "A2 B3 C4 D1"],
+    "answer": "A3 B1 C2 D4"
+  },
+  {
+    "question": "58. सूची-I (सम्राट) का सूची-II (विरुद्ध/उपाधि) से मिलान कर सही कूट चुनें:<br>A. अशोक &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. परक्रमांक<br>B. समुद्रगुप्त &nbsp;&nbsp; 2. प्रियदर्सिन<br>C. चंद्रगुप्त-II &nbsp; 3. क्रमादित्य<br>D. स्कंदगुप्त &nbsp;&nbsp; 4. विक्रमादित्य",
+    "options": ["A1 B2 C4 D3", "A3 B1 C4 D2", "A2 B1 C4 D3", "A2 B3 C4 D1"],
+    "answer": "A2 B1 C4 D3"
+  },
+  {
+    "question": "99. सूची-I( दर्शन) को सूची-II( मोक्ष के तरीके) से सुमेलित कीजिए:<br>A. न्याय दर्शन &nbsp;&nbsp;&nbsp;&nbsp; 1. वास्तविक ज्ञान का अभिग्रहण<br>B. मीमांसा दर्शन &nbsp; 2. आत्मज्ञान<br>C. सांख्य दर्शन &nbsp;&nbsp;&nbsp; 3. वैदिक अनुष्ठान करना<br>D. वेदांत दर्शन &nbsp;&nbsp;&nbsp; 4. तार्किक चिंतन",
+    "options": ["A3 B1 C2 D4", "A4 B3 C1 D2", "A3 B1 C4 D2", "A2 B3 C4 D1"],
+    "answer": "A4 B3 C1 D2"
+  },
+  {
+    "question": "113. सूची-I (संवत्सर) को सूची-II (गणना का समय) से सुमेलित कीजिए:<br>A. विक्रम संवत्सर &nbsp; 1. 3102 ई.पू.<br>B. शक संवत्सर &nbsp;&nbsp;&nbsp; 2. 320 ईस्वी<br>C. गुप्त संवत्सर &nbsp;&nbsp; 3. 78 ईस्वी<br>D. कलि संवत्सर &nbsp;&nbsp; 4. 58 ई.पू.",
+    "options": ["A3 B1 C2 D4", "A3 B2 C4 D1", "A3 B1 C4 D2", "A4 B3 C2 D1"],
+    "answer": "A4 B3 C2 D1"
+  },
+  {
+    "question": "161. सुमेलित कीजिए:( दरबारी कवि - राजा)<br>A. अमीर खुसरो &nbsp; 1. चंद्रगुप्त II<br>B. कालिदास &nbsp;&nbsp;&nbsp;&nbsp; 2. समुद्रगुप्त<br>C. हरिषेण &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. हर्षवर्धन<br>D. बाणभट्ट &nbsp;&nbsp;&nbsp;&nbsp; 4. अलाउद्दीन खिलजी",
+    "options": ["A3 B1 C2 D4", "A4 B1 C2 D3", "A3 B1 C4 D2", "A4 B3 C2 D1"],
+    "answer": "A4 B1 C2 D3"
+  },
+  {
+    "question": "162. सुमेलित कीजिए:<br>A. भोज &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. उज्जैन<br>B. दुर्गावती &nbsp;&nbsp; 2. विदिशा<br>C. समुद्रगुप्त &nbsp; 3. धार<br>D. अशोक &nbsp;&nbsp;&nbsp;&nbsp; 4. गोंडवाना",
+    "options": ["A3 B1 C2 D4", "A3 B2 C4 D1", "A3 B1 C4 D2", "A3 B4 C2 D1"],
+    "answer": "A3 B4 C2 D1"
   }
 ]
 
 }
+
 
 
 
