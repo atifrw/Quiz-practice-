@@ -361,16 +361,6 @@
       margin-bottom: 5px; 
       display: block; 
     }
-    
-    /* इनपुट फील्ड को हमेशा एक्टिव रखने के लिए */
-    .challenge-grid input {
-      background: white;
-      border: 2px solid var(--border-color);
-      padding: 10px;
-      width: 100%;
-      box-sizing: border-box;
-      border-radius: 8px;
-    }
 
     /* क्विज एरिया */
     .question-card { 
@@ -422,7 +412,7 @@
       cursor: not-allowed;
     }
     
-    /* नेक्स्ट बटन */
+    /* नेक्स्ट बटन - अब यह दिखेगा */
     #nextBtn { 
       display: none; 
       background: #28a745 !important; 
@@ -520,11 +510,6 @@
       cursor: pointer; 
     }
     .backup-btn:hover { background: #7f8c8d; }
-    
-    /* क्विज एक्टिव होने पर बैकअप एरिया छुपाने के लिए */
-    .backup-area.hidden {
-      display: none !important;
-    }
 
     /* मोडल */
     .modal { 
@@ -722,7 +707,7 @@
       </div>
     </div>
     
-    <!-- MCQ सेक्शन -->
+    <!-- MCQ सेक्शन - वेबसाइट 1 जैसा -->
     <div id="mcqSection" class="quiz-section">
       <button class="back-btn" onclick="backToModeSelection()">← वापस मुख्य मेनू</button>
       
@@ -748,11 +733,11 @@
         <div class="challenge-grid">
           <div>
             <label>सवाल:</label>
-            <input type="number" id="mcqCustomLimit" placeholder="जितने चाहें" value="5" min="1" max="100">
+            <input type="number" id="mcqCustomLimit" placeholder="10" value="5">
           </div>
           <div>
             <label>मिनट:</label>
-            <input type="number" id="mcqCustomTime" placeholder="0 = बिना टाइमर" value="0" min="0" max="180">
+            <input type="number" id="mcqCustomTime" placeholder="5" value="0">
           </div>
         </div>
 
@@ -812,11 +797,11 @@
         </div>
       </div>
       
-      <!-- क्विज एरिया -->
+      <!-- क्विज एरिया - इसमें नेक्स्ट बटन होगा -->
       <div id="mcqQuizArea" style="display:none;"></div>
     </div>
     
-    <!-- Subjective सेक्शन -->
+    <!-- Subjective सेक्शन - वेबसाइट 2 जैसा -->
     <div id="subjectiveSection" class="quiz-section">
       <button class="back-btn" onclick="backToModeSelection()">← वापस मुख्य मेनू</button>
       
@@ -842,11 +827,11 @@
         <div class="challenge-grid">
           <div>
             <label>सवाल:</label>
-            <input type="number" id="subjCustomLimit" placeholder="जितने चाहें" value="5" min="1" max="100">
+            <input type="number" id="subjCustomLimit" placeholder="10" value="5">
           </div>
           <div>
             <label>मिनट:</label>
-            <input type="number" id="subjCustomTime" placeholder="0 = बिना टाइमर" value="0" min="0" max="180">
+            <input type="number" id="subjCustomTime" placeholder="5" value="0">
           </div>
         </div>
 
@@ -911,7 +896,7 @@
     </div>
     
     <!-- बैकअप बटन -->
-    <div class="backup-area" id="backupArea">
+    <div class="backup-area">
       <button class="backup-btn" onclick="exportData()">📤 Export Data</button>
       <button class="backup-btn" onclick="document.getElementById('importFile').click()">📥 Import Data</button>
       <input type="file" id="importFile" style="display:none" onchange="importData(event)" accept=".json">
@@ -1127,7 +1112,7 @@
             </div>`;
         up.style.display = "flex";
         
-        // JSON फाइल्स लोड करें
+        // Load JSON files
         loadJSONFiles();
     }
 
@@ -1156,18 +1141,6 @@
             .catch(error => {
                 console.error("MCQ JSON load error:", error);
                 alert("mcq_questions.json file nahi mili. Please check file name.");
-                // Demo data for testing
-                mcqData = {
-                    "Science": {
-                        "Physics": [
-                            { "question": "प्रकाश की गति सबसे अधिक कहाँ होती है?", "options": ["हवा में", "पानी में", "कांच में", "निर्वात में"], "answer": "निर्वात में", "explanation": "निर्वात में प्रकाश की गति सबसे अधिक होती है।" },
-                            { "question": "न्यूटन की गति का पहला नियम क्या कहलाता है?", "options": ["जड़त्व का नियम", "त्वरण का नियम", "क्रिया-प्रतिक्रिया का नियम", "ऊर्जा संरक्षण का नियम"], "answer": "जड़त्व का नियम", "explanation": "न्यूटन का पहला नियम जड़त्व का नियम कहलाता है।" }
-                        ]
-                    }
-                };
-                populateSubjects('mcq');
-                updateModeButtons('mcq');
-                checkResumeStatus('mcq');
             });
         
         // Load Subjective JSON
@@ -1186,20 +1159,6 @@
             .catch(error => {
                 console.error("Subjective JSON load error:", error);
                 alert("subjective_questions.json file nahi mili. Please check file name.");
-                // Demo data for testing
-                subjectiveData = {
-                    "History": {
-                        "Ancient": [
-                            { "question": "सिंधु घाटी सभ्यता की प्रमुख विशेषताएं बताइए।", "explanation": "सिंधु घाटी सभ्यता की प्रमुख विशेषताएं: नियोजित नगर, जल निकासी व्यवस्था, स्नानागार, अन्नागार, व्यापार, कृषि, मोहरें, मूर्तियां।" }
-                        ],
-                        "Medieval": [
-                            { "question": "मुगल साम्राज्य के पतन के कारण बताइए।", "explanation": "मुगल साम्राज्य के पतन के कारण: कमजोर उत्तराधिकारी, साम्राज्य का विस्तार, आर्थिक संकट, विदेशी आक्रमण, सामंतों का विद्रोह।" }
-                        ]
-                    }
-                };
-                populateSubjects('subj');
-                updateModeButtons('subj');
-                checkResumeStatus('subj');
             });
         
         // Show mode selection
@@ -1245,9 +1204,6 @@
         currentMode = mode;
         document.getElementById("modeSelection").style.display = "none";
         
-        // बैकअप एरिया दिखाएं (क्योंकि क्विज शुरू नहीं हुई)
-        document.getElementById("backupArea").classList.remove("hidden");
-        
         if (mode === 'mcq') {
             document.getElementById("mcqSection").style.display = "block";
             document.getElementById("subjectiveSection").style.display = "none";
@@ -1280,10 +1236,6 @@
         document.getElementById("quitBtn").style.display = "none";
         document.getElementById("bookmarkActionBtn").style.display = "none";
         document.getElementById("heartActionBtn").style.display = "none";
-        
-        // बैकअप एरिया दिखाएं
-        document.getElementById("backupArea").classList.remove("hidden");
-        
         currentMode = null;
     }
 
@@ -1479,14 +1431,8 @@
         
         const subject = document.getElementById(mode + "SubjectSelect").value;
         const chapter = document.getElementById(mode + "ChapterSelect").value;
-        
-        // सवालों की संख्या लें - डिफॉल्ट 5
-        const limitInput = document.getElementById(mode + "CustomLimit");
-        const limit = parseInt(limitInput.value) || 5;
-        
-        // समय लें - डिफॉल्ट 0
-        const timeInput = document.getElementById(mode + "CustomTime");
-        const time = parseInt(timeInput.value) || 0;
+        const limit = parseInt(document.getElementById(mode + "CustomLimit").value) || 5;
+        const time = parseInt(document.getElementById(mode + "CustomTime").value) || 0;
         
         state.currentSub = subject;
         state.currentCh = chapter;
@@ -1541,9 +1487,6 @@
         document.getElementById("quitBtn").style.display = "flex";
         document.getElementById("bookmarkActionBtn").style.display = "flex";
         document.getElementById("heartActionBtn").style.display = "flex";
-        
-        // बैकअप एरिया छुपाएं - क्विज चल रही है
-        document.getElementById("backupArea").classList.add("hidden");
         
         renderQuizLayout(mode);
         showQuestion(mode);
@@ -1633,7 +1576,7 @@
         nextBtn.style.display = "none";
         explanationBox.style.display = "none";
         
-        if(mode === 'mcq' && q.options && q.options.length > 0) {
+        if(mode === 'mcq' && q.options) {
             // MCQ मोड - ऑप्शन दिखाएं
             q.options.forEach(option => {
                 const btn = document.createElement("button");
@@ -1839,9 +1782,6 @@
         
         document.getElementById(mode + "QuizArea").innerHTML = resultHTML;
         document.getElementById("quitBtn").style.display = "none";
-        
-        // बैकअप एरिया दिखाएं
-        document.getElementById("backupArea").classList.remove("hidden");
         
         updateModeButtons(mode);
     }
