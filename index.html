@@ -3,127 +3,645 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>📚 Mega Quiz Platform - MCQ + Subjective</title>
+  <title>📚 Mega Quiz - MCQ + Subjective (Fixed)</title>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-color: #f5f2eb; --card-bg: #ffffff; --text-color: #2c3e50;
-      --question-bg: #ffffff; --border-color: #e0dcd0; --btn-bg: #faf9f6; 
-      --primary-color: #5d6d7e; --progress-color: #27ae60;
-      --mcq-color: #3498db; --subj-color: #e67e22;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
+
+    :root {
+      --bg-color: #f5f2eb; 
+      --card-bg: #ffffff; 
+      --text-color: #2c3e50;
+      --question-bg: #ffffff; 
+      --border-color: #e0dcd0; 
+      --btn-bg: #faf9f6; 
+      --primary-color: #5d6d7e; 
+      --progress-color: #27ae60;
+      --mcq-color: #3498db; 
+      --subj-color: #e67e22;
+    }
+    
     [data-theme="dark"] {
-      --bg-color: #1a1a1a; --card-bg: #2d2d2d; --text-color: #e0e0e0;
-      --question-bg: #3d3d3d; --border-color: #444; --btn-bg: #3a3a3a;
+      --bg-color: #1a1a1a; 
+      --card-bg: #2d2d2d; 
+      --text-color: #e0e0e0;
+      --question-bg: #3d3d3d; 
+      --border-color: #444; 
+      --btn-bg: #3a3a3a;
       --primary-color: #8da2b5;
     }
-    body { font-family: 'Rubik', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; transition: 0.3s; }
+    
+    body { 
+      font-family: 'Rubik', sans-serif; 
+      background-color: var(--bg-color); 
+      color: var(--text-color); 
+      margin: 0; 
+      padding: 15px; 
+      transition: 0.3s; 
+    }
     
     /* Tab Styles */
-    .tab-container { display: flex; gap: 10px; margin-bottom: 20px; max-width: 700px; margin: 0 auto 20px; }
-    .tab { flex: 1; padding: 15px; text-align: center; border-radius: 15px; cursor: pointer; font-weight: 600; transition: 0.3s; background: var(--card-bg); border: 2px solid transparent; }
-    .tab.active { border-color: var(--mcq-color); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-    .tab.mcq.active { background: linear-gradient(135deg, #f0f7ff, #d0ebff); color: #1971c2; }
-    .tab.subj.active { background: linear-gradient(135deg, #fff5f0, #ffe8d9); color: #d9480f; }
-
-    .container { max-width: 700px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border-color); display: none; }
-    .container.active { display: block; }
-
-    /* Common Styles */
-    .progress-container { width: 100%; background: #e0dcd0; height: 8px; border-radius: 5px; margin-bottom: 15px; display: none; }
-    #progressBar { height: 100%; width: 0%; background: var(--progress-color); border-radius: 5px; transition: 0.4s; }
-
-    .header-btns { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; max-width: 700px; margin: 0 auto 10px; }
-    .header-left { display: flex; align-items: center; gap: 8px; }
-
-    #themeBtn, #quitBtn { padding: 8px 12px; font-size: 13px; background: var(--primary-color); color: white; border: none; cursor: pointer; border-radius: 8px; }
-    #quitBtn { background: #e74c3c; display: none; }
-
-    .voice-switch { position: relative; display: inline-block; width: 34px; height: 18px; }
-    .voice-switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
-    input:checked + .slider { background-color: var(--progress-color); }
-    input:checked + .slider:before { transform: translateX(16px); }
-
-    #timerDisplay { font-weight: bold; font-size: 18px; color: #e74c3c; display: none; text-align: center; flex-grow: 1; }
-
-    h2 { text-align: center; margin-top: 0; color: var(--primary-color); }
-    select, input, .main-btn { padding: 12px; font-size: 16px; margin-bottom: 12px; width: 100%; border-radius: 10px; border: 1px solid var(--border-color); background-color: var(--btn-bg); color: var(--text-color); box-sizing: border-box; }
-
-    /* MCQ Specific */
-    .mcq-only { display: none; }
-    .mcq-active .mcq-only { display: block; }
+    .tab-container { 
+      display: flex; 
+      gap: 10px; 
+      margin-bottom: 20px; 
+      max-width: 700px; 
+      margin: 0 auto 20px; 
+    }
     
-    .option-btn { display: block; background: var(--card-bg); border: 2px solid var(--border-color); color: var(--text-color); padding: 14px; margin: 10px 0; border-radius: 10px; cursor: pointer; width: 100%; text-align: left; font-size: 19px; font-weight: 500; transition: 0.2s; }
-    .option-btn:hover { border-color: var(--primary-color); background: var(--btn-bg); }
-    #nextBtn { display: none; background: #28a745 !important; color: white !important; border: none; text-align: center; margin-top: 15px; width: 100%; padding: 14px; border-radius: 10px; font-size: 18px; cursor: pointer; }
+    .tab { 
+      flex: 1; 
+      padding: 15px; 
+      text-align: center; 
+      border-radius: 15px; 
+      cursor: pointer; 
+      font-weight: 600; 
+      transition: 0.3s; 
+      background: var(--card-bg); 
+      border: 2px solid var(--border-color);
+    }
     
-    /* Subjective Specific */
-    .subj-only { display: none; }
-    .subj-active .subj-only { display: block; }
+    .tab.mcq.active { 
+      background: linear-gradient(135deg, #f0f7ff, #d0ebff); 
+      color: #1971c2; 
+      border-color: #1971c2;
+    }
     
-    .exp-box { background: #dff9fb; padding: 15px; border-radius: 10px; display: none; margin-bottom: 15px; color: #130f40; border: 1px dashed #3498db; font-size: 18px; }
-    [data-theme="dark"] .exp-box { background: #3d3d3d; color: #fff; }
-    
-    .exp-img { width: 100%; max-width: 100%; border-radius: 8px; margin-top: 10px; cursor: zoom-in; border: 1px solid var(--border-color); }
-    
-    .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-    .action-btns .main-btn { margin-bottom: 0; }
-
-    /* Common Elements */
-    .question-card { background: var(--question-bg); border-left: 6px solid var(--primary-color); padding: 20px; border-radius: 12px; margin-bottom: 20px; font-size: 22px; font-weight: 550; line-height: 1.5; position: relative; }
-    .speak-btn { position: absolute; right: 10px; top: 10px; background: none; border: none; cursor: pointer; font-size: 20px; opacity: 0.6; }
-
-    .bookmark-btn { background: transparent; font-size: 20px; padding: 0; border: none; cursor: pointer; }
-    .bookmark-btn svg { width: 28px; height: 28px; fill: none; stroke: var(--text-color); stroke-width: 2; }
-    .bookmark-btn.active svg { fill: var(--text-color); }
-
-    /* Grid Buttons */
-    .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-    .grid-card { display: flex; align-items: center; padding: 20px 15px; min-height: 100px; border-radius: 20px; border: none; cursor: pointer; text-align: left; transition: 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05); width: 100%; }
-    .grid-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-    .orange-card { background: linear-gradient(135deg, #fff9f0 0%, #ffe8cc 100%); color: #d9480f; }
-    .blue-card { background: linear-gradient(135deg, #f0f7ff 0%, #d0ebff 100%); color: #1971c2; }
-    .red-card { background: linear-gradient(135deg, #fff5f5 0%, #ffe3e3 100%); color: #c92a2a; }
-    .yellow-card { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); color: #92400e; }
-    .card-icon { font-size: 38px; margin-right: 15px; }
-    .card-content { display: flex; flex-direction: column; text-align: left; }
-    .card-title { font-weight: 600; font-size: 17px; }
-    .card-sub { font-size: 11.5px; opacity: 0.8; margin-top: 5px; }
-
-    /* Modals */
-    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); }
-    .modal-content { background: var(--card-bg); margin: 5% auto; padding: 20px; border-radius: 15px; width: 90%; max-width: 550px; max-height: 80vh; overflow-y: auto; position: relative; }
-    .close-modal { position: sticky; top: 0; float: right; font-size: 28px; cursor: pointer; color: #e74c3c; }
-
-    #imageModal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); text-align: center; }
-    #fullImage { max-width: 95%; max-height: 90%; margin-top: 50px; }
-    .close-img-modal { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
-
-    .tracker-card, .collection-card { display: none; margin-top: 10px; border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; background: var(--card-bg); }
-    .subject-group { margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; }
-    .subject-title { background: var(--primary-color); color: white; padding: 10px; font-weight: bold; }
-    .chapter-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid var(--border-color); }
-
-    .json-upload { margin-top: 20px; padding-top: 15px; border-top: 2px dashed var(--border-color); }
-    .file-input-group { display: flex; gap: 10px; margin-bottom: 10px; }
-    .file-input-group label { flex: 1; background: var(--btn-bg); padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; border: 1px solid var(--border-color); }
-
-    .backup-area { display: flex; gap: 10px; margin-top: 15px; }
-    .backup-btn { flex: 1; padding: 10px; font-size: 12px; background: #95a5a6; color: white; border: none; border-radius: 8px; cursor: pointer; }
-
-    .list-item { background: var(--bg-color); padding: 12px; border-radius: 8px; margin-bottom: 10px; }
-
-    @media (max-width: 500px) {
-      .button-grid { grid-template-columns: 1fr; }
-      .file-input-group { flex-direction: column; }
+    .tab.subj.active { 
+      background: linear-gradient(135deg, #fff5f0, #ffe8d9); 
+      color: #d9480f; 
+      border-color: #d9480f;
     }
 
+    /* Main Container */
+    .container { 
+      max-width: 700px; 
+      margin: auto; 
+      background: var(--card-bg); 
+      padding: 25px; 
+      border-radius: 20px; 
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
+      border: 1px solid var(--border-color); 
+      display: none; 
+    }
+    
+    .container.active { 
+      display: block; 
+    }
+
+    /* Header Controls */
+    .header-btns { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 20px; 
+      gap: 8px; 
+      max-width: 700px; 
+      margin: 0 auto 20px; 
+      background: var(--card-bg);
+      padding: 10px 15px;
+      border-radius: 15px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .header-left { 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+    }
+
+    .theme-btn { 
+      padding: 8px 12px; 
+      font-size: 13px; 
+      background: var(--primary-color); 
+      color: white; 
+      border: none; 
+      cursor: pointer; 
+      border-radius: 8px; 
+    }
+    
+    #quitBtn { 
+      padding: 8px 12px; 
+      font-size: 13px; 
+      background: #e74c3c; 
+      color: white; 
+      border: none; 
+      cursor: pointer; 
+      border-radius: 8px; 
+      display: none; 
+    }
+
+    /* Voice Switch */
+    .voice-controls {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .voice-switch { 
+      position: relative; 
+      display: inline-block; 
+      width: 34px; 
+      height: 18px; 
+    }
+    
+    .voice-switch input { 
+      opacity: 0; 
+      width: 0; 
+      height: 0; 
+    }
+    
+    .slider { 
+      position: absolute; 
+      cursor: pointer; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0; 
+      background-color: #ccc; 
+      transition: .4s; 
+      border-radius: 34px; 
+    }
+    
+    .slider:before { 
+      position: absolute; 
+      content: ""; 
+      height: 14px; 
+      width: 14px; 
+      left: 2px; 
+      bottom: 2px; 
+      background-color: white; 
+      transition: .4s; 
+      border-radius: 50%; 
+    }
+    
+    input:checked + .slider { 
+      background-color: var(--progress-color); 
+    }
+    
+    input:checked + .slider:before { 
+      transform: translateX(16px); 
+    }
+
+    #voiceSpeed { 
+      width: 50px; 
+    }
+
+    #timerDisplay { 
+      font-weight: bold; 
+      font-size: 18px; 
+      color: #e74c3c; 
+      display: none; 
+      text-align: center; 
+      flex-grow: 1; 
+    }
+
+    /* Progress Bar */
+    .progress-container { 
+      width: 100%; 
+      background: #e0dcd0; 
+      height: 8px; 
+      border-radius: 5px; 
+      margin-bottom: 15px; 
+      display: none; 
+    }
+    
+    .progress-bar { 
+      height: 100%; 
+      width: 0%; 
+      background: var(--progress-color); 
+      border-radius: 5px; 
+      transition: 0.4s; 
+    }
+
+    /* Typography */
+    h2 { 
+      text-align: center; 
+      margin-top: 0; 
+      margin-bottom: 20px;
+      color: var(--primary-color); 
+    }
+    
+    h3 {
+      margin: 10px 0;
+      text-align: center;
+    }
+
+    /* Form Elements */
+    select, input, .main-btn { 
+      padding: 12px; 
+      font-size: 16px; 
+      margin-bottom: 15px; 
+      width: 100%; 
+      border-radius: 10px; 
+      border: 1px solid var(--border-color); 
+      background-color: var(--btn-bg); 
+      color: var(--text-color); 
+      box-sizing: border-box; 
+    }
+
+    .main-btn { 
+      cursor: pointer; 
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    
+    .main-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    /* Grid Layout for Setup */
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .input-grid label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    /* Button Grid for Features */
+    .feature-grid { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 15px; 
+      margin: 20px 0; 
+    }
+    
+    .feature-card { 
+      display: flex; 
+      align-items: center; 
+      padding: 20px 15px; 
+      min-height: 100px; 
+      border-radius: 20px; 
+      border: none; 
+      cursor: pointer; 
+      text-align: left; 
+      transition: 0.3s; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+      width: 100%; 
+      background: var(--btn-bg);
+    }
+    
+    .feature-card:hover { 
+      transform: translateY(-4px); 
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
+    }
+    
+    .card-icon { 
+      font-size: 32px; 
+      margin-right: 15px; 
+    }
+    
+    .card-content { 
+      display: flex; 
+      flex-direction: column; 
+    }
+    
+    .card-title { 
+      font-weight: 600; 
+      font-size: 16px; 
+    }
+    
+    .card-sub { 
+      font-size: 11px; 
+      opacity: 0.8; 
+      margin-top: 3px; 
+    }
+
+    /* Question Card */
+    .question-card { 
+      background: var(--question-bg); 
+      border-left: 6px solid var(--primary-color); 
+      padding: 25px 20px; 
+      border-radius: 12px; 
+      margin-bottom: 20px; 
+      font-size: 20px; 
+      font-weight: 550; 
+      line-height: 1.5; 
+      position: relative; 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02); 
+      min-height: 100px;
+    }
+    
+    .speak-btn { 
+      position: absolute; 
+      right: 10px; 
+      top: 10px; 
+      background: none; 
+      border: none; 
+      cursor: pointer; 
+      font-size: 22px; 
+      opacity: 0.6; 
+    }
+
+    /* Bookmark and Heart Buttons - FIXED POSITIONS */
+    .action-buttons-container {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      display: flex;
+      gap: 5px;
+      z-index: 10;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+
+    .action-btn:hover {
+      background: rgba(0,0,0,0.1);
+    }
+
+    .action-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: var(--text-color);
+      stroke-width: 2;
+    }
+
+    .action-btn.active svg {
+      fill: var(--text-color);
+    }
+
+    .heart-btn.active svg {
+      fill: #e74c3c;
+      stroke: #e74c3c;
+    }
+
+    /* MCQ Options */
+    .option-btn { 
+      display: block; 
+      background: var(--card-bg); 
+      border: 2px solid var(--border-color); 
+      color: var(--text-color); 
+      padding: 14px; 
+      margin: 10px 0; 
+      border-radius: 10px; 
+      cursor: pointer; 
+      width: 100%; 
+      text-align: left; 
+      font-size: 18px; 
+      font-weight: 500; 
+      transition: 0.2s; 
+    }
+    
+    .option-btn:hover { 
+      border-color: var(--primary-color); 
+      background: var(--btn-bg); 
+    }
+
+    #nextBtn { 
+      display: none; 
+      background: #28a745 !important; 
+      color: white !important; 
+      border: none; 
+      text-align: center; 
+      margin-top: 15px; 
+      width: 100%; 
+      padding: 14px; 
+      border-radius: 10px; 
+      font-size: 18px; 
+      cursor: pointer; 
+    }
+
+    /* Explanation Box */
+    .explanation-box { 
+      display: none; 
+      background: #eef2f7; 
+      border-left: 5px solid #3498db; 
+      padding: 15px; 
+      margin-top: 15px; 
+      border-radius: 8px; 
+      font-size: 16px; 
+      line-height: 1.6; 
+      color: var(--text-color); 
+    }
+    
+    [data-theme="dark"] .explanation-box { 
+      background: #3a3a3a; 
+      border-left-color: #8da2b5; 
+    }
+
+    /* Subjective Specific */
+    .exp-box { 
+      background: #dff9fb; 
+      padding: 15px; 
+      border-radius: 10px; 
+      display: none; 
+      margin-bottom: 15px; 
+      color: #130f40; 
+      border: 1px dashed #3498db; 
+      font-size: 18px; 
+    }
+    
+    [data-theme="dark"] .exp-box { 
+      background: #3d3d3d; 
+      color: #fff; 
+    }
+    
+    .exp-img { 
+      width: 100%; 
+      max-width: 100%; 
+      border-radius: 8px; 
+      margin-top: 10px; 
+      cursor: zoom-in; 
+      border: 1px solid var(--border-color); 
+    }
+    
+    .subj-action-btns { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 10px; 
+      margin-top: 15px; 
+    }
+
+    /* Tracker and Collection Cards */
+    .tracker-card, .collection-card { 
+      display: none; 
+      margin-top: 20px; 
+      border: 1px solid var(--border-color); 
+      padding: 15px; 
+      border-radius: 12px; 
+      background: var(--card-bg); 
+    }
+    
+    .subject-group { 
+      margin-bottom: 15px; 
+      border: 1px solid var(--border-color); 
+      border-radius: 10px; 
+      overflow: hidden; 
+    }
+    
+    .subject-title { 
+      background: var(--primary-color); 
+      color: white; 
+      padding: 10px; 
+      font-weight: bold; 
+    }
+    
+    .chapter-row { 
+      display: flex; 
+      justify-content: space-between; 
+      padding: 10px; 
+      background: var(--card-bg); 
+      border-bottom: 1px solid var(--border-color); 
+      align-items: center; 
+    }
+    
+    .status-badge { 
+      width: 12px; 
+      height: 12px; 
+      border-radius: 50%; 
+      display: inline-block; 
+      margin-right: 8px; 
+    }
+    
+    .status-green { 
+      background: #2ecc71; 
+    }
+    
+    .status-yellow { 
+      background: #f1c40f; 
+    }
+    
+    .status-red { 
+      background: #e74c3c; 
+    }
+
+    /* Backup Area */
+    .backup-area { 
+      display: flex; 
+      gap: 10px; 
+      margin-top: 20px; 
+      padding-top: 20px; 
+      border-top: 2px dashed var(--border-color); 
+    }
+    
+    .backup-btn { 
+      flex: 1; 
+      padding: 10px; 
+      font-size: 12px; 
+      cursor: pointer; 
+      border-radius: 8px; 
+      border: 1px solid var(--border-color); 
+      background: var(--btn-bg); 
+      color: var(--text-color); 
+      font-weight: bold; 
+      text-align: center;
+    }
+
+    /* Modals */
+    .modal { 
+      display: none; 
+      position: fixed; 
+      z-index: 1000; 
+      left: 0; 
+      top: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0,0,0,0.6); 
+      backdrop-filter: blur(5px); 
+    }
+    
+    .modal-content { 
+      background: var(--card-bg); 
+      margin: 5% auto; 
+      padding: 20px; 
+      border-radius: 15px; 
+      width: 90%; 
+      max-width: 550px; 
+      max-height: 80vh; 
+      overflow-y: auto; 
+      position: relative; 
+      border: 1px solid var(--border-color); 
+    }
+    
+    .close-modal { 
+      position: sticky; 
+      top: 0; 
+      float: right; 
+      font-size: 28px; 
+      cursor: pointer; 
+      color: #e74c3c; 
+      font-weight: bold; 
+      background: var(--card-bg); 
+      width: 30px; 
+      text-align: center; 
+      border-radius: 50%; 
+    }
+
+    #imageModal { 
+      display: none; 
+      position: fixed; 
+      z-index: 2000; 
+      left: 0; 
+      top: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0,0,0,0.9); 
+      text-align: center; 
+    }
+    
+    #fullImage { 
+      max-width: 95%; 
+      max-height: 90%; 
+      margin-top: 50px; 
+    }
+    
+    .close-img-modal { 
+      position: absolute; 
+      top: 20px; 
+      right: 30px; 
+      color: white; 
+      font-size: 40px; 
+      cursor: pointer; 
+    }
+
+    .list-item { 
+      background: var(--bg-color); 
+      padding: 15px; 
+      border-radius: 8px; 
+      margin-bottom: 10px; 
+      border-left: 4px solid var(--primary-color); 
+    }
+
+    .resume-btn {
+      background: #9b59b6 !important;
+      color: white !important;
+      display: none;
+    }
+
+    /* Print Styles */
     @media print {
       .no-print { display: none !important; }
-      #printSection { display: block !important; }
-      .print-item { border-bottom: 1px solid #eee; padding: 10px; }
+      #printSection { display: block !important; padding: 20px; }
+      .print-item { border-bottom: 1px solid #eee; padding: 10px; page-break-inside: avoid; }
+    }
+
+    @media (max-width: 500px) {
+      .feature-grid { grid-template-columns: 1fr; }
+      .input-grid { grid-template-columns: 1fr; }
+      .backup-area { flex-direction: column; }
     }
   </style>
 </head>
@@ -136,19 +654,19 @@
   </div>
 
   <!-- Print Section -->
-  <div id="printSection" style="display:none; padding: 20px;"></div>
+  <div id="printSection" style="display:none;"></div>
 
   <!-- Header Controls -->
   <div class="header-btns no-print">
     <div class="header-left">
-      <button id="themeBtn" onclick="toggleTheme()">🌙</button>
-      <div style="display:flex; align-items:center; gap:5px;">
+      <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+      <div class="voice-controls">
         <span>🔊</span>
         <label class="voice-switch">
           <input type="checkbox" id="autoReadSwitch">
           <span class="slider"></span>
         </label>
-        <input type="range" id="voiceSpeed" min="0.5" max="1.5" step="0.1" value="1" style="width:50px;">
+        <input type="range" id="voiceSpeed" min="0.5" max="1.5" step="0.1" value="1">
       </div>
     </div>
     <div id="timerDisplay">⏳ 00:00</div>
@@ -163,28 +681,39 @@
 
   <!-- MCQ Container -->
   <div id="mcqContainer" class="container active">
-    <div class="progress-container" id="mcqProgress"><div id="mcqProgressBar"></div></div>
+    <div class="progress-container" id="mcqProgress">
+      <div class="progress-bar" id="mcqProgressBar"></div>
+    </div>
     
+    <!-- Setup Area -->
     <div id="mcqSetup">
       <h2>🎯 MCQ Practice</h2>
-      <button id="mcqResumeBtn" class="main-btn" style="background:#9b59b6; color:white; display:none;" onclick="resumeQuiz('mcq')">🕒 Resume Previous</button>
+      
+      <button id="mcqResumeBtn" class="main-btn resume-btn" onclick="resumeQuiz('mcq')">🕒 Resume Previous</button>
       
       <select id="mcqSubject" onchange="updateChapters('mcq')">
-        <option value="all">-- Load Subjects --</option>
+        <option value="all">-- Select Subject --</option>
       </select>
+      
       <select id="mcqChapter">
         <option value="all">-- All Chapters --</option>
       </select>
 
-      <div class="challenge-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
-        <div><label>Questions:</label><input type="number" id="mcqLimit" value="10"></div>
-        <div><label>Minutes:</label><input type="number" id="mcqTime" value="5"></div>
+      <div class="input-grid">
+        <div>
+          <label>Questions:</label>
+          <input type="number" id="mcqLimit" value="10" min="1">
+        </div>
+        <div>
+          <label>Minutes:</label>
+          <input type="number" id="mcqTime" value="5" min="1">
+        </div>
       </div>
 
       <button class="main-btn" onclick="startQuiz('mcq')" style="background:#5d6d7e; color:white;">🚀 Start MCQ Quiz</button>
 
-      <div class="button-grid">
-        <button id="mcqWeakBtn" class="grid-card orange-card" style="display:none;" onclick="startWeakQuiz('mcq')">
+      <div class="feature-grid">
+        <button id="mcqWeakBtn" class="feature-card" style="display:none;" onclick="startWeakQuiz('mcq')">
           <span class="card-icon">🎯</span>
           <div class="card-content">
             <div class="card-title">Weak Areas (<span id="mcqWeakCount">0</span>)</div>
@@ -192,15 +721,15 @@
           </div>
         </button>
         
-        <button id="mcqCollectionBtn" class="grid-card blue-card" style="display:none;" onclick="toggleCollection('mcq')">
+        <button id="mcqCollectionBtn" class="feature-card" style="display:none;" onclick="toggleCollection('mcq')">
           <span class="card-icon">❤️</span>
           <div class="card-content">
-            <div class="card-title">Collections</div>
+            <div class="card-title">My Collections</div>
             <div class="card-sub">Subject-wise saved questions</div>
           </div>
         </button>
         
-        <button class="grid-card red-card" onclick="toggleTracker('mcq')">
+        <button class="feature-card" onclick="toggleTracker('mcq')">
           <span class="card-icon">📊</span>
           <div class="card-content">
             <div class="card-title">Revision Tracker</div>
@@ -208,7 +737,7 @@
           </div>
         </button>
         
-        <button id="mcqSavedBtn" class="grid-card yellow-card" style="display:none;" onclick="startSavedQuiz('mcq')">
+        <button id="mcqSavedBtn" class="feature-card" style="display:none;" onclick="startSavedQuiz('mcq')">
           <span class="card-icon">⭐</span>
           <div class="card-content">
             <div class="card-title">Bookmarks</div>
@@ -217,89 +746,152 @@
         </button>
       </div>
 
+      <!-- Tracker Area -->
       <div id="mcqTracker" class="tracker-card"></div>
+      
+      <!-- Collection Area -->
       <div id="mcqCollection" class="collection-card">
         <h3>❤️ Collection Practice</h3>
-        <select id="mcqCollSub" onchange="updateCollChapters('mcq')"></select>
-        <select id="mcqCollCh"></select>
-        <button class="main-btn" onclick="startCollectionQuiz('mcq')" style="background:#27ae60;">Start</button>
+        <select id="mcqCollSub" onchange="updateCollChapters('mcq')">
+          <option value="all">-- All Subjects --</option>
+        </select>
+        <select id="mcqCollCh">
+          <option value="all">-- All Chapters --</option>
+        </select>
+        <button class="main-btn" onclick="startCollectionQuiz('mcq')" style="background:#27ae60; color:white;">Start Practice</button>
       </div>
     </div>
 
+    <!-- Quiz Area -->
     <div id="mcqQuiz" style="display:none;">
       <div id="mcqQuizContent">
-        <div id="mcqCount" style="text-align:right; font-size:14px;"></div>
-        <div id="mcqQuestion" class="question-card"></div>
+        <div id="mcqCount" style="text-align:right; font-size:14px; margin-bottom:5px;"></div>
+        
+        <div id="mcqQuestion" class="question-card">
+          <!-- Question will be inserted here -->
+          <div class="action-buttons-container" id="mcqActionButtons"></div>
+          <button class="speak-btn" onclick="speakQuestion('mcq')">🔊</button>
+        </div>
+        
         <div id="mcqOptions"></div>
-        <div id="mcqResult" style="text-align:center; font-weight:bold;"></div>
-        <button id="mcqNextBtn" onclick="nextQuestion('mcq')" style="display:none; background:#28a745; color:white; border:none; padding:14px; border-radius:10px; width:100%; margin-top:15px;">➡️ Next</button>
-        <div id="mcqExplanation" class="explanation-box" style="background:#eef2f7; border-left:5px solid #3498db; padding:15px; margin-top:15px; border-radius:8px; display:none;"></div>
+        <div id="mcqResult" style="text-align:center; font-weight:bold; margin:10px 0;"></div>
+        
+        <button id="mcqNextBtn" onclick="nextQuestion('mcq')" class="main-btn" style="background:#28a745; color:white; display:none;">➡️ Next Question</button>
+        
+        <div id="mcqExplanation" class="explanation-box"></div>
       </div>
+      
       <div id="mcqResultArea" style="display:none; text-align:center;"></div>
     </div>
 
+    <!-- Backup Area -->
     <div class="backup-area no-print">
-      <button class="backup-btn" onclick="exportData('mcq')">📤 MCQ Backup</button>
-      <label class="backup-btn" style="text-align:center;">📥 MCQ Restore
-        <input type="file" id="mcqImport" style="display:none" onchange="importData('mcq', event)">
+      <button class="backup-btn" onclick="exportData('mcq')">📤 Export MCQ Data</button>
+      <label class="backup-btn" style="cursor:pointer;">📥 Import MCQ Data
+        <input type="file" id="mcqImport" style="display:none" onchange="importData('mcq', event)" accept=".json">
       </label>
     </div>
   </div>
 
   <!-- Subjective Container -->
   <div id="subjContainer" class="container">
-    <div class="progress-container" id="subjProgress"><div id="subjProgressBar"></div></div>
+    <div class="progress-container" id="subjProgress">
+      <div class="progress-bar" id="subjProgressBar"></div>
+    </div>
     
+    <!-- Setup Area -->
     <div id="subjSetup">
       <h2>📝 Subjective Practice</h2>
-      <button id="subjResumeBtn" class="main-btn" style="background:#9b59b6; color:white; display:none;" onclick="resumeQuiz('subj')">🕒 Resume Previous</button>
+      
+      <button id="subjResumeBtn" class="main-btn resume-btn" onclick="resumeQuiz('subj')">🕒 Resume Previous</button>
       
       <select id="subjSubject" onchange="updateChapters('subj')">
-        <option value="all">-- Load Subjects --</option>
+        <option value="all">-- Select Subject --</option>
       </select>
+      
       <select id="subjChapter">
         <option value="all">-- All Chapters --</option>
       </select>
 
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
-        <div><label>Questions:</label><input type="number" id="subjLimit" value="10"></div>
-        <div><label>Minutes:</label><input type="number" id="subjTime" value="5"></div>
+      <div class="input-grid">
+        <div>
+          <label>Questions:</label>
+          <input type="number" id="subjLimit" value="10" min="1">
+        </div>
+        <div>
+          <label>Minutes:</label>
+          <input type="number" id="subjTime" value="5" min="1">
+        </div>
       </div>
 
       <button class="main-btn" onclick="startQuiz('subj')" style="background:#e67e22; color:white;">🎯 Start Subjective</button>
       
-      <button id="subjWeakBtn" class="main-btn" style="background:#e67e22; color:white; display:none;" onclick="startWeakQuiz('subj')">
-        🔄 Weak Areas (<span id="subjWeakCount">0</span>)
-      </button>
-      
-      <button class="main-btn" onclick="toggleTracker('subj')" style="background:#3498db;">📊 Revision Tracker</button>
-      
-      <div style="display:flex; gap:10px;">
-        <button id="subjSavedBtn" class="main-btn" style="background:#f1c40f; color:#000; display:none; flex:1;" onclick="startSavedQuiz('subj')">⭐ Bookmarks</button>
-        <button id="subjViewBtn" class="main-btn" style="background:#3498db; color:#fff; display:none; flex:1;" onclick="openSavedList('subj')">📄 View & Print</button>
+      <div class="feature-grid">
+        <button id="subjWeakBtn" class="feature-card" style="display:none;" onclick="startWeakQuiz('subj')">
+          <span class="card-icon">🔄</span>
+          <div class="card-content">
+            <div class="card-title">Weak Areas (<span id="subjWeakCount">0</span>)</div>
+            <div class="card-sub">Practice weak questions</div>
+          </div>
+        </button>
+        
+        <button class="feature-card" onclick="toggleTracker('subj')">
+          <span class="card-icon">📊</span>
+          <div class="card-content">
+            <div class="card-title">Revision Tracker</div>
+            <div class="card-sub">Track progress</div>
+          </div>
+        </button>
+        
+        <button id="subjSavedBtn" class="feature-card" style="display:none;" onclick="startSavedQuiz('subj')">
+          <span class="card-icon">⭐</span>
+          <div class="card-content">
+            <div class="card-title">Bookmarks</div>
+            <div class="card-sub">Practice saved</div>
+          </div>
+        </button>
+        
+        <button id="subjViewBtn" class="feature-card" style="display:none;" onclick="openSavedList('subj')">
+          <span class="card-icon">📄</span>
+          <div class="card-content">
+            <div class="card-title">View & Print</div>
+            <div class="card-sub">See all bookmarks</div>
+          </div>
+        </button>
       </div>
 
+      <!-- Tracker Area -->
       <div id="subjTracker" class="tracker-card"></div>
     </div>
 
+    <!-- Quiz Area -->
     <div id="subjQuiz" style="display:none;">
       <div id="subjQuizContent">
-        <div id="subjCount" style="text-align:right; font-size:14px;"></div>
-        <div id="subjQuestion" class="question-card"></div>
-        <button id="subjShowBtn" onclick="toggleExp()" class="main-btn" style="background:#3498db;">👁️ Show Answer</button>
+        <div id="subjCount" style="text-align:right; font-size:14px; margin-bottom:5px;"></div>
+        
+        <div id="subjQuestion" class="question-card">
+          <div class="action-buttons-container" id="subjActionButtons"></div>
+          <button class="speak-btn" onclick="speakQuestion('subj')">🔊</button>
+        </div>
+        
+        <button id="subjShowBtn" onclick="toggleExp()" class="main-btn" style="background:#3498db; color:white;">👁️ Show Answer</button>
+        
         <div id="subjExpBox" class="exp-box"></div>
-        <div class="action-btns">
-          <button onclick="handleResponse('subj', true)" class="main-btn" style="background:var(--progress-color);">✅ Correct</button>
-          <button onclick="handleResponse('subj', false)" class="main-btn" style="background:#e67e22;">⚠️ Need Improvement</button>
+        
+        <div class="subj-action-btns">
+          <button onclick="handleResponse('subj', true)" class="main-btn" style="background:var(--progress-color); color:white;">✅ Correct</button>
+          <button onclick="handleResponse('subj', false)" class="main-btn" style="background:#e67e22; color:white;">⚠️ Need Improvement</button>
         </div>
       </div>
+      
       <div id="subjResultArea" style="display:none; text-align:center;"></div>
     </div>
 
+    <!-- Backup Area -->
     <div class="backup-area no-print">
-      <button class="backup-btn" onclick="exportData('subj')">📤 Subjective Backup</button>
-      <label class="backup-btn" style="text-align:center;">📥 Subjective Restore
-        <input type="file" id="subjImport" style="display:none" onchange="importData('subj', event)">
+      <button class="backup-btn" onclick="exportData('subj')">📤 Export Subjective Data</button>
+      <label class="backup-btn" style="cursor:pointer;">📥 Import Subjective Data
+        <input type="file" id="subjImport" style="display:none" onchange="importData('subj', event)" accept=".json">
       </label>
     </div>
   </div>
@@ -308,7 +900,7 @@
   <div id="reviewModal" class="modal no-print">
     <div class="modal-content">
       <span class="close-modal" onclick="closeModal('review')">&times;</span>
-      <h3>📋 Review Wrong Questions</h3>
+      <h3>📋 Wrong Questions</h3>
       <div id="reviewList"></div>
     </div>
   </div>
@@ -318,14 +910,15 @@
     <div class="modal-content">
       <span class="close-modal" onclick="closeModal('saved')">&times;</span>
       <h3>⭐ Bookmarked Questions</h3>
-      <button class="main-btn" onclick="printSaved()" style="background:#27ae60;">🖨️ Print</button>
+      <button class="main-btn" onclick="printSaved()" style="background:#27ae60; color:white; margin-bottom:15px;">🖨️ Print / PDF</button>
       <div id="savedList"></div>
     </div>
   </div>
 
   <script>
-    // Data Structures
-    let mcqData = {}, subjData = {};
+    // ==================== DATA STRUCTURES ====================
+    let mcqData = {};
+    let subjData = {};
     
     // Storage Keys
     const STORAGE = {
@@ -345,24 +938,42 @@
       }
     };
 
-    // Current State
-    let currentTab = 'mcq';
+    // Quiz State
     let quizState = {
       mcq: {
-        questions: [], currentIdx: 0, score: 0, wrong: [],
-        isWeakMode: false, subject: '', chapter: '',
-        bookmarks: [], weak: [], revisions: {}, collections: {}
+        questions: [], 
+        currentIdx: 0, 
+        score: 0, 
+        wrong: [],
+        isWeakMode: false, 
+        subject: '', 
+        chapter: '',
+        bookmarks: [], 
+        weak: [], 
+        revisions: {}, 
+        collections: {}
       },
       subj: {
-        questions: [], currentIdx: 0, score: 0, wrong: [],
-        isWeakMode: false, subject: '', chapter: '',
-        bookmarks: [], weak: [], revisions: {}, collections: {}
+        questions: [], 
+        currentIdx: 0, 
+        score: 0, 
+        wrong: [],
+        isWeakMode: false, 
+        subject: '', 
+        chapter: '',
+        bookmarks: [], 
+        weak: [], 
+        revisions: {}, 
+        collections: {}
       }
     };
 
-    // Initialize
-    function init() {
-      // Load stored data
+    let currentTab = 'mcq';
+    let timerInterval = null;
+
+    // ==================== INITIALIZATION ====================
+    window.onload = function() {
+      // Load saved data from localStorage
       ['mcq', 'subj'].forEach(type => {
         const state = quizState[type];
         state.bookmarks = JSON.parse(localStorage.getItem(STORAGE[type].bookmarks)) || [];
@@ -371,105 +982,193 @@
         state.collections = JSON.parse(localStorage.getItem(STORAGE[type].collections)) || {};
       });
 
-      // Load default JSON files
+      // Try to load JSON files
       loadJSON('mcq', 'Demo.json');
       loadJSON('subj', 'sub.json');
 
-      // Setup event listeners
-      document.getElementById('voiceSpeed').onchange = (e) => {
+      // Voice speed
+      document.getElementById('voiceSpeed').onchange = function(e) {
         localStorage.setItem('voice_speed', e.target.value);
       };
-    }
+      
+      // Load saved voice speed
+      const savedSpeed = localStorage.getItem('voice_speed');
+      if(savedSpeed) document.getElementById('voiceSpeed').value = savedSpeed;
+    };
 
     function loadJSON(type, filename) {
-      fetch(filename + '?v=' + Math.random())
-        .then(r => r.json())
+      fetch(filename + '?v=' + Date.now())
+        .then(response => response.json())
         .then(data => {
           if(type === 'mcq') mcqData = data;
           else subjData = data;
           
-          const select = document.getElementById(`${type}Subject`);
+          const select = document.getElementById(type + 'Subject');
           select.innerHTML = '<option value="all">-- All Subjects --</option>';
-          Object.keys(data).forEach(s => select.add(new Option(s, s)));
+          Object.keys(data).forEach(subject => {
+            select.add(new Option(subject, subject));
+          });
           
           updateUI(type);
         })
-        .catch(() => {
-          alert(`${filename} not found! Please upload using the buttons below.`);
+        .catch(error => {
+          console.log(filename + ' not found. Please upload using backup buttons.');
+          // Create sample data
+          if(type === 'mcq') {
+            mcqData = {
+              "Sample": {
+                "Chapter1": [
+                  {
+                    "question": "Sample MCQ Question?",
+                    "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+                    "answer": "Option 1",
+                    "explanation": "This is a sample explanation."
+                  }
+                ]
+              }
+            };
+          } else {
+            subjData = {
+              "Sample": {
+                "Chapter1": [
+                  {
+                    "question": "Sample Subjective Question?",
+                    "explanation": "This is the answer with explanation.",
+                    "image": ""
+                  }
+                ]
+              }
+            };
+          }
+          
+          const select = document.getElementById(type + 'Subject');
+          select.innerHTML = '<option value="all">-- All Subjects --</option>';
+          Object.keys(type === 'mcq' ? mcqData : subjData).forEach(subject => {
+            select.add(new Option(subject, subject));
+          });
+          
+          updateUI(type);
         });
     }
 
     function updateUI(type) {
       const state = quizState[type];
-      document.getElementById(`${type}WeakBtn`).style.display = state.weak.length ? 'block' : 'none';
-      document.getElementById(`${type}WeakCount`).innerText = state.weak.length;
       
-      const savedDisplay = state.bookmarks.length ? 'block' : 'none';
-      document.getElementById(`${type}SavedBtn`).style.display = savedDisplay;
-      if(type === 'subj') document.getElementById(`${type}ViewBtn`).style.display = savedDisplay;
+      // Update weak areas button
+      const weakBtn = document.getElementById(type + 'WeakBtn');
+      const weakCount = document.getElementById(type + 'WeakCount');
+      if(weakBtn && weakCount) {
+        if(state.weak.length > 0) {
+          weakBtn.style.display = 'flex';
+          weakCount.innerText = state.weak.length;
+        } else {
+          weakBtn.style.display = 'none';
+        }
+      }
       
+      // Update saved/bookmarks button
+      const savedBtn = document.getElementById(type + 'SavedBtn');
+      if(savedBtn) {
+        savedBtn.style.display = state.bookmarks.length > 0 ? 'flex' : 'none';
+      }
+      
+      // Update view button for subjective
+      if(type === 'subj') {
+        const viewBtn = document.getElementById('subjViewBtn');
+        if(viewBtn) viewBtn.style.display = state.bookmarks.length > 0 ? 'flex' : 'none';
+      }
+      
+      // Update collection button for MCQ
       if(type === 'mcq') {
-        document.getElementById('mcqCollectionBtn').style.display = 
-          Object.keys(state.collections).length ? 'flex' : 'none';
+        const collBtn = document.getElementById('mcqCollectionBtn');
+        if(collBtn) {
+          const hasCollections = Object.keys(state.collections).length > 0;
+          collBtn.style.display = hasCollections ? 'flex' : 'none';
+        }
       }
       
       checkResumeStatus(type);
     }
 
+    // ==================== TAB SWITCHING ====================
     function switchTab(tab) {
       currentTab = tab;
+      
+      // Update tab styles
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelector(`.tab.${tab}`).classList.add('active');
+      document.querySelector('.tab.' + tab).classList.add('active');
       
+      // Show correct container
       document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
-      document.getElementById(`${tab}Container`).classList.add('active');
+      document.getElementById(tab + 'Container').classList.add('active');
     }
 
+    // ==================== THEME ====================
     function toggleTheme() {
-      document.body.hasAttribute('data-theme') 
-        ? document.body.removeAttribute('data-theme')
-        : document.body.setAttribute('data-theme', 'dark');
-    }
-
-    function updateChapters(type) {
-      const subj = document.getElementById(`${type}Subject`).value;
-      const chSelect = document.getElementById(`${type}Chapter`);
-      chSelect.innerHTML = '<option value="all">-- All Chapters --</option>';
-      
-      const data = type === 'mcq' ? mcqData : subjData;
-      if(subj !== 'all' && data[subj]) {
-        Object.keys(data[subj]).forEach(ch => chSelect.add(new Option(ch, ch)));
+      if(document.body.hasAttribute('data-theme')) {
+        document.body.removeAttribute('data-theme');
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
       }
     }
 
+    // ==================== CHAPTERS ====================
+    function updateChapters(type) {
+      const subject = document.getElementById(type + 'Subject').value;
+      const chapterSelect = document.getElementById(type + 'Chapter');
+      chapterSelect.innerHTML = '<option value="all">-- All Chapters --</option>';
+      
+      const data = type === 'mcq' ? mcqData : subjData;
+      
+      if(subject !== 'all' && data[subject]) {
+        Object.keys(data[subject]).forEach(chapter => {
+          chapterSelect.add(new Option(chapter, chapter));
+        });
+      }
+    }
+
+    // ==================== QUIZ START FUNCTIONS ====================
     function startQuiz(type) {
       const state = quizState[type];
       state.isWeakMode = false;
-      state.subject = document.getElementById(`${type}Subject`).value;
-      state.chapter = document.getElementById(`${type}Chapter`).value;
+      state.subject = document.getElementById(type + 'Subject').value;
+      state.chapter = document.getElementById(type + 'Chapter').value;
       
       let questions = [];
       const data = type === 'mcq' ? mcqData : subjData;
       
       if(state.subject === 'all') {
-        Object.keys(data).forEach(s => 
-          Object.keys(data[s]).forEach(ch => 
-            questions = questions.concat(data[s][ch])));
+        // Get all questions from all subjects and chapters
+        Object.keys(data).forEach(s => {
+          Object.keys(data[s]).forEach(ch => {
+            questions = questions.concat(data[s][ch]);
+          });
+        });
       } else if(state.chapter === 'all') {
-        Object.keys(data[state.subject]).forEach(ch => 
-          questions = questions.concat(data[state.subject][ch]));
+        // Get all questions from selected subject
+        Object.keys(data[state.subject]).forEach(ch => {
+          questions = questions.concat(data[state.subject][ch]);
+        });
       } else {
-        questions = [...data[state.subject][state.chapter]];
+        // Get questions from specific subject and chapter
+        questions = data[state.subject][state.chapter] ? [...data[state.subject][state.chapter]] : [];
       }
       
-      if(!questions.length) return alert('No questions found!');
+      if(questions.length === 0) {
+        alert('No questions found!');
+        return;
+      }
       
+      // Shuffle and limit
       questions.sort(() => Math.random() - 0.5);
-      const limit = parseInt(document.getElementById(`${type}Limit`).value);
+      const limit = parseInt(document.getElementById(type + 'Limit').value);
       state.questions = limit > 0 ? questions.slice(0, limit) : questions;
       
-      const mins = parseInt(document.getElementById(`${type}Time`).value);
-      if(mins > 0) startTimer(mins * 60, type);
+      // Start timer
+      const mins = parseInt(document.getElementById(type + 'Time').value);
+      if(mins > 0 && !isNaN(mins)) {
+        startTimer(mins * 60, type);
+      }
       
       state.currentIdx = 0;
       state.score = 0;
@@ -480,7 +1179,7 @@
 
     function startWeakQuiz(type) {
       const state = quizState[type];
-      if(!state.weak.length) return;
+      if(state.weak.length === 0) return;
       
       state.isWeakMode = true;
       state.questions = [...state.weak].sort(() => Math.random() - 0.5);
@@ -493,6 +1192,8 @@
 
     function startSavedQuiz(type) {
       const state = quizState[type];
+      if(state.bookmarks.length === 0) return;
+      
       state.isWeakMode = false;
       state.questions = [...state.bookmarks].sort(() => Math.random() - 0.5);
       state.currentIdx = 0;
@@ -502,10 +1203,48 @@
       showQuiz(type);
     }
 
+    function startCollectionQuiz(type) {
+      if(type !== 'mcq') return;
+      
+      const sub = document.getElementById('mcqCollSub').value;
+      const ch = document.getElementById('mcqCollCh').value;
+      const state = quizState.mcq;
+      
+      let questions = [];
+      
+      if(sub === 'all') {
+        Object.keys(state.collections).forEach(s => {
+          Object.keys(state.collections[s]).forEach(c => {
+            questions = questions.concat(state.collections[s][c]);
+          });
+        });
+      } else if(ch === 'all') {
+        Object.keys(state.collections[sub]).forEach(c => {
+          questions = questions.concat(state.collections[sub][c]);
+        });
+      } else {
+        questions = state.collections[sub] && state.collections[sub][ch] ? [...state.collections[sub][ch]] : [];
+      }
+      
+      if(questions.length === 0) {
+        alert('No questions in collection!');
+        return;
+      }
+      
+      state.isWeakMode = false;
+      state.questions = [...questions].sort(() => Math.random() - 0.5);
+      state.currentIdx = 0;
+      state.score = 0;
+      state.wrong = [];
+      
+      showQuiz('mcq');
+    }
+
     function showQuiz(type) {
-      document.getElementById(`${type}Setup`).style.display = 'none';
-      document.getElementById(`${type}Quiz`).style.display = 'block';
-      document.getElementById(`${type}Progress`).style.display = 'block';
+      // Hide setup, show quiz
+      document.getElementById(type + 'Setup').style.display = 'none';
+      document.getElementById(type + 'Quiz').style.display = 'block';
+      document.getElementById(type + 'Progress').style.display = 'block';
       document.getElementById('quitBtn').style.display = 'block';
       
       if(type === 'mcq') {
@@ -519,20 +1258,64 @@
       showQuestion(type);
     }
 
+    // ==================== DISPLAY QUESTION ====================
     function showQuestion(type) {
       const state = quizState[type];
+      if(!state.questions || state.questions.length === 0) return;
+      
       const q = state.questions[state.currentIdx];
       if(!q) return;
       
-      // Progress
-      const progress = (state.currentIdx / state.questions.length) * 100;
-      document.getElementById(`${type}ProgressBar`).style.width = progress + '%';
-      document.getElementById(`${type}Count`).innerText = 
-        `${state.currentIdx + 1} / ${state.questions.length}`;
+      // Add subject and chapter to question for collections
+      if(!q.sub || !q.ch) {
+        findQuestionMeta(q, type);
+      }
       
-      // Question
-      document.getElementById(`${type}Question`).innerHTML = 
-        `${q.question} <button class="speak-btn" onclick="speak('${q.question.replace(/'/g, "\\'")}')">🔊</button>`;
+      // Update progress
+      const progress = ((state.currentIdx) / state.questions.length) * 100;
+      document.getElementById(type + 'ProgressBar').style.width = progress + '%';
+      document.getElementById(type + 'Count').innerText = 
+        `Question: ${state.currentIdx + 1} / ${state.questions.length}`;
+      
+      // Set question text
+      document.getElementById(type + 'Question').innerHTML = 
+        `<div class="question-text">${q.question}</div>
+         <button class="speak-btn" onclick="speak('${q.question.replace(/'/g, "\\'")}')">🔊</button>`;
+      
+      // Add action buttons container
+      const actionDiv = document.createElement('div');
+      actionDiv.className = 'action-buttons-container';
+      actionDiv.id = type + 'ActionButtons';
+      
+      // Add bookmark button
+      const isBookmarked = state.bookmarks.some(b => b.question === q.question);
+      actionDiv.innerHTML += `
+        <button class="action-btn bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark('${type}')">
+          <svg viewBox="0 0 24 24">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+          </svg>
+        </button>`;
+      
+      // Add heart button for MCQ only
+      if(type === 'mcq') {
+        let inCollection = false;
+        if(q.sub && q.ch && state.collections[q.sub] && state.collections[q.sub][q.ch]) {
+          inCollection = state.collections[q.sub][q.ch].some(i => i.question === q.question);
+        }
+        actionDiv.innerHTML += `
+          <button class="action-btn heart-btn ${inCollection ? 'active' : ''}" onclick="toggleCollection('${type}', '${q.sub || ''}', '${q.ch || ''}')">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </button>`;
+      }
+      
+      // Replace or add action buttons
+      const existingActions = document.getElementById(type + 'ActionButtons');
+      if(existingActions) {
+        existingActions.remove();
+      }
+      document.getElementById(type + 'Question').appendChild(actionDiv);
       
       // Auto-read
       if(document.getElementById('autoReadSwitch').checked) {
@@ -540,43 +1323,30 @@
       }
       
       if(type === 'mcq') {
-        // MCQ specific
-        const isBookmarked = state.bookmarks.some(b => b.question === q.question);
-        document.getElementById('mcqQuestion').innerHTML += 
-          `<button class="bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark('mcq')" style="position:absolute; left:10px; top:10px; background:none; border:none;">
-            <svg viewBox="0 0 24 24" width="24" height="24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-          </button>`;
-        
-        // Check if in collections
-        let inCollection = false;
-        if(q.sub && q.ch && state.collections[q.sub] && state.collections[q.sub][q.ch]) {
-          inCollection = state.collections[q.sub][q.ch].some(i => i.question === q.question);
-        }
-        
-        document.getElementById('mcqQuestion').innerHTML += 
-          `<button class="bookmark-btn ${inCollection ? 'active' : ''}" onclick="toggleCollection('mcq', '${q.sub}', '${q.ch}')" style="position:absolute; left:50px; top:10px; background:none; border:none;">
-            <svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-          </button>`;
-        
-        // Options
+        // MCQ options
         const optsDiv = document.getElementById('mcqOptions');
         optsDiv.innerHTML = '';
-        q.options.forEach(opt => {
-          const btn = document.createElement('button');
-          btn.className = 'option-btn';
-          btn.innerText = opt;
-          btn.onclick = () => handleMCQAnswer(opt, q);
-          optsDiv.appendChild(btn);
-        });
         
-        document.getElementById('mcqResult').innerText = '';
+        if(q.options && Array.isArray(q.options)) {
+          q.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => handleMCQAnswer(opt, q);
+            optsDiv.appendChild(btn);
+          });
+        }
+        
+        document.getElementById('mcqResult').innerHTML = '';
         document.getElementById('mcqNextBtn').style.display = 'none';
         document.getElementById('mcqExplanation').style.display = 'none';
       } else {
-        // Subjective specific
-        document.getElementById('subjExpBox').innerHTML = '';
-        if(q.explanation) document.getElementById('subjExpBox').innerHTML += `<div>${q.explanation}</div>`;
-        if(q.image) document.getElementById('subjExpBox').innerHTML += `<img src="${q.image}" class="exp-img" onclick="openFullImg(this.src)">`;
+        // Subjective - prepare answer box
+        let expHTML = '';
+        if(q.explanation) expHTML += `<div>${q.explanation}</div>`;
+        if(q.image) expHTML += `<img src="${q.image}" class="exp-img" onclick="openFullImg('${q.image}')">`;
+        
+        document.getElementById('subjExpBox').innerHTML = expHTML;
         document.getElementById('subjShowBtn').style.display = (q.explanation || q.image) ? 'block' : 'none';
         document.getElementById('subjExpBox').style.display = 'none';
       }
@@ -584,17 +1354,40 @@
       saveSession(type);
     }
 
+    function findQuestionMeta(q, type) {
+      const data = type === 'mcq' ? mcqData : subjData;
+      for(let s in data) {
+        for(let c in data[s]) {
+          if(data[s][c].some(item => item.question === q.question)) {
+            q.sub = s;
+            q.ch = c;
+            return;
+          }
+        }
+      }
+    }
+
+    // ==================== MCQ ANSWER HANDLING ====================
     function handleMCQAnswer(selected, question) {
       const state = quizState.mcq;
       
+      // Disable all options
       document.querySelectorAll('#mcqOptions .option-btn').forEach(btn => {
         btn.style.pointerEvents = 'none';
+        if(btn.innerText === question.answer) {
+          btn.style.borderColor = '#27ae60';
+          btn.style.backgroundColor = '#d4edda';
+        } else if(btn.innerText === selected && selected !== question.answer) {
+          btn.style.borderColor = '#e74c3c';
+          btn.style.backgroundColor = '#f8d7da';
+        }
       });
       
       if(selected === question.answer) {
         state.score++;
         document.getElementById('mcqResult').innerHTML = '<span style="color:#27ae60">✅ Correct!</span>';
         
+        // Remove from weak if in weak mode
         if(state.isWeakMode) {
           state.weak = state.weak.filter(w => w.question !== question.question);
           saveData('mcq');
@@ -604,12 +1397,14 @@
           `<span style="color:#e74c3c">❌ Wrong! Correct: ${question.answer}</span>`;
         state.wrong.push(question);
         
+        // Add to weak if not already there
         if(!state.weak.some(w => w.question === question.question)) {
           state.weak.push(question);
           saveData('mcq');
         }
       }
       
+      // Show explanation
       if(question.explanation) {
         document.getElementById('mcqExplanation').innerHTML = 
           `<strong>💡 Explanation:</strong><br>${question.explanation}`;
@@ -620,6 +1415,7 @@
       saveSession('mcq');
     }
 
+    // ==================== SUBJECTIVE ANSWER HANDLING ====================
     function handleResponse(type, isCorrect) {
       const state = quizState[type];
       const q = state.questions[state.currentIdx];
@@ -646,6 +1442,7 @@
       }
     }
 
+    // ==================== NEXT QUESTION ====================
     function nextQuestion(type) {
       window.speechSynthesis.cancel();
       const state = quizState[type];
@@ -659,34 +1456,56 @@
       }
     }
 
+    // ==================== FINAL RESULT ====================
     function showFinalResult(type) {
       const state = quizState[type];
-      clearInterval(timerInterval);
+      
+      // Clear timer
+      if(timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      
+      // Clear session
       localStorage.removeItem(STORAGE[type].session);
       
       // Update revision tracker
       if(!state.isWeakMode && state.subject !== 'all' && state.chapter !== 'all') {
-        const key = `${state.subject}_${state.chapter}`;
+        const key = state.subject + '_' + state.chapter;
         state.revisions[key] = Date.now();
         saveData(type);
       }
       
-      const quizDiv = document.getElementById(`${type}Quiz`);
-      const contentDiv = document.getElementById(`${type}QuizContent`);
-      const resultDiv = document.getElementById(`${type}ResultArea`);
-      
-      contentDiv.style.display = 'none';
-      resultDiv.style.display = 'block';
-      
-      let html = `<h3>🏁 Score: ${state.score}/${state.questions.length}</h3>`;
-      
-      if(state.wrong.length > 0) {
-        html += `<button class="main-btn" style="background:#e67e22;" onclick="openReview('${type}')">
-          🔍 Review Wrong (${state.wrong.length})</button>`;
+      // Hide quiz content, show result
+      if(type === 'mcq') {
+        document.getElementById('mcqQuizContent').style.display = 'none';
+        const resultDiv = document.getElementById('mcqResultArea');
+        resultDiv.style.display = 'block';
+        
+        let html = `<h3>🏁 Final Score: ${state.score}/${state.questions.length}</h3>`;
+        
+        if(state.wrong.length > 0) {
+          html += `<button class="main-btn" style="background:#e67e22; color:white; margin:10px 0;" onclick="openReview('${type}')">
+            🔍 Review Wrong (${state.wrong.length})</button>`;
+        }
+        
+        html += `<button class="main-btn" onclick="goHome('${type}')">🏠 Back to Home</button>`;
+        resultDiv.innerHTML = html;
+      } else {
+        document.getElementById('subjQuizContent').style.display = 'none';
+        const resultDiv = document.getElementById('subjResultArea');
+        resultDiv.style.display = 'block';
+        
+        let html = `<h3>🏁 Final Score: ${state.score}/${state.questions.length}</h3>`;
+        
+        if(state.wrong.length > 0) {
+          html += `<button class="main-btn" style="background:#e67e22; color:white; margin:10px 0;" onclick="openReview('${type}')">
+            🔍 Review Wrong (${state.wrong.length})</button>`;
+        }
+        
+        html += `<button class="main-btn" onclick="goHome('${type}')">🏠 Back to Home</button>`;
+        resultDiv.innerHTML = html;
       }
-      
-      html += `<button class="main-btn" onclick="goHome('${type}')">🏠 Home</button>`;
-      resultDiv.innerHTML = html;
       
       document.getElementById('timerDisplay').style.display = 'none';
       document.getElementById('quitBtn').style.display = 'none';
@@ -694,14 +1513,15 @@
       updateUI(type);
     }
 
+    // ==================== REVIEW MODAL ====================
     function openReview(type) {
       const list = document.getElementById('reviewList');
       list.innerHTML = '';
       
       quizState[type].wrong.forEach(q => {
-        let html = `<div class="list-item"><strong>${q.question}</strong>`;
-        if(q.explanation) html += `<div style="margin-top:5px;">${q.explanation}</div>`;
-        if(q.image) html += `<img src="${q.image}" class="exp-img" style="max-height:100px;" onclick="openFullImg('${q.image}')">`;
+        let html = `<div class="list-item"><strong>❓ ${q.question}</strong>`;
+        if(q.explanation) html += `<div style="margin-top:8px;">📝 ${q.explanation}</div>`;
+        if(q.image) html += `<img src="${q.image}" class="exp-img" style="max-height:100px; margin-top:8px;" onclick="openFullImg('${q.image}')">`;
         html += '</div>';
         list.innerHTML += html;
       });
@@ -709,6 +1529,7 @@
       document.getElementById('reviewModal').style.display = 'block';
     }
 
+    // ==================== SAVED LIST MODAL ====================
     function openSavedList(type) {
       const list = document.getElementById('savedList');
       const printSection = document.getElementById('printSection');
@@ -717,8 +1538,8 @@
       
       quizState[type].bookmarks.forEach((q, i) => {
         let html = `<div class="list-item"><strong>${i+1}. ${q.question}</strong>`;
-        if(q.explanation) html += `<div>${q.explanation}</div>`;
-        if(q.image) html += `<img src="${q.image}" class="exp-img" style="max-height:80px;" onclick="openFullImg('${q.image}')">`;
+        if(q.explanation) html += `<div style="margin-top:8px;">${q.explanation}</div>`;
+        if(q.image) html += `<img src="${q.image}" class="exp-img" style="max-height:80px; margin-top:8px;" onclick="openFullImg('${q.image}')">`;
         html += '</div>';
         list.innerHTML += html;
         
@@ -732,6 +1553,7 @@
       window.print();
     }
 
+    // ==================== TOGGLE BOOKMARK ====================
     function toggleBookmark(type) {
       const state = quizState[type];
       const q = state.questions[state.currentIdx];
@@ -744,14 +1566,23 @@
       }
       
       saveData(type);
-      showQuestion(type); // Refresh to update bookmark icon
+      showQuestion(type); // Refresh to update icon
     }
 
+    // ==================== TOGGLE COLLECTION (HEART) ====================
     function toggleCollection(type, subject, chapter) {
       if(type !== 'mcq') return;
       
       const state = quizState.mcq;
       const q = state.questions[state.currentIdx];
+      
+      if(!subject || !chapter) {
+        findQuestionMeta(q, 'mcq');
+        subject = q.sub;
+        chapter = q.ch;
+      }
+      
+      if(!subject || !chapter) return;
       
       if(!state.collections[subject]) state.collections[subject] = {};
       if(!state.collections[subject][chapter]) state.collections[subject][chapter] = [];
@@ -759,6 +1590,8 @@
       const index = state.collections[subject][chapter].findIndex(i => i.question === q.question);
       if(index > -1) {
         state.collections[subject][chapter].splice(index, 1);
+        
+        // Clean up empty structures
         if(state.collections[subject][chapter].length === 0) {
           delete state.collections[subject][chapter];
           if(Object.keys(state.collections[subject]).length === 0) {
@@ -771,56 +1604,10 @@
       
       saveData('mcq');
       showQuestion('mcq');
+      updateUI('mcq');
     }
 
-    function toggleExp() {
-      const box = document.getElementById('subjExpBox');
-      box.style.display = box.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function toggleTracker(type) {
-      const tracker = document.getElementById(`${type}Tracker`);
-      tracker.style.display = tracker.style.display === 'block' ? 'none' : 'block';
-      
-      if(tracker.style.display === 'block') {
-        renderTracker(type);
-      }
-    }
-
-    function renderTracker(type) {
-      const state = quizState[type];
-      const data = type === 'mcq' ? mcqData : subjData;
-      const tracker = document.getElementById(`${type}Tracker`);
-      
-      let html = '<h3 style="text-align:center;">📅 Revision Status</h3>';
-      
-      Object.keys(data).forEach(sub => {
-        html += `<div class="subject-group"><div class="subject-title">${sub}</div>`;
-        
-        Object.keys(data[sub]).forEach(ch => {
-          const key = `${sub}_${ch}`;
-          const last = state.revisions[key];
-          let status = '#e74c3c', date = 'Never';
-          
-          if(last) {
-            const days = (Date.now() - last) / (1000 * 60 * 60 * 24);
-            date = new Date(last).toLocaleDateString();
-            if(days < 7) status = '#2ecc71';
-            else if(days < 15) status = '#f1c40f';
-          }
-          
-          html += `<div class="chapter-row">
-            <div><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${status}; margin-right:5px;"></span>${ch}</div>
-            <span>${date}</span>
-          </div>`;
-        });
-        
-        html += '</div>';
-      });
-      
-      tracker.innerHTML = html;
-    }
-
+    // ==================== COLLECTION FUNCTIONS ====================
     function toggleCollection(type) {
       if(type !== 'mcq') return;
       
@@ -853,56 +1640,84 @@
       }
     }
 
-    function startCollectionQuiz(type) {
-      if(type !== 'mcq') return;
+    // ==================== TRACKER FUNCTIONS ====================
+    function toggleTracker(type) {
+      const tracker = document.getElementById(type + 'Tracker');
+      tracker.style.display = tracker.style.display === 'block' ? 'none' : 'block';
       
-      const sub = document.getElementById('mcqCollSub').value;
-      const ch = document.getElementById('mcqCollCh').value;
-      const state = quizState.mcq;
-      
-      let questions = [];
-      
-      if(sub === 'all') {
-        Object.keys(state.collections).forEach(s => {
-          Object.keys(state.collections[s]).forEach(c => {
-            questions = questions.concat(state.collections[s][c]);
-          });
-        });
-      } else if(ch === 'all') {
-        Object.keys(state.collections[sub]).forEach(c => {
-          questions = questions.concat(state.collections[sub][c]);
-        });
-      } else {
-        questions = state.collections[sub][ch] || [];
+      if(tracker.style.display === 'block') {
+        renderTracker(type);
       }
-      
-      if(!questions.length) return alert('No questions found!');
-      
-      state.isWeakMode = false;
-      state.questions = [...questions].sort(() => Math.random() - 0.5);
-      state.currentIdx = 0;
-      state.score = 0;
-      state.wrong = [];
-      
-      showQuiz('mcq');
     }
 
+    function renderTracker(type) {
+      const state = quizState[type];
+      const data = type === 'mcq' ? mcqData : subjData;
+      const tracker = document.getElementById(type + 'Tracker');
+      
+      let html = '<h3>📅 Revision Status</h3>';
+      
+      Object.keys(data).forEach(sub => {
+        if(!data[sub]) return;
+        
+        html += '<div class="subject-group">';
+        html += `<div class="subject-title">${sub}</div>`;
+        
+        Object.keys(data[sub]).forEach(ch => {
+          if(!data[sub][ch]) return;
+          
+          const key = sub + '_' + ch;
+          const lastRev = state.revisions[key];
+          let statusClass = 'status-red';
+          let dateText = 'Never';
+          
+          if(lastRev) {
+            const days = Math.floor((Date.now() - lastRev) / (1000 * 60 * 60 * 24));
+            dateText = new Date(lastRev).toLocaleDateString();
+            if(days <= 7) statusClass = 'status-green';
+            else if(days <= 15) statusClass = 'status-yellow';
+          }
+          
+          html += `<div class="chapter-row">
+            <div><span class="status-badge ${statusClass}"></span>${ch}</div>
+            <span style="font-size:12px;">${dateText}</span>
+          </div>`;
+        });
+        
+        html += '</div>';
+      });
+      
+      tracker.innerHTML = html;
+    }
+
+    // ==================== TOGGLE EXPLANATION ====================
+    function toggleExp() {
+      const box = document.getElementById('subjExpBox');
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // ==================== TIMER ====================
     function startTimer(seconds, type) {
+      if(timerInterval) clearInterval(timerInterval);
+      
       const display = document.getElementById('timerDisplay');
       display.style.display = 'block';
       
       timerInterval = setInterval(() => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
-        display.innerText = `⏳ ${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+        display.innerText = `⏳ ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         
-        if(--seconds < 0) {
+        seconds--;
+        if(seconds < 0) {
           clearInterval(timerInterval);
+          timerInterval = null;
           showFinalResult(type);
         }
       }, 1000);
     }
 
+    // ==================== SESSION MANAGEMENT ====================
     function saveSession(type) {
       const state = quizState[type];
       const session = {
@@ -919,10 +1734,15 @@
 
     function checkResumeStatus(type) {
       const session = localStorage.getItem(STORAGE[type].session);
-      document.getElementById(`${type}ResumeBtn`).style.display = session ? 'block' : 'none';
-      if(session && type === currentTab) {
-        document.getElementById(`${type}ResumeBtn`).innerText = 
-          `🕒 Resume (Q. ${JSON.parse(session).currentIdx + 1})`;
+      const btn = document.getElementById(type + 'ResumeBtn');
+      if(btn) {
+        if(session) {
+          const data = JSON.parse(session);
+          btn.innerText = `🕒 Resume (Q. ${data.currentIdx + 1})`;
+          btn.style.display = 'block';
+        } else {
+          btn.style.display = 'none';
+        }
       }
     }
 
@@ -942,22 +1762,32 @@
       }
     }
 
+    // ==================== HOME ====================
     function goHome(type) {
-      document.getElementById(`${type}Setup`).style.display = 'block';
-      document.getElementById(`${type}Quiz`).style.display = 'none';
-      document.getElementById(`${type}Progress`).style.display = 'none';
+      document.getElementById(type + 'Setup').style.display = 'block';
+      document.getElementById(type + 'Quiz').style.display = 'none';
+      document.getElementById(type + 'Progress').style.display = 'none';
       window.speechSynthesis.cancel();
+      
+      if(timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      
+      document.getElementById('timerDisplay').style.display = 'none';
+      document.getElementById('quitBtn').style.display = 'none';
       
       updateUI(type);
       checkResumeStatus(type);
     }
 
     function quitQuiz() {
-      if(confirm('Quit quiz?')) {
+      if(confirm('Quit current quiz?')) {
         showFinalResult(currentTab);
       }
     }
 
+    // ==================== DATA PERSISTENCE ====================
     function saveData(type) {
       const state = quizState[type];
       localStorage.setItem(STORAGE[type].bookmarks, JSON.stringify(state.bookmarks));
@@ -966,20 +1796,24 @@
       localStorage.setItem(STORAGE[type].collections, JSON.stringify(state.collections));
     }
 
+    // ==================== EXPORT/IMPORT ====================
     function exportData(type) {
       const state = quizState[type];
       const data = {
         bookmarks: state.bookmarks,
         weak: state.weak,
         revisions: state.revisions,
-        collections: state.collections
+        collections: state.collections,
+        exportDate: new Date().toISOString()
       };
       
-      const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `${type}_backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.href = url;
+      a.download = type + '_backup_' + new Date().toISOString().slice(0,10) + '.json';
       a.click();
+      URL.revokeObjectURL(url);
     }
 
     function importData(type, event) {
@@ -990,8 +1824,10 @@
       reader.onload = function(e) {
         try {
           const data = JSON.parse(e.target.result);
+          
           if(confirm('Restore this backup? Current data will be overwritten.')) {
             const state = quizState[type];
+            
             if(data.bookmarks) {
               state.bookmarks = data.bookmarks;
               localStorage.setItem(STORAGE[type].bookmarks, JSON.stringify(data.bookmarks));
@@ -1013,33 +1849,48 @@
             alert('Restore complete!');
           }
         } catch(err) {
-          alert('Invalid backup file!');
+          alert('Invalid backup file! ' + err.message);
         }
       };
       reader.readAsText(file);
+      
+      // Clear input
+      event.target.value = '';
     }
 
+    // ==================== SPEECH ====================
     function speak(text) {
       window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.rate = parseFloat(document.getElementById('voiceSpeed').value) || 1;
-      window.speechSynthesis.speak(utter);
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = parseFloat(document.getElementById('voiceSpeed').value) || 1;
+      utterance.lang = 'hi-IN';
+      window.speechSynthesis.speak(utterance);
     }
 
+    function speakQuestion(type) {
+      const state = quizState[type];
+      if(state.questions && state.questions[state.currentIdx]) {
+        speak(state.questions[state.currentIdx].question);
+      }
+    }
+
+    // ==================== IMAGE MODAL ====================
     function openFullImg(src) {
-      document.getElementById('fullImage').src = src;
-      document.getElementById('imageModal').style.display = 'block';
+      if(src && src.trim() !== '') {
+        document.getElementById('fullImage').src = src;
+        document.getElementById('imageModal').style.display = 'block';
+      }
     }
 
+    // ==================== CLOSE MODAL ====================
     function closeModal(type) {
       document.getElementById(type === 'review' ? 'reviewModal' : 'savedModal').style.display = 'none';
     }
 
-    // Initialize on load
-    window.onload = init;
-    window.onclick = function(e) {
-      if(e.target.classList.contains('modal')) {
-        e.target.style.display = 'none';
+    // Close modals when clicking outside
+    window.onclick = function(event) {
+      if(event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
       }
     };
   </script>
