@@ -361,6 +361,16 @@
       margin-bottom: 5px; 
       display: block; 
     }
+    
+    /* इनपुट फील्ड को हमेशा एक्टिव रखने के लिए */
+    .challenge-grid input {
+      background: white;
+      border: 2px solid var(--border-color);
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 8px;
+    }
 
     /* क्विज एरिया */
     .question-card { 
@@ -412,7 +422,7 @@
       cursor: not-allowed;
     }
     
-    /* नेक्स्ट बटन - अब यह दिखेगा */
+    /* नेक्स्ट बटन */
     #nextBtn { 
       display: none; 
       background: #28a745 !important; 
@@ -491,7 +501,7 @@
     .status-yellow { background: #f1c40f; }
     .status-red { background: #e74c3c; }
 
-    /* बैकअप एरिया - अब इसे क्विज के दौरान hide करेंगे */
+    /* बैकअप एरिया */
     .backup-area { 
       display: flex; 
       gap: 10px; 
@@ -712,7 +722,7 @@
       </div>
     </div>
     
-    <!-- MCQ सेक्शन - वेबसाइट 1 जैसा -->
+    <!-- MCQ सेक्शन -->
     <div id="mcqSection" class="quiz-section">
       <button class="back-btn" onclick="backToModeSelection()">← वापस मुख्य मेनू</button>
       
@@ -738,11 +748,11 @@
         <div class="challenge-grid">
           <div>
             <label>सवाल:</label>
-            <input type="number" id="mcqCustomLimit" placeholder="10" value="5">
+            <input type="number" id="mcqCustomLimit" placeholder="जितने चाहें" value="5" min="1" max="100">
           </div>
           <div>
             <label>मिनट:</label>
-            <input type="number" id="mcqCustomTime" placeholder="5" value="0">
+            <input type="number" id="mcqCustomTime" placeholder="0 = बिना टाइमर" value="0" min="0" max="180">
           </div>
         </div>
 
@@ -802,11 +812,11 @@
         </div>
       </div>
       
-      <!-- क्विज एरिया - इसमें नेक्स्ट बटन होगा -->
+      <!-- क्विज एरिया -->
       <div id="mcqQuizArea" style="display:none;"></div>
     </div>
     
-    <!-- Subjective सेक्शन - वेबसाइट 2 जैसा (बिल्कुल वैसा ही) -->
+    <!-- Subjective सेक्शन -->
     <div id="subjectiveSection" class="quiz-section">
       <button class="back-btn" onclick="backToModeSelection()">← वापस मुख्य मेनू</button>
       
@@ -832,11 +842,11 @@
         <div class="challenge-grid">
           <div>
             <label>सवाल:</label>
-            <input type="number" id="subjCustomLimit" placeholder="10" value="5">
+            <input type="number" id="subjCustomLimit" placeholder="जितने चाहें" value="5" min="1" max="100">
           </div>
           <div>
             <label>मिनट:</label>
-            <input type="number" id="subjCustomTime" placeholder="5" value="0">
+            <input type="number" id="subjCustomTime" placeholder="0 = बिना टाइमर" value="0" min="0" max="180">
           </div>
         </div>
 
@@ -900,7 +910,7 @@
       <div id="subjQuizArea" style="display:none;"></div>
     </div>
     
-    <!-- बैकअप बटन - अब इसका अपना ID है ताकि hide कर सकें -->
+    <!-- बैकअप बटन -->
     <div class="backup-area" id="backupArea">
       <button class="backup-btn" onclick="exportData()">📤 Export Data</button>
       <button class="backup-btn" onclick="document.getElementById('importFile').click()">📥 Import Data</button>
@@ -1469,8 +1479,14 @@
         
         const subject = document.getElementById(mode + "SubjectSelect").value;
         const chapter = document.getElementById(mode + "ChapterSelect").value;
-        const limit = parseInt(document.getElementById(mode + "CustomLimit").value) || 5;
-        const time = parseInt(document.getElementById(mode + "CustomTime").value) || 0;
+        
+        // सवालों की संख्या लें - डिफॉल्ट 5
+        const limitInput = document.getElementById(mode + "CustomLimit");
+        const limit = parseInt(limitInput.value) || 5;
+        
+        // समय लें - डिफॉल्ट 0
+        const timeInput = document.getElementById(mode + "CustomTime");
+        const time = parseInt(timeInput.value) || 0;
         
         state.currentSub = subject;
         state.currentCh = chapter;
