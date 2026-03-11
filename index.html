@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Elite Study Hub Pro</title>
+  <title>📚 Mega Quiz Platform - MCQ + Subjective</title>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
-  
   <style>
     :root {
       --bg-color: #f5f2eb; --card-bg: #ffffff; --text-color: #2c3e50;
       --question-bg: #ffffff; --border-color: #e0dcd0; --btn-bg: #faf9f6; 
-      --primary-color: #5d6d7e; --progress-color: #27ae60; --accent-blue: #3498db;
+      --primary-color: #5d6d7e; --progress-color: #27ae60;
+      --mcq-color: #3498db; --subj-color: #e67e22;
     }
     [data-theme="dark"] {
       --bg-color: #1a1a1a; --card-bg: #2d2d2d; --text-color: #e0e0e0;
@@ -19,306 +19,1029 @@
     }
     body { font-family: 'Rubik', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; transition: 0.3s; }
     
-    /* Navigation Bar */
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; margin-bottom: 20px; }
-    .logo { font-size: 22px; font-weight: 600; color: var(--primary-color); cursor: pointer; }
-    .nav-btns { display: flex; gap: 10px; align-items: center; }
+    /* Tab Styles */
+    .tab-container { display: flex; gap: 10px; margin-bottom: 20px; max-width: 700px; margin: 0 auto 20px; }
+    .tab { flex: 1; padding: 15px; text-align: center; border-radius: 15px; cursor: pointer; font-weight: 600; transition: 0.3s; background: var(--card-bg); border: 2px solid transparent; }
+    .tab.active { border-color: var(--mcq-color); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    .tab.mcq.active { background: linear-gradient(135deg, #f0f7ff, #d0ebff); color: #1971c2; }
+    .tab.subj.active { background: linear-gradient(135deg, #fff5f0, #ffe8d9); color: #d9480f; }
 
-    .container { max-width: 700px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border-color); position: relative; }
+    .container { max-width: 700px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border-color); display: none; }
+    .container.active { display: block; }
 
-    /* Dashboard Cards */
-    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-    .mode-card { background: var(--card-bg); padding: 30px 15px; border-radius: 20px; text-align: center; cursor: pointer; border: 1px solid var(--border-color); transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-    .mode-card:hover { transform: translateY(-5px); border-color: var(--accent-blue); }
-    .mode-icon { font-size: 45px; margin-bottom: 10px; display: block; }
-    .mode-card h3 { margin: 10px 0 5px; }
-    .mode-card p { font-size: 12px; opacity: 0.7; margin: 0; }
-
-    /* Utility Grid (Buttons like Website 1) */
-    .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-    .grid-btn { display: flex; align-items: center; padding: 15px; border-radius: 15px; border: none; cursor: pointer; transition: 0.3s; text-align: left; }
-    .orange { background: #fff9f0; color: #d9480f; border: 1px solid #ffdec0; }
-    .blue { background: #f0f7ff; color: #1971c2; border: 1px solid #b2dfff; }
-    .red { background: #fff5f5; color: #c92a2a; border: 1px solid #ffc9c9; }
-    .yellow { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
-
-    /* Form Elements */
-    select, input, .main-btn { padding: 12px; font-size: 16px; margin-bottom: 12px; width: 100%; border-radius: 10px; border: 1px solid var(--border-color); background-color: var(--btn-bg); color: var(--text-color); box-sizing: border-box; }
-    .main-btn { background: var(--primary-color); color: white; font-weight: 600; cursor: pointer; border: none; }
-    .main-btn:hover { opacity: 0.9; }
-
-    /* Quiz Area */
-    .question-card { background: var(--question-bg); border-left: 6px solid var(--primary-color); padding: 20px; border-radius: 12px; margin-bottom: 20px; font-size: 22px; font-weight: 550; line-height: 1.5; position: relative; }
-    .option-btn { display: block; background: var(--card-bg); border: 2px solid var(--border-color); color: var(--text-color); padding: 14px; margin: 10px 0; border-radius: 10px; cursor: pointer; width: 100%; text-align: left; font-size: 18px; transition: 0.2s; }
-    .option-btn:hover { border-color: var(--accent-blue); background: var(--btn-bg); }
-    
+    /* Common Styles */
     .progress-container { width: 100%; background: #e0dcd0; height: 8px; border-radius: 5px; margin-bottom: 15px; display: none; }
     #progressBar { height: 100%; width: 0%; background: var(--progress-color); border-radius: 5px; transition: 0.4s; }
 
-    .exp-box { display: none; background: #eef2f7; border-left: 5px solid var(--accent-blue); padding: 15px; margin-top: 15px; border-radius: 8px; font-size: 16px; }
-    [data-theme="dark"] .exp-box { background: #3a3a3a; }
+    .header-btns { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; max-width: 700px; margin: 0 auto 10px; }
+    .header-left { display: flex; align-items: center; gap: 8px; }
 
-    #timerDisplay { font-weight: bold; color: #e74c3c; font-size: 18px; display: none; }
+    #themeBtn, #quitBtn { padding: 8px 12px; font-size: 13px; background: var(--primary-color); color: white; border: none; cursor: pointer; border-radius: 8px; }
+    #quitBtn { background: #e74c3c; display: none; }
 
-    @media (max-width: 500px) { .dashboard-grid, .button-grid { grid-template-columns: 1fr; } }
+    .voice-switch { position: relative; display: inline-block; width: 34px; height: 18px; }
+    .voice-switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--progress-color); }
+    input:checked + .slider:before { transform: translateX(16px); }
+
+    #timerDisplay { font-weight: bold; font-size: 18px; color: #e74c3c; display: none; text-align: center; flex-grow: 1; }
+
+    h2 { text-align: center; margin-top: 0; color: var(--primary-color); }
+    select, input, .main-btn { padding: 12px; font-size: 16px; margin-bottom: 12px; width: 100%; border-radius: 10px; border: 1px solid var(--border-color); background-color: var(--btn-bg); color: var(--text-color); box-sizing: border-box; }
+
+    /* MCQ Specific */
+    .mcq-only { display: none; }
+    .mcq-active .mcq-only { display: block; }
+    
+    .option-btn { display: block; background: var(--card-bg); border: 2px solid var(--border-color); color: var(--text-color); padding: 14px; margin: 10px 0; border-radius: 10px; cursor: pointer; width: 100%; text-align: left; font-size: 19px; font-weight: 500; transition: 0.2s; }
+    .option-btn:hover { border-color: var(--primary-color); background: var(--btn-bg); }
+    #nextBtn { display: none; background: #28a745 !important; color: white !important; border: none; text-align: center; margin-top: 15px; width: 100%; padding: 14px; border-radius: 10px; font-size: 18px; cursor: pointer; }
+    
+    /* Subjective Specific */
+    .subj-only { display: none; }
+    .subj-active .subj-only { display: block; }
+    
+    .exp-box { background: #dff9fb; padding: 15px; border-radius: 10px; display: none; margin-bottom: 15px; color: #130f40; border: 1px dashed #3498db; font-size: 18px; }
+    [data-theme="dark"] .exp-box { background: #3d3d3d; color: #fff; }
+    
+    .exp-img { width: 100%; max-width: 100%; border-radius: 8px; margin-top: 10px; cursor: zoom-in; border: 1px solid var(--border-color); }
+    
+    .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .action-btns .main-btn { margin-bottom: 0; }
+
+    /* Common Elements */
+    .question-card { background: var(--question-bg); border-left: 6px solid var(--primary-color); padding: 20px; border-radius: 12px; margin-bottom: 20px; font-size: 22px; font-weight: 550; line-height: 1.5; position: relative; }
+    .speak-btn { position: absolute; right: 10px; top: 10px; background: none; border: none; cursor: pointer; font-size: 20px; opacity: 0.6; }
+
+    .bookmark-btn { background: transparent; font-size: 20px; padding: 0; border: none; cursor: pointer; }
+    .bookmark-btn svg { width: 28px; height: 28px; fill: none; stroke: var(--text-color); stroke-width: 2; }
+    .bookmark-btn.active svg { fill: var(--text-color); }
+
+    /* Grid Buttons */
+    .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+    .grid-card { display: flex; align-items: center; padding: 20px 15px; min-height: 100px; border-radius: 20px; border: none; cursor: pointer; text-align: left; transition: 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05); width: 100%; }
+    .grid-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    .orange-card { background: linear-gradient(135deg, #fff9f0 0%, #ffe8cc 100%); color: #d9480f; }
+    .blue-card { background: linear-gradient(135deg, #f0f7ff 0%, #d0ebff 100%); color: #1971c2; }
+    .red-card { background: linear-gradient(135deg, #fff5f5 0%, #ffe3e3 100%); color: #c92a2a; }
+    .yellow-card { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); color: #92400e; }
+    .card-icon { font-size: 38px; margin-right: 15px; }
+    .card-content { display: flex; flex-direction: column; text-align: left; }
+    .card-title { font-weight: 600; font-size: 17px; }
+    .card-sub { font-size: 11.5px; opacity: 0.8; margin-top: 5px; }
+
+    /* Modals */
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); }
+    .modal-content { background: var(--card-bg); margin: 5% auto; padding: 20px; border-radius: 15px; width: 90%; max-width: 550px; max-height: 80vh; overflow-y: auto; position: relative; }
+    .close-modal { position: sticky; top: 0; float: right; font-size: 28px; cursor: pointer; color: #e74c3c; }
+
+    #imageModal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); text-align: center; }
+    #fullImage { max-width: 95%; max-height: 90%; margin-top: 50px; }
+    .close-img-modal { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
+
+    .tracker-card, .collection-card { display: none; margin-top: 10px; border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; background: var(--card-bg); }
+    .subject-group { margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; }
+    .subject-title { background: var(--primary-color); color: white; padding: 10px; font-weight: bold; }
+    .chapter-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid var(--border-color); }
+
+    .json-upload { margin-top: 20px; padding-top: 15px; border-top: 2px dashed var(--border-color); }
+    .file-input-group { display: flex; gap: 10px; margin-bottom: 10px; }
+    .file-input-group label { flex: 1; background: var(--btn-bg); padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; border: 1px solid var(--border-color); }
+
+    .backup-area { display: flex; gap: 10px; margin-top: 15px; }
+    .backup-btn { flex: 1; padding: 10px; font-size: 12px; background: #95a5a6; color: white; border: none; border-radius: 8px; cursor: pointer; }
+
+    .list-item { background: var(--bg-color); padding: 12px; border-radius: 8px; margin-bottom: 10px; }
+
+    @media (max-width: 500px) {
+      .button-grid { grid-template-columns: 1fr; }
+      .file-input-group { flex-direction: column; }
+    }
+
+    @media print {
+      .no-print { display: none !important; }
+      #printSection { display: block !important; }
+      .print-item { border-bottom: 1px solid #eee; padding: 10px; }
+    }
   </style>
 </head>
 <body>
 
-  <nav>
-    <div class="logo" onclick="location.reload()">📖 Elite Study Hub</div>
-    <div id="timerDisplay">00:00</div>
-    <div class="nav-btns">
-        <button onclick="toggleTheme()" style="background:none; border:none; font-size:20px; cursor:pointer;">🌙</button>
-        <button id="quitBtn" onclick="quitQuiz()" style="display:none; background:#e74c3c; color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;">Quit</button>
+  <!-- Image Modal -->
+  <div id="imageModal" onclick="this.style.display='none'">
+    <span class="close-img-modal">&times;</span>
+    <img id="fullImage">
+  </div>
+
+  <!-- Print Section -->
+  <div id="printSection" style="display:none; padding: 20px;"></div>
+
+  <!-- Header Controls -->
+  <div class="header-btns no-print">
+    <div class="header-left">
+      <button id="themeBtn" onclick="toggleTheme()">🌙</button>
+      <div style="display:flex; align-items:center; gap:5px;">
+        <span>🔊</span>
+        <label class="voice-switch">
+          <input type="checkbox" id="autoReadSwitch">
+          <span class="slider"></span>
+        </label>
+        <input type="range" id="voiceSpeed" min="0.5" max="1.5" step="0.1" value="1" style="width:50px;">
+      </div>
     </div>
-  </nav>
+    <div id="timerDisplay">⏳ 00:00</div>
+    <button id="quitBtn" onclick="quitQuiz()">⏹️ Quit</button>
+  </div>
 
-  <div class="container">
-    <div class="progress-container" id="pCont"><div id="progressBar"></div></div>
+  <!-- Tabs -->
+  <div class="tab-container no-print">
+    <div class="tab mcq active" onclick="switchTab('mcq')">📝 MCQ Quiz</div>
+    <div class="tab subj" onclick="switchTab('subj')">📖 Subjective Quiz</div>
+  </div>
 
-    <div id="homeArea">
-        <h2 style="text-align:center; margin-top:0;">Welcome, Student!</h2>
-        <p style="text-align:center; opacity:0.7;">अपनी पढ़ाई का तरीका चुनें</p>
+  <!-- MCQ Container -->
+  <div id="mcqContainer" class="container active">
+    <div class="progress-container" id="mcqProgress"><div id="mcqProgressBar"></div></div>
+    
+    <div id="mcqSetup">
+      <h2>🎯 MCQ Practice</h2>
+      <button id="mcqResumeBtn" class="main-btn" style="background:#9b59b6; color:white; display:none;" onclick="resumeQuiz('mcq')">🕒 Resume Previous</button>
+      
+      <select id="mcqSubject" onchange="updateChapters('mcq')">
+        <option value="all">-- Load Subjects --</option>
+      </select>
+      <select id="mcqChapter">
+        <option value="all">-- All Chapters --</option>
+      </select>
+
+      <div class="challenge-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
+        <div><label>Questions:</label><input type="number" id="mcqLimit" value="10"></div>
+        <div><label>Minutes:</label><input type="number" id="mcqTime" value="5"></div>
+      </div>
+
+      <button class="main-btn" onclick="startQuiz('mcq')" style="background:#5d6d7e; color:white;">🚀 Start MCQ Quiz</button>
+
+      <div class="button-grid">
+        <button id="mcqWeakBtn" class="grid-card orange-card" style="display:none;" onclick="startWeakQuiz('mcq')">
+          <span class="card-icon">🎯</span>
+          <div class="card-content">
+            <div class="card-title">Weak Areas (<span id="mcqWeakCount">0</span>)</div>
+            <div class="card-sub">Practice your weak questions</div>
+          </div>
+        </button>
         
-        <div class="dashboard-grid">
-            <div class="mode-card" onclick="openSetup('mcq')">
-                <span class="mode-icon">🎯</span>
-                <h3>MCQ Quiz</h3>
-                <p>बहुविकल्पीय प्रश्न (Options वाले)</p>
-            </div>
-            <div class="mode-card" onclick="openSetup('subj')">
-                <span class="mode-icon">📝</span>
-                <h3>Subjective</h3>
-                <p>प्रश्न-उत्तर और व्याख्या</p>
-            </div>
-        </div>
+        <button id="mcqCollectionBtn" class="grid-card blue-card" style="display:none;" onclick="toggleCollection('mcq')">
+          <span class="card-icon">❤️</span>
+          <div class="card-content">
+            <div class="card-title">Collections</div>
+            <div class="card-sub">Subject-wise saved questions</div>
+          </div>
+        </button>
+        
+        <button class="grid-card red-card" onclick="toggleTracker('mcq')">
+          <span class="card-icon">📊</span>
+          <div class="card-content">
+            <div class="card-title">Revision Tracker</div>
+            <div class="card-sub">Track your progress</div>
+          </div>
+        </button>
+        
+        <button id="mcqSavedBtn" class="grid-card yellow-card" style="display:none;" onclick="startSavedQuiz('mcq')">
+          <span class="card-icon">⭐</span>
+          <div class="card-content">
+            <div class="card-title">Bookmarks</div>
+            <div class="card-sub">Practice saved questions</div>
+          </div>
+        </button>
+      </div>
 
-        <div class="button-grid">
-            <button class="grid-btn orange" onclick="startSpecial('weak')">
-                <span style="font-size:25px; margin-right:10px;">🎯</span>
-                <div><b>Weak Areas</b><br><small>Improve mistakes</small></div>
-            </button>
-            <button class="grid-btn blue" onclick="startSpecial('saved')">
-                <span style="font-size:25px; margin-right:10px;">⭐</span>
-                <div><b>Bookmarks</b><br><small>Saved questions</small></div>
-            </button>
-        </div>
+      <div id="mcqTracker" class="tracker-card"></div>
+      <div id="mcqCollection" class="collection-card">
+        <h3>❤️ Collection Practice</h3>
+        <select id="mcqCollSub" onchange="updateCollChapters('mcq')"></select>
+        <select id="mcqCollCh"></select>
+        <button class="main-btn" onclick="startCollectionQuiz('mcq')" style="background:#27ae60;">Start</button>
+      </div>
     </div>
 
-    <div id="setupArea" style="display:none;">
-        <h2 id="setupTitle">Quiz Settings</h2>
-        <select id="subjectSelect" onchange="updateChapters()"><option>Loading...</option></select>
-        <select id="chapterSelect"><option value="all">-- All Chapters --</option></select>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <input type="number" id="qLimit" placeholder="सवाल (Max)">
-            <input type="number" id="tLimit" placeholder="मिनट">
-        </div>
-        <button class="main-btn" onclick="startQuiz()">🚀 Start Quiz</button>
-        <button class="main-btn" onclick="location.reload()" style="background:#95a5a6;">🔙 Back</button>
-    </div>
-
-    <div id="quizArea" style="display:none;">
-        <div id="qCount" style="text-align:right; font-size:13px; font-weight:bold; margin-bottom:5px;"></div>
-        <div id="questionBox" class="question-card"></div>
+    <div id="mcqQuiz" style="display:none;">
+      <div id="mcqQuizContent">
+        <div id="mcqCount" style="text-align:right; font-size:14px;"></div>
+        <div id="mcqQuestion" class="question-card"></div>
         <div id="mcqOptions"></div>
-        
-        <div id="subjControls" style="display:none;">
-            <button class="main-btn" style="background:var(--accent-blue);" onclick="toggleExp()">👁️ Show Answer</button>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <button class="main-btn" style="background:var(--progress-color);" onclick="handleResponse(true)">✅ I Knew It</button>
-                <button class="main-btn" style="background:#e67e22;" onclick="handleResponse(false)">❌ Need Review</button>
-            </div>
-        </div>
-
-        <div id="expBox" class="exp-box"></div>
-        <button id="nextBtn" class="main-btn" style="display:none; background:var(--progress-color);" onclick="nextQuestion()">Next Question ➡️</button>
+        <div id="mcqResult" style="text-align:center; font-weight:bold;"></div>
+        <button id="mcqNextBtn" onclick="nextQuestion('mcq')" style="display:none; background:#28a745; color:white; border:none; padding:14px; border-radius:10px; width:100%; margin-top:15px;">➡️ Next</button>
+        <div id="mcqExplanation" class="explanation-box" style="background:#eef2f7; border-left:5px solid #3498db; padding:15px; margin-top:15px; border-radius:8px; display:none;"></div>
+      </div>
+      <div id="mcqResultArea" style="display:none; text-align:center;"></div>
     </div>
 
-    <div id="resultArea" style="display:none; text-align:center;">
-        <h2 id="resTitle">🏁 Results</h2>
-        <h1 id="resScore">0/0</h1>
-        <button class="main-btn" onclick="location.reload()">🏠 Home</button>
+    <div class="backup-area no-print">
+      <button class="backup-btn" onclick="exportData('mcq')">📤 MCQ Backup</button>
+      <label class="backup-btn" style="text-align:center;">📥 MCQ Restore
+        <input type="file" id="mcqImport" style="display:none" onchange="importData('mcq', event)">
+      </label>
+    </div>
+  </div>
+
+  <!-- Subjective Container -->
+  <div id="subjContainer" class="container">
+    <div class="progress-container" id="subjProgress"><div id="subjProgressBar"></div></div>
+    
+    <div id="subjSetup">
+      <h2>📝 Subjective Practice</h2>
+      <button id="subjResumeBtn" class="main-btn" style="background:#9b59b6; color:white; display:none;" onclick="resumeQuiz('subj')">🕒 Resume Previous</button>
+      
+      <select id="subjSubject" onchange="updateChapters('subj')">
+        <option value="all">-- Load Subjects --</option>
+      </select>
+      <select id="subjChapter">
+        <option value="all">-- All Chapters --</option>
+      </select>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
+        <div><label>Questions:</label><input type="number" id="subjLimit" value="10"></div>
+        <div><label>Minutes:</label><input type="number" id="subjTime" value="5"></div>
+      </div>
+
+      <button class="main-btn" onclick="startQuiz('subj')" style="background:#e67e22; color:white;">🎯 Start Subjective</button>
+      
+      <button id="subjWeakBtn" class="main-btn" style="background:#e67e22; color:white; display:none;" onclick="startWeakQuiz('subj')">
+        🔄 Weak Areas (<span id="subjWeakCount">0</span>)
+      </button>
+      
+      <button class="main-btn" onclick="toggleTracker('subj')" style="background:#3498db;">📊 Revision Tracker</button>
+      
+      <div style="display:flex; gap:10px;">
+        <button id="subjSavedBtn" class="main-btn" style="background:#f1c40f; color:#000; display:none; flex:1;" onclick="startSavedQuiz('subj')">⭐ Bookmarks</button>
+        <button id="subjViewBtn" class="main-btn" style="background:#3498db; color:#fff; display:none; flex:1;" onclick="openSavedList('subj')">📄 View & Print</button>
+      </div>
+
+      <div id="subjTracker" class="tracker-card"></div>
+    </div>
+
+    <div id="subjQuiz" style="display:none;">
+      <div id="subjQuizContent">
+        <div id="subjCount" style="text-align:right; font-size:14px;"></div>
+        <div id="subjQuestion" class="question-card"></div>
+        <button id="subjShowBtn" onclick="toggleExp()" class="main-btn" style="background:#3498db;">👁️ Show Answer</button>
+        <div id="subjExpBox" class="exp-box"></div>
+        <div class="action-btns">
+          <button onclick="handleResponse('subj', true)" class="main-btn" style="background:var(--progress-color);">✅ Correct</button>
+          <button onclick="handleResponse('subj', false)" class="main-btn" style="background:#e67e22;">⚠️ Need Improvement</button>
+        </div>
+      </div>
+      <div id="subjResultArea" style="display:none; text-align:center;"></div>
+    </div>
+
+    <div class="backup-area no-print">
+      <button class="backup-btn" onclick="exportData('subj')">📤 Subjective Backup</button>
+      <label class="backup-btn" style="text-align:center;">📥 Subjective Restore
+        <input type="file" id="subjImport" style="display:none" onchange="importData('subj', event)">
+      </label>
+    </div>
+  </div>
+
+  <!-- Review Modal -->
+  <div id="reviewModal" class="modal no-print">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('review')">&times;</span>
+      <h3>📋 Review Wrong Questions</h3>
+      <div id="reviewList"></div>
+    </div>
+  </div>
+
+  <!-- Saved List Modal -->
+  <div id="savedModal" class="modal no-print">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('saved')">&times;</span>
+      <h3>⭐ Bookmarked Questions</h3>
+      <button class="main-btn" onclick="printSaved()" style="background:#27ae60;">🖨️ Print</button>
+      <div id="savedList"></div>
     </div>
   </div>
 
   <script>
+    // Data Structures
     let mcqData = {}, subjData = {};
-    let activeMode = '', currentQuestions = [], currentIdx = 0, score = 0, timer;
     
-    // Load Data
-    window.onload = async () => {
-        try {
-            const [r1, r2] = await Promise.all([
-                fetch('Demo.json?v='+Date.now()),
-                fetch('sub.json?v='+Date.now())
-            ]);
-            mcqData = await r1.json();
-            subjData = await r2.json();
-        } catch(e) { console.error("Data load failed"); }
+    // Storage Keys
+    const STORAGE = {
+      mcq: {
+        bookmarks: 'mcq_bookmarks',
+        weak: 'mcq_weak',
+        revisions: 'mcq_revisions',
+        collections: 'mcq_collections',
+        session: 'mcq_session'
+      },
+      subj: {
+        bookmarks: 'subj_bookmarks',
+        weak: 'subj_weak',
+        revisions: 'subj_revisions',
+        collections: 'subj_collections',
+        session: 'subj_session'
+      }
     };
 
-    function openSetup(mode) {
-        activeMode = mode;
-        document.getElementById('homeArea').style.display = 'none';
-        document.getElementById('setupArea').style.display = 'block';
-        document.getElementById('setupTitle').innerText = mode === 'mcq' ? '🎯 MCQ Setup' : '📝 Subjective Setup';
+    // Current State
+    let currentTab = 'mcq';
+    let quizState = {
+      mcq: {
+        questions: [], currentIdx: 0, score: 0, wrong: [],
+        isWeakMode: false, subject: '', chapter: '',
+        bookmarks: [], weak: [], revisions: {}, collections: {}
+      },
+      subj: {
+        questions: [], currentIdx: 0, score: 0, wrong: [],
+        isWeakMode: false, subject: '', chapter: '',
+        bookmarks: [], weak: [], revisions: {}, collections: {}
+      }
+    };
+
+    // Initialize
+    function init() {
+      // Load stored data
+      ['mcq', 'subj'].forEach(type => {
+        const state = quizState[type];
+        state.bookmarks = JSON.parse(localStorage.getItem(STORAGE[type].bookmarks)) || [];
+        state.weak = JSON.parse(localStorage.getItem(STORAGE[type].weak)) || [];
+        state.revisions = JSON.parse(localStorage.getItem(STORAGE[type].revisions)) || {};
+        state.collections = JSON.parse(localStorage.getItem(STORAGE[type].collections)) || {};
+      });
+
+      // Load default JSON files
+      loadJSON('mcq', 'Demo.json');
+      loadJSON('subj', 'sub.json');
+
+      // Setup event listeners
+      document.getElementById('voiceSpeed').onchange = (e) => {
+        localStorage.setItem('voice_speed', e.target.value);
+      };
+    }
+
+    function loadJSON(type, filename) {
+      fetch(filename + '?v=' + Math.random())
+        .then(r => r.json())
+        .then(data => {
+          if(type === 'mcq') mcqData = data;
+          else subjData = data;
+          
+          const select = document.getElementById(`${type}Subject`);
+          select.innerHTML = '<option value="all">-- All Subjects --</option>';
+          Object.keys(data).forEach(s => select.add(new Option(s, s)));
+          
+          updateUI(type);
+        })
+        .catch(() => {
+          alert(`${filename} not found! Please upload using the buttons below.`);
+        });
+    }
+
+    function updateUI(type) {
+      const state = quizState[type];
+      document.getElementById(`${type}WeakBtn`).style.display = state.weak.length ? 'block' : 'none';
+      document.getElementById(`${type}WeakCount`).innerText = state.weak.length;
+      
+      const savedDisplay = state.bookmarks.length ? 'block' : 'none';
+      document.getElementById(`${type}SavedBtn`).style.display = savedDisplay;
+      if(type === 'subj') document.getElementById(`${type}ViewBtn`).style.display = savedDisplay;
+      
+      if(type === 'mcq') {
+        document.getElementById('mcqCollectionBtn').style.display = 
+          Object.keys(state.collections).length ? 'flex' : 'none';
+      }
+      
+      checkResumeStatus(type);
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.tab.${tab}`).classList.add('active');
+      
+      document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
+      document.getElementById(`${tab}Container`).classList.add('active');
+    }
+
+    function toggleTheme() {
+      document.body.hasAttribute('data-theme') 
+        ? document.body.removeAttribute('data-theme')
+        : document.body.setAttribute('data-theme', 'dark');
+    }
+
+    function updateChapters(type) {
+      const subj = document.getElementById(`${type}Subject`).value;
+      const chSelect = document.getElementById(`${type}Chapter`);
+      chSelect.innerHTML = '<option value="all">-- All Chapters --</option>';
+      
+      const data = type === 'mcq' ? mcqData : subjData;
+      if(subj !== 'all' && data[subj]) {
+        Object.keys(data[subj]).forEach(ch => chSelect.add(new Option(ch, ch)));
+      }
+    }
+
+    function startQuiz(type) {
+      const state = quizState[type];
+      state.isWeakMode = false;
+      state.subject = document.getElementById(`${type}Subject`).value;
+      state.chapter = document.getElementById(`${type}Chapter`).value;
+      
+      let questions = [];
+      const data = type === 'mcq' ? mcqData : subjData;
+      
+      if(state.subject === 'all') {
+        Object.keys(data).forEach(s => 
+          Object.keys(data[s]).forEach(ch => 
+            questions = questions.concat(data[s][ch])));
+      } else if(state.chapter === 'all') {
+        Object.keys(data[state.subject]).forEach(ch => 
+          questions = questions.concat(data[state.subject][ch]));
+      } else {
+        questions = [...data[state.subject][state.chapter]];
+      }
+      
+      if(!questions.length) return alert('No questions found!');
+      
+      questions.sort(() => Math.random() - 0.5);
+      const limit = parseInt(document.getElementById(`${type}Limit`).value);
+      state.questions = limit > 0 ? questions.slice(0, limit) : questions;
+      
+      const mins = parseInt(document.getElementById(`${type}Time`).value);
+      if(mins > 0) startTimer(mins * 60, type);
+      
+      state.currentIdx = 0;
+      state.score = 0;
+      state.wrong = [];
+      
+      showQuiz(type);
+    }
+
+    function startWeakQuiz(type) {
+      const state = quizState[type];
+      if(!state.weak.length) return;
+      
+      state.isWeakMode = true;
+      state.questions = [...state.weak].sort(() => Math.random() - 0.5);
+      state.currentIdx = 0;
+      state.score = 0;
+      state.wrong = [];
+      
+      showQuiz(type);
+    }
+
+    function startSavedQuiz(type) {
+      const state = quizState[type];
+      state.isWeakMode = false;
+      state.questions = [...state.bookmarks].sort(() => Math.random() - 0.5);
+      state.currentIdx = 0;
+      state.score = 0;
+      state.wrong = [];
+      
+      showQuiz(type);
+    }
+
+    function showQuiz(type) {
+      document.getElementById(`${type}Setup`).style.display = 'none';
+      document.getElementById(`${type}Quiz`).style.display = 'block';
+      document.getElementById(`${type}Progress`).style.display = 'block';
+      document.getElementById('quitBtn').style.display = 'block';
+      
+      if(type === 'mcq') {
+        document.getElementById('mcqQuizContent').style.display = 'block';
+        document.getElementById('mcqResultArea').style.display = 'none';
+      } else {
+        document.getElementById('subjQuizContent').style.display = 'block';
+        document.getElementById('subjResultArea').style.display = 'none';
+      }
+      
+      showQuestion(type);
+    }
+
+    function showQuestion(type) {
+      const state = quizState[type];
+      const q = state.questions[state.currentIdx];
+      if(!q) return;
+      
+      // Progress
+      const progress = (state.currentIdx / state.questions.length) * 100;
+      document.getElementById(`${type}ProgressBar`).style.width = progress + '%';
+      document.getElementById(`${type}Count`).innerText = 
+        `${state.currentIdx + 1} / ${state.questions.length}`;
+      
+      // Question
+      document.getElementById(`${type}Question`).innerHTML = 
+        `${q.question} <button class="speak-btn" onclick="speak('${q.question.replace(/'/g, "\\'")}')">🔊</button>`;
+      
+      // Auto-read
+      if(document.getElementById('autoReadSwitch').checked) {
+        setTimeout(() => speak(q.question), 500);
+      }
+      
+      if(type === 'mcq') {
+        // MCQ specific
+        const isBookmarked = state.bookmarks.some(b => b.question === q.question);
+        document.getElementById('mcqQuestion').innerHTML += 
+          `<button class="bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark('mcq')" style="position:absolute; left:10px; top:10px; background:none; border:none;">
+            <svg viewBox="0 0 24 24" width="24" height="24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </button>`;
         
-        const data = mode === 'mcq' ? mcqData : subjData;
-        const subSel = document.getElementById('subjectSelect');
-        subSel.innerHTML = '<option value="all">-- All Subjects --</option>';
-        Object.keys(data).forEach(s => subSel.add(new Option(s, s)));
-        updateChapters();
-    }
-
-    function updateChapters() {
-        const mode = activeMode;
-        const data = mode === 'mcq' ? mcqData : subjData;
-        const sub = document.getElementById('subjectSelect').value;
-        const chSel = document.getElementById('chapterSelect');
-        chSel.innerHTML = '<option value="all">-- All Chapters --</option>';
-        if(sub !== 'all' && data[sub]) {
-            Object.keys(data[sub]).forEach(ch => chSel.add(new Option(ch, ch)));
+        // Check if in collections
+        let inCollection = false;
+        if(q.sub && q.ch && state.collections[q.sub] && state.collections[q.sub][q.ch]) {
+          inCollection = state.collections[q.sub][q.ch].some(i => i.question === q.question);
         }
+        
+        document.getElementById('mcqQuestion').innerHTML += 
+          `<button class="bookmark-btn ${inCollection ? 'active' : ''}" onclick="toggleCollection('mcq', '${q.sub}', '${q.ch}')" style="position:absolute; left:50px; top:10px; background:none; border:none;">
+            <svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </button>`;
+        
+        // Options
+        const optsDiv = document.getElementById('mcqOptions');
+        optsDiv.innerHTML = '';
+        q.options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.innerText = opt;
+          btn.onclick = () => handleMCQAnswer(opt, q);
+          optsDiv.appendChild(btn);
+        });
+        
+        document.getElementById('mcqResult').innerText = '';
+        document.getElementById('mcqNextBtn').style.display = 'none';
+        document.getElementById('mcqExplanation').style.display = 'none';
+      } else {
+        // Subjective specific
+        document.getElementById('subjExpBox').innerHTML = '';
+        if(q.explanation) document.getElementById('subjExpBox').innerHTML += `<div>${q.explanation}</div>`;
+        if(q.image) document.getElementById('subjExpBox').innerHTML += `<img src="${q.image}" class="exp-img" onclick="openFullImg(this.src)">`;
+        document.getElementById('subjShowBtn').style.display = (q.explanation || q.image) ? 'block' : 'none';
+        document.getElementById('subjExpBox').style.display = 'none';
+      }
+      
+      saveSession(type);
     }
 
-    function startQuiz() {
-        const sub = document.getElementById('subjectSelect').value;
-        const ch = document.getElementById('chapterSelect').value;
-        const data = activeMode === 'mcq' ? mcqData : subjData;
-        let pool = [];
-
-        if(sub === 'all') {
-            Object.keys(data).forEach(s => Object.keys(data[s]).forEach(c => pool = pool.concat(data[s][c])));
-        } else if(ch === 'all') {
-            Object.keys(data[sub]).forEach(c => pool = pool.concat(data[sub][c]));
-        } else { pool = [...data[sub][ch]]; }
-
-        if(pool.length === 0) return alert("No questions found!");
-
-        const limit = parseInt(document.getElementById('qLimit').value);
-        currentQuestions = pool.sort(() => Math.random() - 0.5);
-        if(limit > 0) currentQuestions = currentQuestions.slice(0, limit);
-
-        const mins = parseInt(document.getElementById('tLimit').value);
-        if(mins > 0) startTimer(mins);
-
-        currentIdx = 0; score = 0;
-        document.getElementById('setupArea').style.display = 'none';
-        document.getElementById('quizArea').style.display = 'block';
-        document.getElementById('pCont').style.display = 'block';
-        document.getElementById('quitBtn').style.display = 'block';
-        showQuestion();
-    }
-
-    function showQuestion() {
-        const q = currentQuestions[currentIdx];
-        document.getElementById('progressBar').style.width = (currentIdx / currentQuestions.length) * 100 + "%";
-        document.getElementById('qCount').innerText = `Q: ${currentIdx + 1} / ${currentQuestions.length}`;
-        document.getElementById('questionBox').innerText = q.question;
-        document.getElementById('expBox').style.display = 'none';
-        document.getElementById('nextBtn').style.display = 'none';
-
-        if(activeMode === 'mcq') {
-            document.getElementById('mcqOptions').style.display = 'block';
-            document.getElementById('subjControls').style.display = 'none';
-            const optBox = document.getElementById('mcqOptions');
-            optBox.innerHTML = '';
-            q.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    document.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents = 'none');
-                    if(opt === q.answer) {
-                        score++;
-                        btn.style.borderColor = 'var(--progress-color)';
-                    } else {
-                        btn.style.borderColor = '#e74c3c';
-                        saveToWeak(q);
-                    }
-                    if(q.explanation) {
-                        document.getElementById('expBox').innerHTML = "<b>Answer: "+q.answer+"</b><br>"+q.explanation;
-                        document.getElementById('expBox').style.display = 'block';
-                    }
-                    document.getElementById('nextBtn').style.display = 'block';
-                };
-                optBox.appendChild(btn);
-            });
-        } else {
-            document.getElementById('mcqOptions').style.display = 'none';
-            document.getElementById('subjControls').style.display = 'block';
-            let expContent = q.explanation || "No explanation provided.";
-            if(q.image) expContent += `<br><img src="${q.image}" style="width:100%; border-radius:10px; margin-top:10px;">`;
-            document.getElementById('expBox').innerHTML = expContent;
+    function handleMCQAnswer(selected, question) {
+      const state = quizState.mcq;
+      
+      document.querySelectorAll('#mcqOptions .option-btn').forEach(btn => {
+        btn.style.pointerEvents = 'none';
+      });
+      
+      if(selected === question.answer) {
+        state.score++;
+        document.getElementById('mcqResult').innerHTML = '<span style="color:#27ae60">✅ Correct!</span>';
+        
+        if(state.isWeakMode) {
+          state.weak = state.weak.filter(w => w.question !== question.question);
+          saveData('mcq');
         }
+      } else {
+        document.getElementById('mcqResult').innerHTML = 
+          `<span style="color:#e74c3c">❌ Wrong! Correct: ${question.answer}</span>`;
+        state.wrong.push(question);
+        
+        if(!state.weak.some(w => w.question === question.question)) {
+          state.weak.push(question);
+          saveData('mcq');
+        }
+      }
+      
+      if(question.explanation) {
+        document.getElementById('mcqExplanation').innerHTML = 
+          `<strong>💡 Explanation:</strong><br>${question.explanation}`;
+        document.getElementById('mcqExplanation').style.display = 'block';
+      }
+      
+      document.getElementById('mcqNextBtn').style.display = 'block';
+      saveSession('mcq');
     }
 
-    function handleResponse(isCorrect) {
-        if(isCorrect) score++; else saveToWeak(currentQuestions[currentIdx]);
-        nextQuestion();
+    function handleResponse(type, isCorrect) {
+      const state = quizState[type];
+      const q = state.questions[state.currentIdx];
+      
+      if(isCorrect) {
+        state.score++;
+        if(state.isWeakMode) {
+          state.weak = state.weak.filter(w => w.question !== q.question);
+          saveData(type);
+        }
+      } else {
+        state.wrong.push(q);
+        if(!state.weak.some(w => w.question === q.question)) {
+          state.weak.push(q);
+          saveData(type);
+        }
+      }
+      
+      state.currentIdx++;
+      if(state.currentIdx < state.questions.length) {
+        showQuestion(type);
+      } else {
+        showFinalResult(type);
+      }
     }
 
-    function nextQuestion() {
-        currentIdx++;
-        if(currentIdx < currentQuestions.length) showQuestion(); else finishQuiz();
+    function nextQuestion(type) {
+      window.speechSynthesis.cancel();
+      const state = quizState[type];
+      state.currentIdx++;
+      
+      if(state.currentIdx < state.questions.length) {
+        saveSession(type);
+        showQuestion(type);
+      } else {
+        showFinalResult(type);
+      }
+    }
+
+    function showFinalResult(type) {
+      const state = quizState[type];
+      clearInterval(timerInterval);
+      localStorage.removeItem(STORAGE[type].session);
+      
+      // Update revision tracker
+      if(!state.isWeakMode && state.subject !== 'all' && state.chapter !== 'all') {
+        const key = `${state.subject}_${state.chapter}`;
+        state.revisions[key] = Date.now();
+        saveData(type);
+      }
+      
+      const quizDiv = document.getElementById(`${type}Quiz`);
+      const contentDiv = document.getElementById(`${type}QuizContent`);
+      const resultDiv = document.getElementById(`${type}ResultArea`);
+      
+      contentDiv.style.display = 'none';
+      resultDiv.style.display = 'block';
+      
+      let html = `<h3>🏁 Score: ${state.score}/${state.questions.length}</h3>`;
+      
+      if(state.wrong.length > 0) {
+        html += `<button class="main-btn" style="background:#e67e22;" onclick="openReview('${type}')">
+          🔍 Review Wrong (${state.wrong.length})</button>`;
+      }
+      
+      html += `<button class="main-btn" onclick="goHome('${type}')">🏠 Home</button>`;
+      resultDiv.innerHTML = html;
+      
+      document.getElementById('timerDisplay').style.display = 'none';
+      document.getElementById('quitBtn').style.display = 'none';
+      
+      updateUI(type);
+    }
+
+    function openReview(type) {
+      const list = document.getElementById('reviewList');
+      list.innerHTML = '';
+      
+      quizState[type].wrong.forEach(q => {
+        let html = `<div class="list-item"><strong>${q.question}</strong>`;
+        if(q.explanation) html += `<div style="margin-top:5px;">${q.explanation}</div>`;
+        if(q.image) html += `<img src="${q.image}" class="exp-img" style="max-height:100px;" onclick="openFullImg('${q.image}')">`;
+        html += '</div>';
+        list.innerHTML += html;
+      });
+      
+      document.getElementById('reviewModal').style.display = 'block';
+    }
+
+    function openSavedList(type) {
+      const list = document.getElementById('savedList');
+      const printSection = document.getElementById('printSection');
+      list.innerHTML = '';
+      printSection.innerHTML = '<h2 style="text-align:center;">Bookmarked Questions</h2>';
+      
+      quizState[type].bookmarks.forEach((q, i) => {
+        let html = `<div class="list-item"><strong>${i+1}. ${q.question}</strong>`;
+        if(q.explanation) html += `<div>${q.explanation}</div>`;
+        if(q.image) html += `<img src="${q.image}" class="exp-img" style="max-height:80px;" onclick="openFullImg('${q.image}')">`;
+        html += '</div>';
+        list.innerHTML += html;
+        
+        printSection.innerHTML += `<div class="print-item"><strong>Q${i+1}: ${q.question}</strong><p>${q.explanation || ''}</p></div>`;
+      });
+      
+      document.getElementById('savedModal').style.display = 'block';
+    }
+
+    function printSaved() {
+      window.print();
+    }
+
+    function toggleBookmark(type) {
+      const state = quizState[type];
+      const q = state.questions[state.currentIdx];
+      const index = state.bookmarks.findIndex(b => b.question === q.question);
+      
+      if(index > -1) {
+        state.bookmarks.splice(index, 1);
+      } else {
+        state.bookmarks.push(q);
+      }
+      
+      saveData(type);
+      showQuestion(type); // Refresh to update bookmark icon
+    }
+
+    function toggleCollection(type, subject, chapter) {
+      if(type !== 'mcq') return;
+      
+      const state = quizState.mcq;
+      const q = state.questions[state.currentIdx];
+      
+      if(!state.collections[subject]) state.collections[subject] = {};
+      if(!state.collections[subject][chapter]) state.collections[subject][chapter] = [];
+      
+      const index = state.collections[subject][chapter].findIndex(i => i.question === q.question);
+      if(index > -1) {
+        state.collections[subject][chapter].splice(index, 1);
+        if(state.collections[subject][chapter].length === 0) {
+          delete state.collections[subject][chapter];
+          if(Object.keys(state.collections[subject]).length === 0) {
+            delete state.collections[subject];
+          }
+        }
+      } else {
+        state.collections[subject][chapter].push(q);
+      }
+      
+      saveData('mcq');
+      showQuestion('mcq');
     }
 
     function toggleExp() {
-        const box = document.getElementById('expBox');
-        box.style.display = box.style.display === 'block' ? 'none' : 'block';
+      const box = document.getElementById('subjExpBox');
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
     }
 
-    function finishQuiz() {
-        clearInterval(timer);
-        document.getElementById('quizArea').style.display = 'none';
-        document.getElementById('pCont').style.display = 'none';
-        document.getElementById('resultArea').style.display = 'block';
-        document.getElementById('resScore').innerText = `${score} / ${currentQuestions.length}`;
-        document.getElementById('quitBtn').style.display = 'none';
-        document.getElementById('timerDisplay').style.display = 'none';
+    function toggleTracker(type) {
+      const tracker = document.getElementById(`${type}Tracker`);
+      tracker.style.display = tracker.style.display === 'block' ? 'none' : 'block';
+      
+      if(tracker.style.display === 'block') {
+        renderTracker(type);
+      }
     }
 
-    function startTimer(m) {
-        let time = m * 60;
-        const display = document.getElementById('timerDisplay');
-        display.style.display = 'block';
-        timer = setInterval(() => {
-            let mins = Math.floor(time/60), secs = time%60;
-            display.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            if(--time < 0) finishQuiz();
-        }, 1000);
-    }
-
-    function saveToWeak(q) {
-        let weak = JSON.parse(localStorage.getItem('weak_qs')) || [];
-        if(!weak.some(item => item.question === q.question)) {
-            weak.push(q);
-            localStorage.setItem('weak_qs', JSON.stringify(weak));
-        }
-    }
-
-    function quitQuiz() { if(confirm("Quit Quiz?")) location.reload(); }
-
-    function toggleTheme() {
-        const b = document.body;
-        b.hasAttribute("data-theme") ? b.removeAttribute("data-theme") : b.setAttribute("data-theme", "dark");
-    }
-
-    // Special Quizzes (Weak/Saved)
-    function startSpecial(type) {
-        let pool = [];
-        if(type === 'weak') pool = JSON.parse(localStorage.getItem('weak_qs')) || [];
-        // Add bookmark logic if needed
+    function renderTracker(type) {
+      const state = quizState[type];
+      const data = type === 'mcq' ? mcqData : subjData;
+      const tracker = document.getElementById(`${type}Tracker`);
+      
+      let html = '<h3 style="text-align:center;">📅 Revision Status</h3>';
+      
+      Object.keys(data).forEach(sub => {
+        html += `<div class="subject-group"><div class="subject-title">${sub}</div>`;
         
-        if(pool.length === 0) return alert("No questions here yet!");
-        activeMode = pool[0].options ? 'mcq' : 'subj';
-        currentQuestions = pool.sort(() => Math.random() - 0.5);
-        currentIdx = 0; score = 0;
-        document.getElementById('homeArea').style.display = 'none';
-        document.getElementById('quizArea').style.display = 'block';
-        showQuestion();
+        Object.keys(data[sub]).forEach(ch => {
+          const key = `${sub}_${ch}`;
+          const last = state.revisions[key];
+          let status = '#e74c3c', date = 'Never';
+          
+          if(last) {
+            const days = (Date.now() - last) / (1000 * 60 * 60 * 24);
+            date = new Date(last).toLocaleDateString();
+            if(days < 7) status = '#2ecc71';
+            else if(days < 15) status = '#f1c40f';
+          }
+          
+          html += `<div class="chapter-row">
+            <div><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${status}; margin-right:5px;"></span>${ch}</div>
+            <span>${date}</span>
+          </div>`;
+        });
+        
+        html += '</div>';
+      });
+      
+      tracker.innerHTML = html;
     }
+
+    function toggleCollection(type) {
+      if(type !== 'mcq') return;
+      
+      const area = document.getElementById('mcqCollection');
+      area.style.display = area.style.display === 'block' ? 'none' : 'block';
+      
+      if(area.style.display === 'block') {
+        const subSelect = document.getElementById('mcqCollSub');
+        subSelect.innerHTML = '<option value="all">-- All Subjects --</option>';
+        
+        Object.keys(quizState.mcq.collections).forEach(s => {
+          subSelect.add(new Option(s, s));
+        });
+        
+        updateCollChapters('mcq');
+      }
+    }
+
+    function updateCollChapters(type) {
+      if(type !== 'mcq') return;
+      
+      const sub = document.getElementById('mcqCollSub').value;
+      const chSelect = document.getElementById('mcqCollCh');
+      chSelect.innerHTML = '<option value="all">-- All Chapters --</option>';
+      
+      if(sub !== 'all' && quizState.mcq.collections[sub]) {
+        Object.keys(quizState.mcq.collections[sub]).forEach(ch => {
+          chSelect.add(new Option(ch, ch));
+        });
+      }
+    }
+
+    function startCollectionQuiz(type) {
+      if(type !== 'mcq') return;
+      
+      const sub = document.getElementById('mcqCollSub').value;
+      const ch = document.getElementById('mcqCollCh').value;
+      const state = quizState.mcq;
+      
+      let questions = [];
+      
+      if(sub === 'all') {
+        Object.keys(state.collections).forEach(s => {
+          Object.keys(state.collections[s]).forEach(c => {
+            questions = questions.concat(state.collections[s][c]);
+          });
+        });
+      } else if(ch === 'all') {
+        Object.keys(state.collections[sub]).forEach(c => {
+          questions = questions.concat(state.collections[sub][c]);
+        });
+      } else {
+        questions = state.collections[sub][ch] || [];
+      }
+      
+      if(!questions.length) return alert('No questions found!');
+      
+      state.isWeakMode = false;
+      state.questions = [...questions].sort(() => Math.random() - 0.5);
+      state.currentIdx = 0;
+      state.score = 0;
+      state.wrong = [];
+      
+      showQuiz('mcq');
+    }
+
+    function startTimer(seconds, type) {
+      const display = document.getElementById('timerDisplay');
+      display.style.display = 'block';
+      
+      timerInterval = setInterval(() => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        display.innerText = `⏳ ${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+        
+        if(--seconds < 0) {
+          clearInterval(timerInterval);
+          showFinalResult(type);
+        }
+      }, 1000);
+    }
+
+    function saveSession(type) {
+      const state = quizState[type];
+      const session = {
+        questions: state.questions,
+        currentIdx: state.currentIdx,
+        score: state.score,
+        isWeakMode: state.isWeakMode,
+        subject: state.subject,
+        chapter: state.chapter,
+        wrong: state.wrong
+      };
+      localStorage.setItem(STORAGE[type].session, JSON.stringify(session));
+    }
+
+    function checkResumeStatus(type) {
+      const session = localStorage.getItem(STORAGE[type].session);
+      document.getElementById(`${type}ResumeBtn`).style.display = session ? 'block' : 'none';
+      if(session && type === currentTab) {
+        document.getElementById(`${type}ResumeBtn`).innerText = 
+          `🕒 Resume (Q. ${JSON.parse(session).currentIdx + 1})`;
+      }
+    }
+
+    function resumeQuiz(type) {
+      const session = JSON.parse(localStorage.getItem(STORAGE[type].session));
+      if(session) {
+        const state = quizState[type];
+        state.questions = session.questions;
+        state.currentIdx = session.currentIdx;
+        state.score = session.score;
+        state.isWeakMode = session.isWeakMode;
+        state.subject = session.subject;
+        state.chapter = session.chapter;
+        state.wrong = session.wrong || [];
+        
+        showQuiz(type);
+      }
+    }
+
+    function goHome(type) {
+      document.getElementById(`${type}Setup`).style.display = 'block';
+      document.getElementById(`${type}Quiz`).style.display = 'none';
+      document.getElementById(`${type}Progress`).style.display = 'none';
+      window.speechSynthesis.cancel();
+      
+      updateUI(type);
+      checkResumeStatus(type);
+    }
+
+    function quitQuiz() {
+      if(confirm('Quit quiz?')) {
+        showFinalResult(currentTab);
+      }
+    }
+
+    function saveData(type) {
+      const state = quizState[type];
+      localStorage.setItem(STORAGE[type].bookmarks, JSON.stringify(state.bookmarks));
+      localStorage.setItem(STORAGE[type].weak, JSON.stringify(state.weak));
+      localStorage.setItem(STORAGE[type].revisions, JSON.stringify(state.revisions));
+      localStorage.setItem(STORAGE[type].collections, JSON.stringify(state.collections));
+    }
+
+    function exportData(type) {
+      const state = quizState[type];
+      const data = {
+        bookmarks: state.bookmarks,
+        weak: state.weak,
+        revisions: state.revisions,
+        collections: state.collections
+      };
+      
+      const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${type}_backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+
+    function importData(type, event) {
+      const file = event.target.files[0];
+      if(!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if(confirm('Restore this backup? Current data will be overwritten.')) {
+            const state = quizState[type];
+            if(data.bookmarks) {
+              state.bookmarks = data.bookmarks;
+              localStorage.setItem(STORAGE[type].bookmarks, JSON.stringify(data.bookmarks));
+            }
+            if(data.weak) {
+              state.weak = data.weak;
+              localStorage.setItem(STORAGE[type].weak, JSON.stringify(data.weak));
+            }
+            if(data.revisions) {
+              state.revisions = data.revisions;
+              localStorage.setItem(STORAGE[type].revisions, JSON.stringify(data.revisions));
+            }
+            if(data.collections) {
+              state.collections = data.collections;
+              localStorage.setItem(STORAGE[type].collections, JSON.stringify(data.collections));
+            }
+            
+            updateUI(type);
+            alert('Restore complete!');
+          }
+        } catch(err) {
+          alert('Invalid backup file!');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function speak(text) {
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = parseFloat(document.getElementById('voiceSpeed').value) || 1;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function openFullImg(src) {
+      document.getElementById('fullImage').src = src;
+      document.getElementById('imageModal').style.display = 'block';
+    }
+
+    function closeModal(type) {
+      document.getElementById(type === 'review' ? 'reviewModal' : 'savedModal').style.display = 'none';
+    }
+
+    // Initialize on load
+    window.onload = init;
+    window.onclick = function(e) {
+      if(e.target.classList.contains('modal')) {
+        e.target.style.display = 'none';
+      }
+    };
   </script>
 </body>
 </html>
