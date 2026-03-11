@@ -491,7 +491,7 @@
     .status-yellow { background: #f1c40f; }
     .status-red { background: #e74c3c; }
 
-    /* बैकअप एरिया */
+    /* बैकअप एरिया - अब इसे क्विज के दौरान hide करेंगे */
     .backup-area { 
       display: flex; 
       gap: 10px; 
@@ -510,6 +510,11 @@
       cursor: pointer; 
     }
     .backup-btn:hover { background: #7f8c8d; }
+    
+    /* क्विज एक्टिव होने पर बैकअप एरिया छुपाने के लिए */
+    .backup-area.hidden {
+      display: none !important;
+    }
 
     /* मोडल */
     .modal { 
@@ -801,7 +806,7 @@
       <div id="mcqQuizArea" style="display:none;"></div>
     </div>
     
-    <!-- Subjective सेक्शन - वेबसाइट 2 जैसा -->
+    <!-- Subjective सेक्शन - वेबसाइट 2 जैसा (बिल्कुल वैसा ही) -->
     <div id="subjectiveSection" class="quiz-section">
       <button class="back-btn" onclick="backToModeSelection()">← वापस मुख्य मेनू</button>
       
@@ -895,8 +900,8 @@
       <div id="subjQuizArea" style="display:none;"></div>
     </div>
     
-    <!-- बैकअप बटन -->
-    <div class="backup-area">
+    <!-- बैकअप बटन - अब इसका अपना ID है ताकि hide कर सकें -->
+    <div class="backup-area" id="backupArea">
       <button class="backup-btn" onclick="exportData()">📤 Export Data</button>
       <button class="backup-btn" onclick="document.getElementById('importFile').click()">📥 Import Data</button>
       <input type="file" id="importFile" style="display:none" onchange="importData(event)" accept=".json">
@@ -1112,7 +1117,7 @@
             </div>`;
         up.style.display = "flex";
         
-        // Load JSON files
+        // JSON फाइल्स लोड करें
         loadJSONFiles();
     }
 
@@ -1141,6 +1146,18 @@
             .catch(error => {
                 console.error("MCQ JSON load error:", error);
                 alert("mcq_questions.json file nahi mili. Please check file name.");
+                // Demo data for testing
+                mcqData = {
+                    "Science": {
+                        "Physics": [
+                            { "question": "प्रकाश की गति सबसे अधिक कहाँ होती है?", "options": ["हवा में", "पानी में", "कांच में", "निर्वात में"], "answer": "निर्वात में", "explanation": "निर्वात में प्रकाश की गति सबसे अधिक होती है।" },
+                            { "question": "न्यूटन की गति का पहला नियम क्या कहलाता है?", "options": ["जड़त्व का नियम", "त्वरण का नियम", "क्रिया-प्रतिक्रिया का नियम", "ऊर्जा संरक्षण का नियम"], "answer": "जड़त्व का नियम", "explanation": "न्यूटन का पहला नियम जड़त्व का नियम कहलाता है।" }
+                        ]
+                    }
+                };
+                populateSubjects('mcq');
+                updateModeButtons('mcq');
+                checkResumeStatus('mcq');
             });
         
         // Load Subjective JSON
@@ -1159,6 +1176,20 @@
             .catch(error => {
                 console.error("Subjective JSON load error:", error);
                 alert("subjective_questions.json file nahi mili. Please check file name.");
+                // Demo data for testing
+                subjectiveData = {
+                    "History": {
+                        "Ancient": [
+                            { "question": "सिंधु घाटी सभ्यता की प्रमुख विशेषताएं बताइए।", "explanation": "सिंधु घाटी सभ्यता की प्रमुख विशेषताएं: नियोजित नगर, जल निकासी व्यवस्था, स्नानागार, अन्नागार, व्यापार, कृषि, मोहरें, मूर्तियां।" }
+                        ],
+                        "Medieval": [
+                            { "question": "मुगल साम्राज्य के पतन के कारण बताइए।", "explanation": "मुगल साम्राज्य के पतन के कारण: कमजोर उत्तराधिकारी, साम्राज्य का विस्तार, आर्थिक संकट, विदेशी आक्रमण, सामंतों का विद्रोह।" }
+                        ]
+                    }
+                };
+                populateSubjects('subj');
+                updateModeButtons('subj');
+                checkResumeStatus('subj');
             });
         
         // Show mode selection
@@ -1204,6 +1235,9 @@
         currentMode = mode;
         document.getElementById("modeSelection").style.display = "none";
         
+        // बैकअप एरिया दिखाएं (क्योंकि क्विज शुरू नहीं हुई)
+        document.getElementById("backupArea").classList.remove("hidden");
+        
         if (mode === 'mcq') {
             document.getElementById("mcqSection").style.display = "block";
             document.getElementById("subjectiveSection").style.display = "none";
@@ -1236,6 +1270,10 @@
         document.getElementById("quitBtn").style.display = "none";
         document.getElementById("bookmarkActionBtn").style.display = "none";
         document.getElementById("heartActionBtn").style.display = "none";
+        
+        // बैकअप एरिया दिखाएं
+        document.getElementById("backupArea").classList.remove("hidden");
+        
         currentMode = null;
     }
 
@@ -1488,6 +1526,9 @@
         document.getElementById("bookmarkActionBtn").style.display = "flex";
         document.getElementById("heartActionBtn").style.display = "flex";
         
+        // बैकअप एरिया छुपाएं - क्विज चल रही है
+        document.getElementById("backupArea").classList.add("hidden");
+        
         renderQuizLayout(mode);
         showQuestion(mode);
     }
@@ -1576,7 +1617,7 @@
         nextBtn.style.display = "none";
         explanationBox.style.display = "none";
         
-        if(mode === 'mcq' && q.options) {
+        if(mode === 'mcq' && q.options && q.options.length > 0) {
             // MCQ मोड - ऑप्शन दिखाएं
             q.options.forEach(option => {
                 const btn = document.createElement("button");
@@ -1782,6 +1823,9 @@
         
         document.getElementById(mode + "QuizArea").innerHTML = resultHTML;
         document.getElementById("quitBtn").style.display = "none";
+        
+        // बैकअप एरिया दिखाएं
+        document.getElementById("backupArea").classList.remove("hidden");
         
         updateModeButtons(mode);
     }
