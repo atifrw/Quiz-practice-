@@ -1,1898 +1,739 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>📚 Mega Quiz - MCQ + Subjective (Fixed)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✨ QUIZ PREMIUM - Master Your Knowledge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      font-family: 'Outfit', sans-serif;
     }
 
-    :root {
-      --bg-color: #f5f2eb; 
-      --card-bg: #ffffff; 
-      --text-color: #2c3e50;
-      --question-bg: #ffffff; 
-      --border-color: #e0dcd0; 
-      --btn-bg: #faf9f6; 
-      --primary-color: #5d6d7e; 
-      --progress-color: #27ae60;
-      --mcq-color: #3498db; 
-      --subj-color: #e67e22;
-    }
-    
-    [data-theme="dark"] {
-      --bg-color: #1a1a1a; 
-      --card-bg: #2d2d2d; 
-      --text-color: #e0e0e0;
-      --question-bg: #3d3d3d; 
-      --border-color: #444; 
-      --btn-bg: #3a3a3a;
-      --primary-color: #8da2b5;
-    }
-    
-    body { 
-      font-family: 'Rubik', sans-serif; 
-      background-color: var(--bg-color); 
-      color: var(--text-color); 
-      margin: 0; 
-      padding: 15px; 
-      transition: 0.3s; 
-    }
-    
-    /* Tab Styles */
-    .tab-container { 
-      display: flex; 
-      gap: 10px; 
-      margin-bottom: 20px; 
-      max-width: 700px; 
-      margin: 0 auto 20px; 
-    }
-    
-    .tab { 
-      flex: 1; 
-      padding: 15px; 
-      text-align: center; 
-      border-radius: 15px; 
-      cursor: pointer; 
-      font-weight: 600; 
-      transition: 0.3s; 
-      background: var(--card-bg); 
-      border: 2px solid var(--border-color);
-    }
-    
-    .tab.mcq.active { 
-      background: linear-gradient(135deg, #f0f7ff, #d0ebff); 
-      color: #1971c2; 
-      border-color: #1971c2;
-    }
-    
-    .tab.subj.active { 
-      background: linear-gradient(135deg, #fff5f0, #ffe8d9); 
-      color: #d9480f; 
-      border-color: #d9480f;
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      transition: all 0.3s ease;
     }
 
-    /* Main Container */
-    .container { 
-      max-width: 700px; 
-      margin: auto; 
-      background: var(--card-bg); 
-      padding: 25px; 
-      border-radius: 20px; 
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
-      border: 1px solid var(--border-color); 
-      display: none; 
-    }
-    
-    .container.active { 
-      display: block; 
+    /* PREMIUM GLASS MORPHISM */
+    .glass-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 40px;
+      padding: 30px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.2) inset;
+      border: 1px solid rgba(255,255,255,0.3);
     }
 
-    /* Header Controls */
-    .header-btns { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      margin-bottom: 20px; 
-      gap: 8px; 
-      max-width: 700px; 
-      margin: 0 auto 20px; 
-      background: var(--card-bg);
-      padding: 10px 15px;
-      border-radius: 15px;
-      border: 1px solid var(--border-color);
-    }
-    
-    .header-left { 
-      display: flex; 
-      align-items: center; 
-      gap: 8px; 
+    /* ANIMATED GRADIENT HEADER */
+    .premium-header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
     }
 
-    .theme-btn { 
-      padding: 8px 12px; 
-      font-size: 13px; 
-      background: var(--primary-color); 
-      color: white; 
-      border: none; 
-      cursor: pointer; 
-      border-radius: 8px; 
-    }
-    
-    #quitBtn { 
-      padding: 8px 12px; 
-      font-size: 13px; 
-      background: #e74c3c; 
-      color: white; 
-      border: none; 
-      cursor: pointer; 
-      border-radius: 8px; 
-      display: none; 
+    .premium-header h1 {
+      font-size: 4.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea, #764ba2, #ff6b6b, #4ecdc4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradient 5s ease infinite;
+      background-size: 300% 300%;
+      letter-spacing: -1px;
+      text-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
 
-    /* Voice Switch */
-    .voice-controls {
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .premium-header p {
+      font-size: 1.2rem;
+      color: #666;
+      margin-top: 10px;
+      font-weight: 300;
+    }
+
+    /* PREMIUM TOGGLE SWITCH - 3D MODERN */
+    .mode-toggle {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .mode-btn {
+      padding: 15px 40px;
+      border: none;
+      border-radius: 60px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      background: white;
+      color: #333;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
       display: flex;
       align-items: center;
-      gap: 5px;
-    }
-    
-    .voice-switch { 
-      position: relative; 
-      display: inline-block; 
-      width: 34px; 
-      height: 18px; 
-    }
-    
-    .voice-switch input { 
-      opacity: 0; 
-      width: 0; 
-      height: 0; 
-    }
-    
-    .slider { 
-      position: absolute; 
-      cursor: pointer; 
-      top: 0; 
-      left: 0; 
-      right: 0; 
-      bottom: 0; 
-      background-color: #ccc; 
-      transition: .4s; 
-      border-radius: 34px; 
-    }
-    
-    .slider:before { 
-      position: absolute; 
-      content: ""; 
-      height: 14px; 
-      width: 14px; 
-      left: 2px; 
-      bottom: 2px; 
-      background-color: white; 
-      transition: .4s; 
-      border-radius: 50%; 
-    }
-    
-    input:checked + .slider { 
-      background-color: var(--progress-color); 
-    }
-    
-    input:checked + .slider:before { 
-      transform: translateX(16px); 
+      gap: 10px;
     }
 
-    #voiceSpeed { 
-      width: 50px; 
+    .mode-btn i {
+      font-size: 1.5rem;
     }
 
-    #timerDisplay { 
-      font-weight: bold; 
-      font-size: 18px; 
-      color: #e74c3c; 
-      display: none; 
-      text-align: center; 
-      flex-grow: 1; 
+    .mode-btn.active {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      transform: translateY(-5px);
+      box-shadow: 0 20px 30px rgba(102, 126, 234, 0.4);
     }
 
-    /* Progress Bar */
-    .progress-container { 
-      width: 100%; 
-      background: #e0dcd0; 
-      height: 8px; 
-      border-radius: 5px; 
-      margin-bottom: 15px; 
-      display: none; 
-    }
-    
-    .progress-bar { 
-      height: 100%; 
-      width: 0%; 
-      background: var(--progress-color); 
-      border-radius: 5px; 
-      transition: 0.4s; 
+    .mode-btn.active::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, #fff, #667eea);
+      border-radius: 60px;
+      z-index: -1;
+      animation: rotate 2s linear infinite;
     }
 
-    /* Typography */
-    h2 { 
-      text-align: center; 
-      margin-top: 0; 
-      margin-bottom: 20px;
-      color: var(--primary-color); 
-    }
-    
-    h3 {
-      margin: 10px 0;
-      text-align: center;
+    @keyframes rotate {
+      0% { filter: blur(5px); }
+      50% { filter: blur(10px); }
+      100% { filter: blur(5px); }
     }
 
-    /* Form Elements */
-    select, input, .main-btn { 
-      padding: 12px; 
-      font-size: 16px; 
-      margin-bottom: 15px; 
-      width: 100%; 
-      border-radius: 10px; 
-      border: 1px solid var(--border-color); 
-      background-color: var(--btn-bg); 
-      color: var(--text-color); 
-      box-sizing: border-box; 
-    }
-
-    .main-btn { 
-      cursor: pointer; 
-      font-weight: 500;
-      transition: 0.3s;
-    }
-    
-    .main-btn:hover {
-      opacity: 0.9;
-      transform: translateY(-2px);
-    }
-
-    /* Grid Layout for Setup */
-    .input-grid {
+    /* PREMIUM CONTROL PANEL */
+    .control-panel {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+      background: rgba(255,255,255,0.5);
+      padding: 25px;
+      border-radius: 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .control-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .control-item label {
+      font-weight: 600;
+      color: #555;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .premium-select, .premium-input {
+      padding: 15px 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 20px;
+      font-size: 1rem;
+      font-weight: 500;
+      background: white;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .premium-select:focus, .premium-input:focus {
+      border-color: #667eea;
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    /* PREMIUM BUTTONS */
+    .premium-btn {
+      padding: 18px 35px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      box-shadow: 0 15px 25px rgba(102, 126, 234, 0.3);
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .premium-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: 0.5s;
+    }
+
+    .premium-btn:hover::before {
+      left: 100%;
+    }
+
+    .premium-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 35px rgba(102, 126, 234, 0.5);
+    }
+
+    .premium-btn.secondary {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      box-shadow: 0 15px 25px rgba(255, 107, 107, 0.3);
+    }
+
+    .premium-btn.success {
+      background: linear-gradient(135deg, #00b894, #00cec9);
+    }
+
+    /* PREMIUM FEATURE CARDS */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin: 40px 0;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 30px 20px;
+      border-radius: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-15px) scale(1.02);
+      box-shadow: 0 30px 45px rgba(0,0,0,0.2);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
       margin-bottom: 15px;
     }
 
-    .input-grid label {
-      display: block;
-      font-size: 12px;
-      margin-bottom: 5px;
-      font-weight: bold;
+    .feature-title {
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: #333;
     }
 
-    /* Button Grid for Features */
-    .feature-grid { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      gap: 15px; 
-      margin: 20px 0; 
-    }
-    
-    .feature-card { 
-      display: flex; 
-      align-items: center; 
-      padding: 20px 15px; 
-      min-height: 100px; 
-      border-radius: 20px; 
-      border: none; 
-      cursor: pointer; 
-      text-align: left; 
-      transition: 0.3s; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-      width: 100%; 
-      background: var(--btn-bg);
-    }
-    
-    .feature-card:hover { 
-      transform: translateY(-4px); 
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
-    }
-    
-    .card-icon { 
-      font-size: 32px; 
-      margin-right: 15px; 
-    }
-    
-    .card-content { 
-      display: flex; 
-      flex-direction: column; 
-    }
-    
-    .card-title { 
-      font-weight: 600; 
-      font-size: 16px; 
-    }
-    
-    .card-sub { 
-      font-size: 11px; 
-      opacity: 0.8; 
-      margin-top: 3px; 
+    .feature-count {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #667eea;
     }
 
-    /* Question Card */
-    .question-card { 
-      background: var(--question-bg); 
-      border-left: 6px solid var(--primary-color); 
-      padding: 25px 20px; 
-      border-radius: 12px; 
-      margin-bottom: 20px; 
-      font-size: 20px; 
-      font-weight: 550; 
-      line-height: 1.5; 
-      position: relative; 
-      box-shadow: 0 2px 10px rgba(0,0,0,0.02); 
-      min-height: 100px;
-    }
-    
-    .speak-btn { 
-      position: absolute; 
-      right: 10px; 
-      top: 10px; 
-      background: none; 
-      border: none; 
-      cursor: pointer; 
-      font-size: 22px; 
-      opacity: 0.6; 
+    .feature-desc {
+      font-size: 0.9rem;
+      color: #777;
+      margin-top: 8px;
     }
 
-    /* Bookmark and Heart Buttons - FIXED POSITIONS */
-    .action-buttons-container {
-      position: absolute;
-      left: 10px;
-      top: 10px;
+    /* PREMIUM QUESTION CARD */
+    .question-card {
+      background: linear-gradient(135deg, #fff, #f8f9ff);
+      border-radius: 40px;
+      padding: 40px;
+      margin: 30px 0;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.8);
+    }
+
+    .question-header {
       display: flex;
-      gap: 5px;
-      z-index: 10;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
     }
 
-    .action-btn {
-      background: none;
+    .progress-badge {
+      background: rgba(102, 126, 234, 0.1);
+      padding: 10px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    .timer-badge {
+      background: #ff6b6b;
+      color: white;
+      padding: 10px 25px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+    }
+
+    .question-text {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #333;
+      line-height: 1.4;
+      margin-bottom: 30px;
+      padding-right: 60px;
+    }
+
+    .action-buttons {
+      position: absolute;
+      top: 40px;
+      right: 40px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .action-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background: white;
       border: none;
       cursor: pointer;
-      padding: 5px;
-      border-radius: 5px;
+      font-size: 1.5rem;
+      color: #667eea;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      transition: all 0.3s;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: 0.2s;
     }
 
-    .action-btn:hover {
-      background: rgba(0,0,0,0.1);
+    .action-icon:hover {
+      transform: scale(1.1);
+      background: #667eea;
+      color: white;
     }
 
-    .action-btn svg {
-      width: 24px;
-      height: 24px;
-      fill: none;
-      stroke: var(--text-color);
-      stroke-width: 2;
+    .action-icon.active {
+      background: #ff6b6b;
+      color: white;
     }
 
-    .action-btn.active svg {
-      fill: var(--text-color);
+    /* PREMIUM OPTIONS */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin: 30px 0;
     }
 
-    .heart-btn.active svg {
-      fill: #e74c3c;
-      stroke: #e74c3c;
+    .option-btn {
+      padding: 25px;
+      border: 3px solid #e0e0e0;
+      border-radius: 30px;
+      background: white;
+      font-size: 1.3rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 15px;
     }
 
-    /* MCQ Options */
-    .option-btn { 
-      display: block; 
-      background: var(--card-bg); 
-      border: 2px solid var(--border-color); 
-      color: var(--text-color); 
-      padding: 14px; 
-      margin: 10px 0; 
-      border-radius: 10px; 
-      cursor: pointer; 
-      width: 100%; 
-      text-align: left; 
-      font-size: 18px; 
-      font-weight: 500; 
-      transition: 0.2s; 
-    }
-    
-    .option-btn:hover { 
-      border-color: var(--primary-color); 
-      background: var(--btn-bg); 
+    .option-btn:hover {
+      border-color: #667eea;
+      transform: translateX(10px);
+      box-shadow: 0 15px 30px rgba(102, 126, 234, 0.2);
     }
 
-    #nextBtn { 
-      display: none; 
-      background: #28a745 !important; 
-      color: white !important; 
-      border: none; 
-      text-align: center; 
-      margin-top: 15px; 
-      width: 100%; 
-      padding: 14px; 
-      border-radius: 10px; 
-      font-size: 18px; 
-      cursor: pointer; 
+    .option-btn.correct {
+      background: linear-gradient(135deg, #00b894, #00cec9);
+      border-color: #00b894;
+      color: white;
     }
 
-    /* Explanation Box */
-    .explanation-box { 
-      display: none; 
-      background: #eef2f7; 
-      border-left: 5px solid #3498db; 
-      padding: 15px; 
-      margin-top: 15px; 
-      border-radius: 8px; 
-      font-size: 16px; 
-      line-height: 1.6; 
-      color: var(--text-color); 
-    }
-    
-    [data-theme="dark"] .explanation-box { 
-      background: #3a3a3a; 
-      border-left-color: #8da2b5; 
+    .option-btn.wrong {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      border-color: #ff6b6b;
+      color: white;
     }
 
-    /* Subjective Specific */
-    .exp-box { 
-      background: #dff9fb; 
-      padding: 15px; 
-      border-radius: 10px; 
-      display: none; 
-      margin-bottom: 15px; 
-      color: #130f40; 
-      border: 1px dashed #3498db; 
-      font-size: 18px; 
-    }
-    
-    [data-theme="dark"] .exp-box { 
-      background: #3d3d3d; 
-      color: #fff; 
-    }
-    
-    .exp-img { 
-      width: 100%; 
-      max-width: 100%; 
-      border-radius: 8px; 
-      margin-top: 10px; 
-      cursor: zoom-in; 
-      border: 1px solid var(--border-color); 
-    }
-    
-    .subj-action-btns { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      gap: 10px; 
-      margin-top: 15px; 
+    .option-prefix {
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
     }
 
-    /* Tracker and Collection Cards */
-    .tracker-card, .collection-card { 
-      display: none; 
-      margin-top: 20px; 
-      border: 1px solid var(--border-color); 
-      padding: 15px; 
-      border-radius: 12px; 
-      background: var(--card-bg); 
-    }
-    
-    .subject-group { 
-      margin-bottom: 15px; 
-      border: 1px solid var(--border-color); 
-      border-radius: 10px; 
-      overflow: hidden; 
-    }
-    
-    .subject-title { 
-      background: var(--primary-color); 
-      color: white; 
-      padding: 10px; 
-      font-weight: bold; 
-    }
-    
-    .chapter-row { 
-      display: flex; 
-      justify-content: space-between; 
-      padding: 10px; 
-      background: var(--card-bg); 
-      border-bottom: 1px solid var(--border-color); 
-      align-items: center; 
-    }
-    
-    .status-badge { 
-      width: 12px; 
-      height: 12px; 
-      border-radius: 50%; 
-      display: inline-block; 
-      margin-right: 8px; 
-    }
-    
-    .status-green { 
-      background: #2ecc71; 
-    }
-    
-    .status-yellow { 
-      background: #f1c40f; 
-    }
-    
-    .status-red { 
-      background: #e74c3c; 
-    }
-
-    /* Backup Area */
-    .backup-area { 
-      display: flex; 
-      gap: 10px; 
-      margin-top: 20px; 
-      padding-top: 20px; 
-      border-top: 2px dashed var(--border-color); 
-    }
-    
-    .backup-btn { 
-      flex: 1; 
-      padding: 10px; 
-      font-size: 12px; 
-      cursor: pointer; 
-      border-radius: 8px; 
-      border: 1px solid var(--border-color); 
-      background: var(--btn-bg); 
-      color: var(--text-color); 
-      font-weight: bold; 
-      text-align: center;
-    }
-
-    /* Modals */
-    .modal { 
-      display: none; 
-      position: fixed; 
-      z-index: 1000; 
-      left: 0; 
-      top: 0; 
-      width: 100%; 
-      height: 100%; 
-      background: rgba(0,0,0,0.6); 
-      backdrop-filter: blur(5px); 
-    }
-    
-    .modal-content { 
-      background: var(--card-bg); 
-      margin: 5% auto; 
-      padding: 20px; 
-      border-radius: 15px; 
-      width: 90%; 
-      max-width: 550px; 
-      max-height: 80vh; 
-      overflow-y: auto; 
-      position: relative; 
-      border: 1px solid var(--border-color); 
-    }
-    
-    .close-modal { 
-      position: sticky; 
-      top: 0; 
-      float: right; 
-      font-size: 28px; 
-      cursor: pointer; 
-      color: #e74c3c; 
-      font-weight: bold; 
-      background: var(--card-bg); 
-      width: 30px; 
-      text-align: center; 
-      border-radius: 50%; 
-    }
-
-    #imageModal { 
-      display: none; 
-      position: fixed; 
-      z-index: 2000; 
-      left: 0; 
-      top: 0; 
-      width: 100%; 
-      height: 100%; 
-      background: rgba(0,0,0,0.9); 
-      text-align: center; 
-    }
-    
-    #fullImage { 
-      max-width: 95%; 
-      max-height: 90%; 
-      margin-top: 50px; 
-    }
-    
-    .close-img-modal { 
-      position: absolute; 
-      top: 20px; 
-      right: 30px; 
-      color: white; 
-      font-size: 40px; 
-      cursor: pointer; 
-    }
-
-    .list-item { 
-      background: var(--bg-color); 
-      padding: 15px; 
-      border-radius: 8px; 
-      margin-bottom: 10px; 
-      border-left: 4px solid var(--primary-color); 
-    }
-
-    .resume-btn {
-      background: #9b59b6 !important;
-      color: white !important;
+    /* EXPLANATION CARD */
+    .explanation-card {
+      background: linear-gradient(135deg, #f6f9ff, #f1f4ff);
+      border-radius: 30px;
+      padding: 30px;
+      margin-top: 30px;
+      border-left: 8px solid #667eea;
       display: none;
     }
 
-    /* Print Styles */
-    @media print {
-      .no-print { display: none !important; }
-      #printSection { display: block !important; padding: 20px; }
-      .print-item { border-bottom: 1px solid #eee; padding: 10px; page-break-inside: avoid; }
+    .explanation-card.show {
+      display: block;
+      animation: slideUp 0.5s ease;
     }
 
-    @media (max-width: 500px) {
-      .feature-grid { grid-template-columns: 1fr; }
-      .input-grid { grid-template-columns: 1fr; }
-      .backup-area { flex-direction: column; }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* PREMIUM MODAL */
+    .premium-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 50px;
+      border-radius: 60px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: modalPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* DARK MODE */
+    body.dark-mode {
+      background: linear-gradient(135deg, #2c3e50, #1a1a2e);
+    }
+
+    body.dark-mode .glass-container {
+      background: rgba(20, 20, 30, 0.95);
+    }
+
+    body.dark-mode .premium-header h1 {
+      background: linear-gradient(135deg, #a8c0ff, #3f2b96);
+      -webkit-background-clip: text;
+    }
+
+    body.dark-mode .feature-card {
+      background: #2d2d3a;
+      color: #fff;
+    }
+
+    body.dark-mode .feature-title {
+      color: #fff;
+    }
+
+    body.dark-mode .question-card {
+      background: #2d2d3a;
+    }
+
+    body.dark-mode .question-text {
+      color: #fff;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .premium-header h1 {
+        font-size: 2.5rem;
+      }
+      
+      .question-text {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* ANIMATIONS */
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+
+    @keyframes floating {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
     }
   </style>
 </head>
 <body>
-
-  <!-- Image Modal -->
-  <div id="imageModal" onclick="this.style.display='none'">
-    <span class="close-img-modal">&times;</span>
-    <img id="fullImage">
-  </div>
-
-  <!-- Print Section -->
-  <div id="printSection" style="display:none;"></div>
-
-  <!-- Header Controls -->
-  <div class="header-btns no-print">
-    <div class="header-left">
-      <button class="theme-btn" onclick="toggleTheme()">🌙</button>
-      <div class="voice-controls">
-        <span>🔊</span>
-        <label class="voice-switch">
-          <input type="checkbox" id="autoReadSwitch">
-          <span class="slider"></span>
-        </label>
-        <input type="range" id="voiceSpeed" min="0.5" max="1.5" step="0.1" value="1">
-      </div>
-    </div>
-    <div id="timerDisplay">⏳ 00:00</div>
-    <button id="quitBtn" onclick="quitQuiz()">⏹️ Quit</button>
-  </div>
-
-  <!-- Tabs -->
-  <div class="tab-container no-print">
-    <div class="tab mcq active" onclick="switchTab('mcq')">📝 MCQ Quiz</div>
-    <div class="tab subj" onclick="switchTab('subj')">📖 Subjective Quiz</div>
-  </div>
-
-  <!-- MCQ Container -->
-  <div id="mcqContainer" class="container active">
-    <div class="progress-container" id="mcqProgress">
-      <div class="progress-bar" id="mcqProgressBar"></div>
-    </div>
-    
-    <!-- Setup Area -->
-    <div id="mcqSetup">
-      <h2>🎯 MCQ Practice</h2>
-      
-      <button id="mcqResumeBtn" class="main-btn resume-btn" onclick="resumeQuiz('mcq')">🕒 Resume Previous</button>
-      
-      <select id="mcqSubject" onchange="updateChapters('mcq')">
-        <option value="all">-- Select Subject --</option>
-      </select>
-      
-      <select id="mcqChapter">
-        <option value="all">-- All Chapters --</option>
-      </select>
-
-      <div class="input-grid">
-        <div>
-          <label>Questions:</label>
-          <input type="number" id="mcqLimit" value="10" min="1">
-        </div>
-        <div>
-          <label>Minutes:</label>
-          <input type="number" id="mcqTime" value="5" min="1">
-        </div>
-      </div>
-
-      <button class="main-btn" onclick="startQuiz('mcq')" style="background:#5d6d7e; color:white;">🚀 Start MCQ Quiz</button>
-
-      <div class="feature-grid">
-        <button id="mcqWeakBtn" class="feature-card" style="display:none;" onclick="startWeakQuiz('mcq')">
-          <span class="card-icon">🎯</span>
-          <div class="card-content">
-            <div class="card-title">Weak Areas (<span id="mcqWeakCount">0</span>)</div>
-            <div class="card-sub">Practice your weak questions</div>
-          </div>
-        </button>
-        
-        <button id="mcqCollectionBtn" class="feature-card" style="display:none;" onclick="toggleCollection('mcq')">
-          <span class="card-icon">❤️</span>
-          <div class="card-content">
-            <div class="card-title">My Collections</div>
-            <div class="card-sub">Subject-wise saved questions</div>
-          </div>
-        </button>
-        
-        <button class="feature-card" onclick="toggleTracker('mcq')">
-          <span class="card-icon">📊</span>
-          <div class="card-content">
-            <div class="card-title">Revision Tracker</div>
-            <div class="card-sub">Track your progress</div>
-          </div>
-        </button>
-        
-        <button id="mcqSavedBtn" class="feature-card" style="display:none;" onclick="startSavedQuiz('mcq')">
-          <span class="card-icon">⭐</span>
-          <div class="card-content">
-            <div class="card-title">Bookmarks</div>
-            <div class="card-sub">Practice saved questions</div>
-          </div>
-        </button>
-      </div>
-
-      <!-- Tracker Area -->
-      <div id="mcqTracker" class="tracker-card"></div>
-      
-      <!-- Collection Area -->
-      <div id="mcqCollection" class="collection-card">
-        <h3>❤️ Collection Practice</h3>
-        <select id="mcqCollSub" onchange="updateCollChapters('mcq')">
-          <option value="all">-- All Subjects --</option>
-        </select>
-        <select id="mcqCollCh">
-          <option value="all">-- All Chapters --</option>
-        </select>
-        <button class="main-btn" onclick="startCollectionQuiz('mcq')" style="background:#27ae60; color:white;">Start Practice</button>
-      </div>
-    </div>
-
-    <!-- Quiz Area -->
-    <div id="mcqQuiz" style="display:none;">
-      <div id="mcqQuizContent">
-        <div id="mcqCount" style="text-align:right; font-size:14px; margin-bottom:5px;"></div>
-        
-        <div id="mcqQuestion" class="question-card">
-          <!-- Question will be inserted here -->
-          <div class="action-buttons-container" id="mcqActionButtons"></div>
-          <button class="speak-btn" onclick="speakQuestion('mcq')">🔊</button>
-        </div>
-        
-        <div id="mcqOptions"></div>
-        <div id="mcqResult" style="text-align:center; font-weight:bold; margin:10px 0;"></div>
-        
-        <button id="mcqNextBtn" onclick="nextQuestion('mcq')" class="main-btn" style="background:#28a745; color:white; display:none;">➡️ Next Question</button>
-        
-        <div id="mcqExplanation" class="explanation-box"></div>
-      </div>
-      
-      <div id="mcqResultArea" style="display:none; text-align:center;"></div>
-    </div>
-
-    <!-- Backup Area -->
-    <div class="backup-area no-print">
-      <button class="backup-btn" onclick="exportData('mcq')">📤 Export MCQ Data</button>
-      <label class="backup-btn" style="cursor:pointer;">📥 Import MCQ Data
-        <input type="file" id="mcqImport" style="display:none" onchange="importData('mcq', event)" accept=".json">
-      </label>
-    </div>
-  </div>
-
-  <!-- Subjective Container -->
-  <div id="subjContainer" class="container">
-    <div class="progress-container" id="subjProgress">
-      <div class="progress-bar" id="subjProgressBar"></div>
-    </div>
-    
-    <!-- Setup Area -->
-    <div id="subjSetup">
-      <h2>📝 Subjective Practice</h2>
-      
-      <button id="subjResumeBtn" class="main-btn resume-btn" onclick="resumeQuiz('subj')">🕒 Resume Previous</button>
-      
-      <select id="subjSubject" onchange="updateChapters('subj')">
-        <option value="all">-- Select Subject --</option>
-      </select>
-      
-      <select id="subjChapter">
-        <option value="all">-- All Chapters --</option>
-      </select>
-
-      <div class="input-grid">
-        <div>
-          <label>Questions:</label>
-          <input type="number" id="subjLimit" value="10" min="1">
-        </div>
-        <div>
-          <label>Minutes:</label>
-          <input type="number" id="subjTime" value="5" min="1">
-        </div>
-      </div>
-
-      <button class="main-btn" onclick="startQuiz('subj')" style="background:#e67e22; color:white;">🎯 Start Subjective</button>
-      
-      <div class="feature-grid">
-        <button id="subjWeakBtn" class="feature-card" style="display:none;" onclick="startWeakQuiz('subj')">
-          <span class="card-icon">🔄</span>
-          <div class="card-content">
-            <div class="card-title">Weak Areas (<span id="subjWeakCount">0</span>)</div>
-            <div class="card-sub">Practice weak questions</div>
-          </div>
-        </button>
-        
-        <button class="feature-card" onclick="toggleTracker('subj')">
-          <span class="card-icon">📊</span>
-          <div class="card-content">
-            <div class="card-title">Revision Tracker</div>
-            <div class="card-sub">Track progress</div>
-          </div>
-        </button>
-        
-        <button id="subjSavedBtn" class="feature-card" style="display:none;" onclick="startSavedQuiz('subj')">
-          <span class="card-icon">⭐</span>
-          <div class="card-content">
-            <div class="card-title">Bookmarks</div>
-            <div class="card-sub">Practice saved</div>
-          </div>
-        </button>
-        
-        <button id="subjViewBtn" class="feature-card" style="display:none;" onclick="openSavedList('subj')">
-          <span class="card-icon">📄</span>
-          <div class="card-content">
-            <div class="card-title">View & Print</div>
-            <div class="card-sub">See all bookmarks</div>
-          </div>
-        </button>
-      </div>
-
-      <!-- Tracker Area -->
-      <div id="subjTracker" class="tracker-card"></div>
-    </div>
-
-    <!-- Quiz Area -->
-    <div id="subjQuiz" style="display:none;">
-      <div id="subjQuizContent">
-        <div id="subjCount" style="text-align:right; font-size:14px; margin-bottom:5px;"></div>
-        
-        <div id="subjQuestion" class="question-card">
-          <div class="action-buttons-container" id="subjActionButtons"></div>
-          <button class="speak-btn" onclick="speakQuestion('subj')">🔊</button>
-        </div>
-        
-        <button id="subjShowBtn" onclick="toggleExp()" class="main-btn" style="background:#3498db; color:white;">👁️ Show Answer</button>
-        
-        <div id="subjExpBox" class="exp-box"></div>
-        
-        <div class="subj-action-btns">
-          <button onclick="handleResponse('subj', true)" class="main-btn" style="background:var(--progress-color); color:white;">✅ Correct</button>
-          <button onclick="handleResponse('subj', false)" class="main-btn" style="background:#e67e22; color:white;">⚠️ Need Improvement</button>
-        </div>
-      </div>
-      
-      <div id="subjResultArea" style="display:none; text-align:center;"></div>
-    </div>
-
-    <!-- Backup Area -->
-    <div class="backup-area no-print">
-      <button class="backup-btn" onclick="exportData('subj')">📤 Export Subjective Data</button>
-      <label class="backup-btn" style="cursor:pointer;">📥 Import Subjective Data
-        <input type="file" id="subjImport" style="display:none" onchange="importData('subj', event)" accept=".json">
-      </label>
-    </div>
-  </div>
-
-  <!-- Review Modal -->
-  <div id="reviewModal" class="modal no-print">
+  <!-- PREMIUM MODALS -->
+  <div class="premium-modal" id="collectionModal">
     <div class="modal-content">
-      <span class="close-modal" onclick="closeModal('review')">&times;</span>
-      <h3>📋 Wrong Questions</h3>
+      <h2 style="font-size: 2rem; margin-bottom: 20px;">❤️ My Collections</h2>
+      <select id="collectionSubject" class="premium-select" style="margin-bottom: 15px;">
+        <option value="all">All Subjects</option>
+      </select>
+      <select id="collectionChapter" class="premium-select" style="margin-bottom: 20px;">
+        <option value="all">All Chapters</option>
+      </select>
+      <button class="premium-btn success" onclick="startCollectionQuiz()" style="margin-bottom: 10px;">
+        <i class="fas fa-play"></i> Start Practice
+      </button>
+      <button class="premium-btn secondary" onclick="closeModal('collection')">
+        <i class="fas fa-times"></i> Close
+      </button>
+    </div>
+  </div>
+
+  <div class="premium-modal" id="trackerModal">
+    <div class="modal-content">
+      <h2 style="font-size: 2rem; margin-bottom: 20px;">📊 Revision Tracker</h2>
+      <div id="trackerContent"></div>
+      <button class="premium-btn secondary" onclick="closeModal('tracker')" style="margin-top: 20px;">
+        <i class="fas fa-times"></i> Close
+      </button>
+    </div>
+  </div>
+
+  <div class="premium-modal" id="reviewModal">
+    <div class="modal-content">
+      <h2 style="font-size: 2rem; margin-bottom: 20px;">📋 Wrong Questions</h2>
       <div id="reviewList"></div>
+      <button class="premium-btn secondary" onclick="closeModal('review')" style="margin-top: 20px;">
+        <i class="fas fa-times"></i> Close
+      </button>
     </div>
   </div>
 
-  <!-- Saved List Modal -->
-  <div id="savedModal" class="modal no-print">
+  <div class="premium-modal" id="bookmarkModal">
     <div class="modal-content">
-      <span class="close-modal" onclick="closeModal('saved')">&times;</span>
-      <h3>⭐ Bookmarked Questions</h3>
-      <button class="main-btn" onclick="printSaved()" style="background:#27ae60; color:white; margin-bottom:15px;">🖨️ Print / PDF</button>
-      <div id="savedList"></div>
+      <h2 style="font-size: 2rem; margin-bottom: 20px;">⭐ Saved Questions</h2>
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button class="premium-btn success" onclick="printBookmarks()" style="flex: 1;">
+          <i class="fas fa-print"></i> Print PDF
+        </button>
+        <button class="premium-btn secondary" onclick="closeModal('bookmark')" style="flex: 1;">
+          <i class="fas fa-times"></i> Close
+        </button>
+      </div>
+      <div id="bookmarkList"></div>
     </div>
   </div>
 
-  <script>
-    // ==================== DATA STRUCTURES ====================
-    let mcqData = {};
-    let subjData = {};
-    
-    // Storage Keys
-    const STORAGE = {
-      mcq: {
-        bookmarks: 'mcq_bookmarks',
-        weak: 'mcq_weak',
-        revisions: 'mcq_revisions',
-        collections: 'mcq_collections',
-        session: 'mcq_session'
-      },
-      subj: {
-        bookmarks: 'subj_bookmarks',
-        weak: 'subj_weak',
-        revisions: 'subj_revisions',
-        collections: 'subj_collections',
-        session: 'subj_session'
-      }
-    };
+  <!-- MAIN CONTAINER -->
+  <div class="glass-container">
+    <!-- HEADER -->
+    <div class="premium-header">
+      <h1>✨ QUIZ PREMIUM</h1>
+      <p>Master Your Knowledge with AI-Powered Learning</p>
+      <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+        <button class="action-icon" onclick="toggleTheme()" style="width: 60px; height: 60px;">
+          <i class="fas fa-moon"></i>
+        </button>
+        <div style="display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.05); padding: 10px 20px; border-radius: 50px;">
+          <i class="fas fa-volume-up"></i>
+          <label class="voice-switch">
+            <input type="checkbox" id="autoRead" style="width: 20px; height: 20px;">
+          </label>
+          <input type="range" id="voiceSpeed" min="0.5" max="2" step="0.1" value="1" style="width: 100px;">
+        </div>
+      </div>
+    </div>
 
-    // Quiz State
-    let quizState = {
-      mcq: {
-        questions: [], 
-        currentIdx: 0, 
-        score: 0, 
-        wrong: [],
-        isWeakMode: false, 
-        subject: '', 
-        chapter: '',
-        bookmarks: [], 
-        weak: [], 
-        revisions: {}, 
-        collections: {}
-      },
-      subj: {
-        questions: [], 
-        currentIdx: 0, 
-        score: 0, 
-        wrong: [],
-        isWeakMode: false, 
-        subject: '', 
-        chapter: '',
-        bookmarks: [], 
-        weak: [], 
-        revisions: {}, 
-        collections: {}
-      }
-    };
+    <!-- MODE TOGGLE -->
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mcqModeBtn" onclick="switchMode('mcq')">
+        <i class="fas fa-check-circle"></i> MCQ Mode
+      </button>
+      <button class="mode-btn" id="subjModeBtn" onclick="switchMode('subj')">
+        <i class="fas fa-pen"></i> Subjective Mode
+      </button>
+    </div>
 
-    let currentTab = 'mcq';
-    let timerInterval = null;
+    <!-- CONTROL PANEL -->
+    <div class="control-panel" id="setupPanel">
+      <div class="control-item">
+        <label><i class="fas fa-book"></i> Subject</label>
+        <select id="subjectSelect" class="premium-select">
+          <option value="all">All Subjects</option>
+        </select>
+      </div>
+      <div class="control-item">
+        <label><i class="fas fa-chapter"></i> Chapter</label>
+        <select id="chapterSelect" class="premium-select">
+          <option value="all">All Chapters</option>
+        </select>
+      </div>
+      <div class="control-item">
+        <label><i class="fas fa-question"></i> Questions</label>
+        <input type="number" id="questionLimit" class="premium-input" value="10" min="1" max="100">
+      </div>
+      <div class="control-item">
+        <label><i class="fas fa-clock"></i> Minutes</label>
+        <input type="number" id="timeLimit" class="premium-input" value="5" min="1" max="120">
+      </div>
+    </div>
 
-    // ==================== INITIALIZATION ====================
-    window.onload = function() {
-      // Load saved data from localStorage
-      ['mcq', 'subj'].forEach(type => {
-        const state = quizState[type];
-        state.bookmarks = JSON.parse(localStorage.getItem(STORAGE[type].bookmarks)) || [];
-        state.weak = JSON.parse(localStorage.getItem(STORAGE[type].weak)) || [];
-        state.revisions = JSON.parse(localStorage.getItem(STORAGE[type].revisions)) || {};
-        state.collections = JSON.parse(localStorage.getItem(STORAGE[type].collections)) || {};
-      });
+    <!-- MAIN BUTTON -->
+    <button class="premium-btn" id="startBtn" onclick="startQuiz()" style="margin-bottom: 20px;">
+      <i class="fas fa-rocket"></i> START QUIZ
+    </button>
 
-      // Try to load JSON files
-      loadJSON('mcq', 'Demo.json');
-      loadJSON('subj', 'sub.json');
+    <button class="premium-btn secondary" id="resumeBtn" onclick="resumeQuiz()" style="margin-bottom: 20px; display: none;">
+      <i class="fas fa-play-circle"></i> RESUME SESSION
+    </button>
 
-      // Voice speed
-      document.getElementById('voiceSpeed').onchange = function(e) {
-        localStorage.setItem('voice_speed', e.target.value);
-      };
-      
-      // Load saved voice speed
-      const savedSpeed = localStorage.getItem('voice_speed');
-      if(savedSpeed) document.getElementById('voiceSpeed').value = savedSpeed;
-    };
+    <!-- FEATURE GRID -->
+    <div class="feature-grid" id="featureGrid">
+      <div class="feature-card floating" id="weakCard" onclick="startWeakQuiz()" style="display: none;">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">Weak Areas</div>
+        <div class="feature-count" id="weakCount">0</div>
+        <div class="feature-desc">Questions to improve</div>
+      </div>
 
-    function loadJSON(type, filename) {
-      fetch(filename + '?v=' + Date.now())
-        .then(response => response.json())
-        .then(data => {
-          if(type === 'mcq') mcqData = data;
-          else subjData = data;
-          
-          const select = document.getElementById(type + 'Subject');
-          select.innerHTML = '<option value="all">-- All Subjects --</option>';
-          Object.keys(data).forEach(subject => {
-            select.add(new Option(subject, subject));
-          });
-          
-          updateUI(type);
-        })
-        .catch(error => {
-          console.log(filename + ' not found. Please upload using backup buttons.');
-          // Create sample data
-          if(type === 'mcq') {
-            mcqData = {
-              "Sample": {
-                "Chapter1": [
-                  {
-                    "question": "Sample MCQ Question?",
-                    "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-                    "answer": "Option 1",
-                    "explanation": "This is a sample explanation."
-                  }
-                ]
-              }
-            };
-          } else {
-            subjData = {
-              "Sample": {
-                "Chapter1": [
-                  {
-                    "question": "Sample Subjective Question?",
-                    "explanation": "This is the answer with explanation.",
-                    "image": ""
-                  }
-                ]
-              }
-            };
-          }
-          
-          const select = document.getElementById(type + 'Subject');
-          select.innerHTML = '<option value="all">-- All Subjects --</option>';
-          Object.keys(type === 'mcq' ? mcqData : subjData).forEach(subject => {
-            select.add(new Option(subject, subject));
-          });
-          
-          updateUI(type);
-        });
-    }
+      <div class="feature-card floating" id="collectionCard" onclick="openModal('collection')" style="display: none;">
+        <div class="feature-icon">❤️</div>
+        <div class="feature-title">Collections</div>
+        <div class="feature-count" id="collectionCount">0</div>
+        <div class="feature-desc">Saved questions</div>
+      </div>
 
-    function updateUI(type) {
-      const state = quizState[type];
-      
-      // Update weak areas button
-      const weakBtn = document.getElementById(type + 'WeakBtn');
-      const weakCount = document.getElementById(type + 'WeakCount');
-      if(weakBtn && weakCount) {
-        if(state.weak.length > 0) {
-          weakBtn.style.display = 'flex';
-          weakCount.innerText = state.weak.length;
-        } else {
-          weakBtn.style.display = 'none';
-        }
-      }
-      
-      // Update saved/bookmarks button
-      const savedBtn = document.getElementById(type + 'SavedBtn');
-      if(savedBtn) {
-        savedBtn.style.display = state.bookmarks.length > 0 ? 'flex' : 'none';
-      }
-      
-      // Update view button for subjective
-      if(type === 'subj') {
-        const viewBtn = document.getElementById('subjViewBtn');
-        if(viewBtn) viewBtn.style.display = state.bookmarks.length > 0 ? 'flex' : 'none';
-      }
-      
-      // Update collection button for MCQ
-      if(type === 'mcq') {
-        const collBtn = document.getElementById('mcqCollectionBtn');
-        if(collBtn) {
-          const hasCollections = Object.keys(state.collections).length > 0;
-          collBtn.style.display = hasCollections ? 'flex' : 'none';
-        }
-      }
-      
-      checkResumeStatus(type);
-    }
+      <div class="feature-card floating" onclick="openModal('tracker')">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Tracker</div>
+        <div class="feature-count" id="trackerCount">📅</div>
+        <div class="feature-desc">Revision status</div>
+      </div>
 
-    // ==================== TAB SWITCHING ====================
-    function switchTab(tab) {
-      currentTab = tab;
-      
-      // Update tab styles
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelector('.tab.' + tab).classList.add('active');
-      
-      // Show correct container
-      document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
-      document.getElementById(tab + 'Container').classList.add('active');
-    }
+      <div class="feature-card floating" id="bookmarkCard" onclick="openModal('bookmark')" style="display: none;">
+        <div class="feature-icon">⭐</div>
+        <div class="feature-title">Bookmarks</div>
+        <div class="feature-count" id="bookmarkCount">0</div>
+        <div class="feature-desc">Practice saved</div>
+      </div>
+    </div>
 
-    // ==================== THEME ====================
-    function toggleTheme() {
-      if(document.body.hasAttribute('data-theme')) {
-        document.body.removeAttribute('data-theme');
-      } else {
-        document.body.setAttribute('data-theme', 'dark');
-      }
-    }
-
-    // ==================== CHAPTERS ====================
-    function updateChapters(type) {
-      const subject = document.getElementById(type + 'Subject').value;
-      const chapterSelect = document.getElementById(type + 'Chapter');
-      chapterSelect.innerHTML = '<option value="all">-- All Chapters --</option>';
-      
-      const data = type === 'mcq' ? mcqData : subjData;
-      
-      if(subject !== 'all' && data[subject]) {
-        Object.keys(data[subject]).forEach(chapter => {
-          chapterSelect.add(new Option(chapter, chapter));
-        });
-      }
-    }
-
-    // ==================== QUIZ START FUNCTIONS ====================
-    function startQuiz(type) {
-      const state = quizState[type];
-      state.isWeakMode = false;
-      state.subject = document.getElementById(type + 'Subject').value;
-      state.chapter = document.getElementById(type + 'Chapter').value;
-      
-      let questions = [];
-      const data = type === 'mcq' ? mcqData : subjData;
-      
-      if(state.subject === 'all') {
-        // Get all questions from all subjects and chapters
-        Object.keys(data).forEach(s => {
-          Object.keys(data[s]).forEach(ch => {
-            questions = questions.concat(data[s][ch]);
-          });
-        });
-      } else if(state.chapter === 'all') {
-        // Get all questions from selected subject
-        Object.keys(data[state.subject]).forEach(ch => {
-          questions = questions.concat(data[state.subject][ch]);
-        });
-      } else {
-        // Get questions from specific subject and chapter
-        questions = data[state.subject][state.chapter] ? [...data[state.subject][state.chapter]] : [];
-      }
-      
-      if(questions.length === 0) {
-        alert('No questions found!');
-        return;
-      }
-      
-      // Shuffle and limit
-      questions.sort(() => Math.random() - 0.5);
-      const limit = parseInt(document.getElementById(type + 'Limit').value);
-      state.questions = limit > 0 ? questions.slice(0, limit) : questions;
-      
-      // Start timer
-      const mins = parseInt(document.getElementById(type + 'Time').value);
-      if(mins > 0 && !isNaN(mins)) {
-        startTimer(mins * 60, type);
-      }
-      
-      state.currentIdx = 0;
-      state.score = 0;
-      state.wrong = [];
-      
-      showQuiz(type);
-    }
-
-    function startWeakQuiz(type) {
-      const state = quizState[type];
-      if(state.weak.length === 0) return;
-      
-      state.isWeakMode = true;
-      state.questions = [...state.weak].sort(() => Math.random() - 0.5);
-      state.currentIdx = 0;
-      state.score = 0;
-      state.wrong = [];
-      
-      showQuiz(type);
-    }
-
-    function startSavedQuiz(type) {
-      const state = quizState[type];
-      if(state.bookmarks.length === 0) return;
-      
-      state.isWeakMode = false;
-      state.questions = [...state.bookmarks].sort(() => Math.random() - 0.5);
-      state.currentIdx = 0;
-      state.score = 0;
-      state.wrong = [];
-      
-      showQuiz(type);
-    }
-
-    function startCollectionQuiz(type) {
-      if(type !== 'mcq') return;
-      
-      const sub = document.getElementById('mcqCollSub').value;
-      const ch = document.getElementById('mcqCollCh').value;
-      const state = quizState.mcq;
-      
-      let questions = [];
-      
-      if(sub === 'all') {
-        Object.keys(state.collections).forEach(s => {
-          Object.keys(state.collections[s]).forEach(c => {
-            questions = questions.concat(state.collections[s][c]);
-          });
-        });
-      } else if(ch === 'all') {
-        Object.keys(state.collections[sub]).forEach(c => {
-          questions = questions.concat(state.collections[sub][c]);
-        });
-      } else {
-        questions = state.collections[sub] && state.collections[sub][ch] ? [...state.collections[sub][ch]] : [];
-      }
-      
-      if(questions.length === 0) {
-        alert('No questions in collection!');
-        return;
-      }
-      
-      state.isWeakMode = false;
-      state.questions = [...questions].sort(() => Math.random() - 0.5);
-      state.currentIdx = 0;
-      state.score = 0;
-      state.wrong = [];
-      
-      showQuiz('mcq');
-    }
-
-    function showQuiz(type) {
-      // Hide setup, show quiz
-      document.getElementById(type + 'Setup').style.display = 'none';
-      document.getElementById(type + 'Quiz').style.display = 'block';
-      document.getElementById(type + 'Progress').style.display = 'block';
-      document.getElementById('quitBtn').style.display = 'block';
-      
-      if(type === 'mcq') {
-        document.getElementById('mcqQuizContent').style.display = 'block';
-        document.getElementById('mcqResultArea').style.display = 'none';
-      } else {
-        document.getElementById('subjQuizContent').style.display = 'block';
-        document.getElementById('subjResultArea').style.display = 'none';
-      }
-      
-      showQuestion(type);
-    }
-
-    // ==================== DISPLAY QUESTION ====================
-    function showQuestion(type) {
-      const state = quizState[type];
-      if(!state.questions || state.questions.length === 0) return;
-      
-      const q = state.questions[state.currentIdx];
-      if(!q) return;
-      
-      // Add subject and chapter to question for collections
-      if(!q.sub || !q.ch) {
-        findQuestionMeta(q, type);
-      }
-      
-      // Update progress
-      const progress = ((state.currentIdx) / state.questions.length) * 100;
-      document.getElementById(type + 'ProgressBar').style.width = progress + '%';
-      document.getElementById(type + 'Count').innerText = 
-        `Question: ${state.currentIdx + 1} / ${state.questions.length}`;
-      
-      // Set question text
-      document.getElementById(type + 'Question').innerHTML = 
-        `<div class="question-text">${q.question}</div>
-         <button class="speak-btn" onclick="speak('${q.question.replace(/'/g, "\\'")}')">🔊</button>`;
-      
-      // Add action buttons container
-      const actionDiv = document.createElement('div');
-      actionDiv.className = 'action-buttons-container';
-      actionDiv.id = type + 'ActionButtons';
-      
-      // Add bookmark button
-      const isBookmarked = state.bookmarks.some(b => b.question === q.question);
-      actionDiv.innerHTML += `
-        <button class="action-btn bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark('${type}')">
-          <svg viewBox="0 0 24 24">
-            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
-          </svg>
-        </button>`;
-      
-      // Add heart button for MCQ only
-      if(type === 'mcq') {
-        let inCollection = false;
-        if(q.sub && q.ch && state.collections[q.sub] && state.collections[q.sub][q.ch]) {
-          inCollection = state.collections[q.sub][q.ch].some(i => i.question === q.question);
-        }
-        actionDiv.innerHTML += `
-          <button class="action-btn heart-btn ${inCollection ? 'active' : ''}" onclick="toggleCollection('${type}', '${q.sub || ''}', '${q.ch || ''}')">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
-          </button>`;
-      }
-      
-      // Replace or add action buttons
-      const existingActions = document.getElementById(type + 'ActionButtons');
-      if(existingActions) {
-        existingActions.remove();
-      }
-      document.getElementById(type + 'Question').appendChild(actionDiv);
-      
-      // Auto-read
-      if(document.getElementById('autoReadSwitch').checked) {
-        setTimeout(() => speak(q.question), 500);
-      }
-      
-      if(type === 'mcq') {
-        // MCQ options
-        const optsDiv = document.getElementById('mcqOptions');
-        optsDiv.innerHTML = '';
+    <!-- QUIZ AREA -->
+    <div id="quizArea" style="display: none;">
+      <!-- QUESTION CARD -->
+      <div class="question-card">
+        <div class="question-header">
+          <span class="progress-badge" id="questionProgress">Question 1/10</span>
+          <span class="timer-badge" id="timerDisplay">⏳ 05:00</span>
+        </div>
         
-        if(q.options && Array.isArray(q.options)) {
-          q.options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = opt;
-            btn.onclick = () => handleMCQAnswer(opt, q);
-            optsDiv.appendChild(btn);
-          });
-        }
-        
-        document.getElementById('mcqResult').innerHTML = '';
-        document.getElementById('mcqNextBtn').style.display = 'none';
-        document.getElementById('mcqExplanation').style.display = 'none';
-      } else {
-        // Subjective - prepare answer box
-        let expHTML = '';
-        if(q.explanation) expHTML += `<div>${q.explanation}</div>`;
-        if(q.image) expHTML += `<img src="${q.image}" class="exp-img" onclick="openFullImg('${q.image}')">`;
-        
-        document.getElementById('subjExpBox').innerHTML = expHTML;
-        document.getElementById('subjShowBtn').style.display = (q.explanation || q.image) ? 'block' : 'none';
-        document.getElementById('subjExpBox').style.display = 'none';
-      }
-      
-      saveSession(type);
-    }
+        <div class="question-text" id="questionText">
+          Loading question...
+        </div>
 
-    function findQuestionMeta(q, type) {
-      const data = type === 'mcq' ? mcqData : subjData;
-      for(let s in data) {
-        for(let c in data[s]) {
-          if(data[s][c].some(item => item.question === q.question)) {
-            q.sub = s;
-            q.ch = c;
-            return;
-          }
-        }
-      }
-    }
+        <div class="action-buttons" id="actionButtons">
+          <button class="action-icon" onclick="toggleBookmark()" id="bookmarkBtn">
+            <i class="far fa-bookmark"></i>
+          </button>
+          <button class="action-icon" onclick="toggleCollection()" id="heartBtn">
+            <i class="far fa-heart"></i>
+          </button>
+          <button class="action-icon" onclick="speakQuestion()">
+            <i class="fas fa-volume-up"></i>
+          </button>
+        </div>
 
-    // ==================== MCQ ANSWER HANDLING ====================
-    function handleMCQAnswer(selected, question) {
-      const state = quizState.mcq;
-      
-      // Disable all options
-      document.querySelectorAll('#mcqOptions .option-btn').forEach(btn => {
-        btn.style.pointerEvents = 'none';
-        if(btn.innerText === question.answer) {
-          btn.style.borderColor = '#27ae60';
-          btn.style.backgroundColor = '#d4edda';
-        } else if(btn.innerText === selected && selected !== question.answer) {
-          btn.style.borderColor = '#e74c3c';
-          btn.style.backgroundColor = '#f8d7da';
-        }
-      });
-      
-      if(selected === question.answer) {
-        state.score++;
-        document.getElementById('mcqResult').innerHTML = '<span style="color:#27ae60">✅ Correct!</span>';
-        
-        // Remove from weak if in weak mode
-        if(state.isWeakMode) {
-          state.weak = state.weak.filter(w => w.question !== question.question);
-          saveData('mcq');
-        }
-      } else {
-        document.getElementById('mcqResult').innerHTML = 
-          `<span style="color:#e74c3c">❌ Wrong! Correct: ${question.answer}</span>`;
-        state.wrong.push(question);
-        
-        // Add to weak if not already there
-        if(!state.weak.some(w => w.question === question.question)) {
-          state.weak.push(question);
-          saveData('mcq');
-        }
-      }
-      
-      // Show explanation
-      if(question.explanation) {
-        document.getElementById('mcqExplanation').innerHTML = 
-          `<strong>💡 Explanation:</strong><br>${question.explanation}`;
-        document.getElementById('mcqExplanation').style.display = 'block';
-      }
-      
-      document.getElementById('mcqNextBtn').style.display = 'block';
-      saveSession('mcq');
-    }
+        <!-- MCQ OPTIONS -->
+        <div id="mcqOptions" class="options-grid"></div>
 
-    // ==================== SUBJECTIVE ANSWER HANDLING ====================
-    function handleResponse(type, isCorrect) {
-      const state = quizState[type];
-      const q = state.questions[state.currentIdx];
-      
-      if(isCorrect) {
-        state.score++;
-        if(state.isWeakMode) {
-          state.weak = state.weak.filter(w => w.question !== q.question);
-          saveData(type);
-        }
-      } else {
-        state.wrong.push(q);
-        if(!state.weak.some(w => w.question === q.question)) {
-          state.weak.push(q);
-          saveData(type);
-        }
-      }
-      
-      state.currentIdx++;
-      if(state.currentIdx < state.questions.length) {
-        showQuestion(type);
-      } else {
-        showFinalResult(type);
-      }
-    }
+        <!-- SUBJECTIVE BUTTON -->
+        <button id="showAnswerBtn" class="premium-btn secondary" onclick="toggleAnswer()" style="display: none; margin: 20px 0;">
+          <i class="fas fa-eye"></i> Show Answer
+        </button>
 
-    // ==================== NEXT QUESTION ====================
-    function nextQuestion(type) {
-      window.speechSynthesis.cancel();
-      const state = quizState[type];
-      state.currentIdx++;
-      
-      if(state.currentIdx < state.questions.length) {
-        saveSession(type);
-        showQuestion(type);
-      } else {
-        showFinalResult(type);
-      }
-    }
+        <!-- EXPLANATION CARD -->
+        <div class="explanation-card" id="explanationCard">
+          <div id="explanationText"></div>
+          <div id="answerImage"></div>
+        </div>
 
-    // ==================== FINAL RESULT ====================
-    function showFinalResult(type) {
-      const state = quizState[type];
-      
-      // Clear timer
-      if(timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-      }
-      
-      // Clear session
-      localStorage.removeItem(STORAGE[type].session);
-      
-      // Update revision tracker
-      if(!state.isWeakMode && state.subject !== 'all' && state.chapter !== 'all') {
-        const key = state.subject + '_' + state.chapter;
-        state.revisions[key] = Date.now();
-        saveData(type);
-      }
-      
-      // Hide quiz content, show result
-      if(type === 'mcq') {
-        document.getElementById('mcqQuizContent').style.display = 'none';
-        const resultDiv = document.getElementById('mcqResultArea');
-        resultDiv.style.display = 'block';
-        
-        let html = `<h3>🏁 Final Score: ${state.score}/${state.questions.length}</h3>`;
-        
-        if(state.wrong.length > 0) {
-          html += `<button class="main-btn" style="background:#e67e22; color:white; margin:10px 0;" onclick="openReview('${type}')">
-            🔍 Review Wrong (${state.wrong.length})</button>`;
-        }
-        
-        html += `<button class="main-btn" onclick="goHome('${type}')">🏠 Back to Home</button>`;
-        resultDiv.innerHTML = html;
-      } else {
-        document.getElementById('subjQuizContent').style.display = 'none';
-        const resultDiv = document.getElementById('subjResultArea');
-        resultDiv.style.display = 'block';
-        
-        let html = `<h3>🏁 Final Score: ${state.score}/${state.questions.length}</h3>`;
-        
-        if(state.wrong.length > 0) {
-          html += `<button class="main-btn" style="background:#e67e22; color:white; margin:10px 0;" onclick="openReview('${type}')">
-            🔍 Review Wrong (${state.wrong.length})</button>`;
-        }
-        
-        html += `<button class="main-btn" onclick="goHome('${type}')">🏠 Back to Home</button>`;
-        resultDiv.innerHTML = html;
-      }
-      
-      document.getElementById('timerDisplay').style.display = 'none';
-      document.getElementById('quitBtn').style.display = 'none';
-      
-      updateUI(type);
-    }
+        <!-- SUBJECTIVE ACTION BUTTONS -->
+        <div id="subjectiveActions" style="display: none; gap: 15px; margin-top: 20px;">
+          <button class="premium-btn success" onclick="handleSubjectiveResponse(true)" style="flex: 1;">
+            <i class="fas fa-check"></i> Correct
+          </button>
+          <button class="premium-btn secondary" onclick="handleSubjectiveResponse(false)" style="flex: 1;">
+            <i class="fas fa-times"></i> Need Improvement
+          </button>
+        </div>
 
-    // ==================== REVIEW MODAL ====================
-    function openReview(type) {
-      const list = document.getElementById('reviewList');
-      list.innerHTML = '';
-      
-      quizState[type].wrong.forEach(q => {
-        let html = `<div class="list-item"><strong>❓ ${q.question}</strong>`;
-        if(q.explanation) html += `<div style="margin-top:8px;">📝 ${q.explanation}</div>`;
-        if(q.image) html += `<img src="${q.image}" class="exp-img" style="max-height:100px; margin-top:8px;" onclick="openFullImg('${q.image}')">`;
-        html += '</div>';
-        list.innerHTML += html;
-      });
-      
-      document.getElementById('reviewModal').style.display = 'block';
-    }
+        <!-- NEXT BUTTON -->
+        <button class="premium-btn" id="nextBtn" onclick="nextQuestion()" style="margin-top: 30px; display: none;">
+          <i class="fas fa-arrow-right"></i> Next Question
+        </button>
+      </div>
+    </div>
 
-    // ==================== SAVED LIST MODAL ====================
-    function openSavedList(type) {
-      const list = document.getElementById('savedList');
-      const printSection = document.getElementById('printSection');
-      list.innerHTML = '';
-      printSection.innerHTML = '<h2 style="text-align:center;">Bookmarked Questions</h2>';
-      
-      quizState[type].bookmarks.forEach((q, i) => {
-        let html = `<div class="list-item"><strong>${i+1}. ${q.question}</strong>`;
-        if(q.explanation) html += `<div style="margin-top:8px;">${q.explanation}</div>`;
-        if(q.image) html += `<img src="${q.image}" class="exp-img" style="max-height:80px; margin-top:8px;" onclick="openFullImg('${q.image}')">`;
-        html += '</div>';
-        list.innerHTML += html;
-        
-        printSection.innerHTML += `<div class="print-item"><strong>Q${i+1}: ${q.question}</strong><p>${q.explanation || ''}</p></div>`;
-      });
-      
-      document.getElementById('savedModal').style.display = 'block';
-    }
-
-    function printSaved() {
-      window.print();
-    }
-
-    // ==================== TOGGLE BOOKMARK ====================
-    function toggleBookmark(type) {
-      const state = quizState[type];
-      const q = state.questions[state.currentIdx];
-      const index = state.bookmarks.findIndex(b => b.question === q.question);
-      
-      if(index > -1) {
-        state.bookmarks.splice(index, 1);
-      } else {
-        state.bookmarks.push(q);
-      }
-      
-      saveData(type);
-      showQuestion(type); // Refresh to update icon
-    }
-
-    // ==================== TOGGLE COLLECTION (HEART) ====================
-    function toggleCollection(type, subject, chapter) {
-      if(type !== 'mcq') return;
-      
-      const state = quizState.mcq;
-      const q = state.questions[state.currentIdx];
-      
-      if(!subject || !chapter) {
-        findQuestionMeta(q, 'mcq');
-        subject = q.sub;
-        chapter = q.ch;
-      }
-      
-      if(!subject || !chapter) return;
-      
-      if(!state.collections[subject]) state.collections[subject] = {};
-      if(!state.collections[subject][chapter]) state.collections[subject][chapter] = [];
-      
-      const index = state.collections[subject][chapter].findIndex(i => i.question === q.question);
-      if(index > -1) {
-        state.collections[subject][chapter].splice(index, 1);
-        
-        // Clean up empty structures
-        if(state.collections[subject][chapter].length === 0) {
-          delete state.collections[subject][chapter];
-          if(Object.keys(state.collections[subject]).length === 0) {
-            delete state.collections[subject];
-          }
-        }
-      } else {
-        state.collections[subject][chapter].push(q);
-      }
-      
-      saveData('mcq');
-      showQuestion('mcq');
-      updateUI('mcq');
-    }
-
-    // ==================== COLLECTION FUNCTIONS ====================
-    function toggleCollection(type) {
-      if(type !== 'mcq') return;
-      
-      const area = document.getElementById('mcqCollection');
-      area.style.display = area.style.display === 'block' ? 'none' : 'block';
-      
-      if(area.style.display === 'block') {
-        const subSelect = document.getElementById('mcqCollSub');
-        subSelect.innerHTML = '<option value="all">-- All Subjects --</option>';
-        
-        Object.keys(quizState.mcq.collections).forEach(s => {
-          subSelect.add(new Option(s, s));
-        });
-        
-        updateCollChapters('mcq');
-      }
-    }
-
-    function updateCollChapters(type) {
-      if(type !== 'mcq') return;
-      
-      const sub = document.getElementById('mcqCollSub').value;
-      const chSelect = document.getElementById('mcqCollCh');
-      chSelect.innerHTML = '<option value="all">-- All Chapters --</option>';
-      
-      if(sub !== 'all' && quizState.mcq.collections[sub]) {
-        Object.keys(quizState.mcq.collections[sub]).forEach(ch => {
-          chSelect.add(new Option(ch, ch));
-        });
-      }
-    }
-
-    // ==================== TRACKER FUNCTIONS ====================
-    function toggleTracker(type) {
-      const tracker = document.getElementById(type + 'Tracker');
-      tracker.style.display = tracker.style.display === 'block' ? 'none' : 'block';
-      
-      if(tracker.style.display === 'block') {
-        renderTracker(type);
-      }
-    }
-
-    function renderTracker(type) {
-      const state = quizState[type];
-      const data = type === 'mcq' ? mcqData : subjData;
-      const tracker = document.getElementById(type + 'Tracker');
-      
-      let html = '<h3>📅 Revision Status</h3>';
-      
-      Object.keys(data).forEach(sub => {
-        if(!data[sub]) return;
-        
-        html += '<div class="subject-group">';
-        html += `<div class="subject-title">${sub}</div>`;
-        
-        Object.keys(data[sub]).forEach(ch => {
-          if(!data[sub][ch]) return;
-          
-          const key = sub + '_' + ch;
-          const lastRev = state.revisions[key];
-          let statusClass = 'status-red';
-          let dateText = 'Never';
-          
-          if(lastRev) {
-            const days = Math.floor((Date.now() - lastRev) / (1000 * 60 * 60 * 24));
-            dateText = new Date(lastRev).toLocaleDateString();
-            if(days <= 7) statusClass = 'status-green';
-            else if(days <= 15) statusClass = 'status-yellow';
-          }
-          
-          html += `<div class="chapter-row">
-            <div><span class="status-badge ${statusClass}"></span>${ch}</div>
-            <span style="font-size:12px;">${dateText}</span>
-          </div>`;
-        });
-        
-        html += '</div>';
-      });
-      
-      tracker.innerHTML = html;
-    }
-
-    // ==================== TOGGLE EXPLANATION ====================
-    function toggleExp() {
-      const box = document.getElementById('subjExpBox');
-      box.style.display = box.style.display === 'block' ? 'none' : 'block';
-    }
-
-    // ==================== TIMER ====================
-    function startTimer(seconds, type) {
-      if(timerInterval) clearInterval(timerInterval);
-      
-      const display = document.getElementById('timerDisplay');
-      display.style.display = 'block';
-      
-      timerInterval = setInterval(() => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        display.innerText = `⏳ ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        
-        seconds--;
-        if(seconds < 0) {
-          clearInterval(timerInterval);
-          timerInterval = null;
-          showFinalResult(type);
-        }
-      }, 1000);
-    }
-
-    // ==================== SESSION MANAGEMENT ====================
-    function saveSession(type) {
-      const state = quizState[type];
-      const session = {
-        questions: state.questions,
-        currentIdx: state.currentIdx,
-        score: state.score,
-        isWeakMode: state.isWeakMode,
-        subject: state.subject,
-        chapter: state.chapter,
-        wrong: state.wrong
-      };
-      localStorage.setItem(STORAGE[type].session, JSON.stringify(session));
-    }
-
-    function checkResumeStatus(type) {
-      const session = localStorage.getItem(STORAGE[type].session);
-      const btn = document.getElementById(type + 'ResumeBtn');
-      if(btn) {
-        if(session) {
-          const data = JSON.parse(session);
-          btn.innerText = `🕒 Resume (Q. ${data.currentIdx + 1})`;
-          btn.style.display = 'block';
-        } else {
-          btn.style.display = 'none';
-        }
-      }
-    }
-
-    function resumeQuiz(type) {
-      const session = JSON.parse(localStorage.getItem(STORAGE[type].session));
-      if(session) {
-        const state = quizState[type];
-        state.questions = session.questions;
-        state.currentIdx = session.currentIdx;
-        state.score = session.score;
-        state.isWeakMode = session.isWeakMode;
-        state.subject = session.subject;
-        state.chapter = session.chapter;
-        state.wrong = session.wrong || [];
-        
-        showQuiz(type);
-      }
-    }
-
-    // ==================== HOME ====================
-    function goHome(type) {
-      document.getElementById(type + 'Setup').style.display = 'block';
-      document.getElementById(type + 'Quiz').style.display = 'none';
-      document.getElementById(type + 'Progress').style.display = 'none';
-      window.speechSynthesis.cancel();
-      
-      if(timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-      }
-      
-      document.getElementById('timerDisplay').style.display = 'none';
-      document.getElementById('quitBtn').style.display = 'none';
-      
-      updateUI(type);
-      checkResumeStatus(type);
-    }
-
-    function quitQuiz() {
-      if(confirm('Quit current quiz?')) {
-        showFinalResult(currentTab);
-      }
-    }
-
-    // ==================== DATA PERSISTENCE ====================
-    function saveData(type) {
-      const state = quizState[type];
-      localStorage.setItem(STORAGE[type].bookmarks, JSON.stringify(state.bookmarks));
-      localStorage.setItem(STORAGE[type].weak, JSON.stringify(state.weak));
-      localStorage.setItem(STORAGE[type].revisions, JSON.stringify(state.revisions));
-      localStorage.setItem(STORAGE[type].collections, JSON.stringify(state.collections));
-    }
-
-    // ==================== EXPORT/IMPORT ====================
-    function exportData(type) {
-      const state = quizState[type];
-      const data = {
-        bookmarks: state.bookmarks,
-        weak: state.weak,
-        revisions: state.revisions,
-        collections: state.collections,
-        exportDate: new Date().toISOString()
-      };
-      
-      const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = type + '_backup_' + new Date().toISOString().slice(0,10) + '.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function importData(type, event) {
-      const file = event.target.files[0];
-      if(!file) return;
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const data = JSON.parse(e.target.result);
-          
-          if(confirm('Restore this backup? Current data will be overwritten.')) {
-            const state = quizState[type];
-            
-            if(data.bookmarks) {
-              state.bookmarks = data.bookmarks;
-              localStorage.setItem(STORAGE[type].bookmarks, JSON.stringify(data.bookmarks));
-            }
-            if(data.weak) {
-              state.weak = data.weak;
-              localStorage.setItem(STORAGE[type].weak, JSON.stringify(data.weak));
-            }
-            if(data.revisions) {
-              state.revisions = data.revisions;
-              localStorage.setItem(STORAGE[type].revisions, JSON.stringify(data.revisions));
-            }
-            if(data.collections) {
-              state.collections = data.collections;
-              localStorage.setItem(STORAGE[type].collections, JSON.stringify(data.collections));
-            }
-            
-            updateUI(type);
-            alert('Restore complete!');
-          }
-        } catch(err) {
-          alert('Invalid backup file! ' + err.message);
-        }
-      };
-      reader.readAsText(file);
-      
-      // Clear input
-      event.target.value = '';
-    }
-
-    // ==================== SPEECH ====================
-    function speak(text) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = parseFloat(document.getElementById('voiceSpeed').value) || 1;
-      utterance.lang = 'hi-IN';
-      window.speechSynthesis.speak(utterance);
-    }
-
-    function speakQuestion(type) {
-      const state = quizState[type];
-      if(state.questions && state.questions[state.currentIdx]) {
-        speak(state.questions[state.currentIdx].question);
-      }
-    }
-
-    // ==================== IMAGE MODAL ====================
-    function openFullImg(src) {
-      if(src && src.trim() !== '') {
-        document.getElementById('fullImage').src = src;
-        document.getElementById('imageModal').style.display = 'block';
-      }
-    }
-
-    // ==================== CLOSE MODAL ====================
-    function closeModal(type) {
-      document.getElementById(type === 'review' ? 'reviewModal' : 'savedModal').style.display = 'none';
-    }
-
-    // Close modals when clicking outside
-    window.onclick = function(event) {
-      if(event.target.classList.contains('modal')) {
-        event.target.style.display = 'none';
-      }
-    };
-  </script>
-</body>
-</html>
+    <!-- RESULT AREA -->
+    <div id="resultArea" style="display: none; text-align: center; padding: 50px;">
+      <div style="font-size: 5rem; margin-bottom: 20px;">🏆</div>
+      <h2 style="font-size: 3rem; margin-bottom: 20px;" id="finalScore">Score: 0/0</h2>
+      <div style="display: flex; gap: 15px; justify-content: center;">
+        <button class="premium-btn success" onclick="reviewWrong()" id="reviewBtn">
+          <i class="fas
