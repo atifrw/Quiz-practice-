@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>📖 Combined Quiz Pro - MCQ & Subjective</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>📚 Combined Quiz Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -12,7 +12,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
   <style>
-    /* ========== स्टाइल पहले जैसी ही ========== */
+    /* ========== स्टाइल - बिल्कुल पहले जैसी ========== */
     :root {
       --bg-color: #f5f2eb; --card-bg: #ffffff; --text-color: #2c3e50;
       --question-bg: #ffffff; --border-color: #e0dcd0; --btn-bg: #faf9f6; 
@@ -23,9 +23,26 @@
       --question-bg: #3d3d3d; --border-color: #444; --btn-bg: #3a3a3a;
       --primary-color: #8da2b5;
     }
-    body { font-family: 'Rubik', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; transition: 0.3s; }
-    .container { max-width: 700px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); position: relative; border: 1px solid var(--border-color); }
+    body { 
+      font-family: 'Rubik', sans-serif; 
+      background-color: var(--bg-color); 
+      color: var(--text-color); 
+      margin: 0; 
+      padding: 15px; 
+      transition: 0.3s; 
+    }
+    .container { 
+      max-width: 700px; 
+      margin: auto; 
+      background: var(--card-bg); 
+      padding: 25px; 
+      border-radius: 20px; 
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
+      position: relative; 
+      border: 1px solid var(--border-color); 
+    }
     
+    /* प्रिंट स्टाइल */
     @media print {
       body { background: white !important; color: black !important; }
       .container, .header-btns, .modal, .no-print { display: none !important; }
@@ -33,29 +50,104 @@
       .print-box { border-bottom: 1px solid #eee; padding: 10px; page-break-inside: avoid; }
     }
 
-    .progress-container { width: 100%; background: #e0dcd0; height: 8px; border-radius: 5px; margin-bottom: 15px; display: none; }
-    #progressBar { height: 100%; width: 0%; background: var(--progress-color); border-radius: 5px; transition: 0.4s; }
+    /* प्रोग्रेस बार */
+    .progress-container { 
+      width: 100%; 
+      background: #e0dcd0; 
+      height: 8px; 
+      border-radius: 5px; 
+      margin-bottom: 15px; 
+      display: none; 
+    }
+    .progress-bar { 
+      height: 100%; 
+      width: 0%; 
+      background: var(--progress-color); 
+      border-radius: 5px; 
+      transition: 0.4s; 
+    }
 
-    .header-btns { display: none; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; flex-wrap: nowrap; }
+    /* हेडर बटन */
+    .header-btns { 
+      display: none; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 10px; 
+      gap: 8px; 
+      flex-wrap: nowrap; 
+    }
     .header-left { display: flex; align-items: center; gap: 8px; }
     .header-right { display: flex; align-items: center; gap: 12px; }
     
-    #themeBtn, #quitBtn, #bookmarkActionBtn, #heartActionBtn { padding: 8px 12px; font-size: 13px; background: var(--primary-color); color: white; border: none; cursor: pointer; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    #themeBtn, #quitBtn, #bookmarkActionBtn, #heartActionBtn { 
+      padding: 8px 12px; 
+      font-size: 13px; 
+      background: var(--primary-color); 
+      color: white; 
+      border: none; 
+      cursor: pointer; 
+      border-radius: 8px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+    }
     #quitBtn { background: #e74c3c; display: none; }
-    #bookmarkActionBtn, #heartActionBtn { background: transparent; font-size: 20px; padding: 0; display: none; }
-    #bookmarkActionBtn svg, #heartActionBtn svg { width: 28px; height: 28px; fill: none; stroke: var(--text-color); stroke-width: 2; }
+    #bookmarkActionBtn, #heartActionBtn { 
+      background: transparent; 
+      font-size: 20px; 
+      padding: 0; 
+      display: none; 
+    }
+    #bookmarkActionBtn svg, #heartActionBtn svg { 
+      width: 28px; 
+      height: 28px; 
+      fill: none; 
+      stroke: var(--text-color); 
+      stroke-width: 2; 
+    }
     #bookmarkActionBtn.active svg { fill: var(--text-color); }
     #heartActionBtn.active svg { fill: #e74c3c; stroke: #e74c3c; }
     
-    .voice-switch { position: relative; display: inline-block; width: 34px; height: 18px; }
+    /* वॉयस स्विच */
+    .voice-switch { 
+      position: relative; 
+      display: inline-block; 
+      width: 34px; 
+      height: 18px; 
+    }
     .voice-switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+    .slider { 
+      position: absolute; 
+      cursor: pointer; 
+      top: 0; left: 0; right: 0; bottom: 0; 
+      background-color: #ccc; 
+      transition: .4s; 
+      border-radius: 34px; 
+    }
+    .slider:before { 
+      position: absolute; 
+      content: ""; 
+      height: 14px; 
+      width: 14px; 
+      left: 2px; 
+      bottom: 2px; 
+      background-color: white; 
+      transition: .4s; 
+      border-radius: 50%; 
+    }
     input:checked + .slider { background-color: var(--progress-color); }
     input:checked + .slider:before { transform: translateX(16px); }
-    #timerDisplay { font-weight: bold; font-size: 18px; color: #e74c3c; display: none; text-align: center; flex-grow: 1; }
+    
+    #timerDisplay { 
+      font-weight: bold; 
+      font-size: 18px; 
+      color: #e74c3c; 
+      display: none; 
+      text-align: center; 
+      flex-grow: 1; 
+    }
 
-    /* लॉगिन एरिया */
+    /* ========== लॉगिन एरिया ========== */
     #loginArea { 
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: linear-gradient(135deg, #f5f2eb 0%, #e0dcd0 100%);
@@ -93,7 +185,7 @@
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* प्रोफाइल मेनू */
+    /* ========== प्रोफाइल मेनू ========== */
     .user-profile { position: relative; display: none; align-items: center; cursor: pointer; }
     .user-profile img { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--primary-color); }
     
@@ -112,11 +204,119 @@
       padding: 12px; border-bottom: 1px solid var(--border-color); font-weight: 600; font-size: 13px; color: var(--primary-color);
     }
 
-    h2 { text-align: center; margin-top: 0; color: var(--primary-color); }
-    select, input, .main-btn { padding: 12px; font-size: 16px; margin-bottom: 12px; width: 100%; border-radius: 10px; border: 1px solid var(--border-color); background-color: var(--btn-bg); color: var(--text-color); box-sizing: border-box; cursor: pointer; }
+    /* ========== मोड सेलेक्शन ========== */
+    .mode-selection {
+      text-align: center;
+      margin: 30px 0;
+    }
+    
+    .mode-selection h2 {
+      color: var(--primary-color);
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+    
+    .mode-cards {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .mode-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 20px;
+      padding: 30px 20px;
+      width: 250px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    
+    .mode-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary-color);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .mode-icon {
+      font-size: 50px;
+      margin-bottom: 15px;
+    }
+    
+    .mode-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    
+    .mode-desc {
+      font-size: 14px;
+      opacity: 0.8;
+      line-height: 1.5;
+    }
+    
+    .quiz-section {
+      display: none;
+    }
+    
+    .back-btn {
+      background: #95a5a6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .back-btn:hover {
+      background: #7f8c8d;
+    }
 
-    /* ग्रिड बटन */
-    .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+    /* ========== मुख्य एलिमेंट्स ========== */
+    h2 { 
+      text-align: center; 
+      margin-top: 0; 
+      margin-bottom: 20px;
+      color: var(--primary-color); 
+      font-size: 24px;
+      font-weight: 600;
+    }
+    
+    select, input, .main-btn { 
+      padding: 12px; 
+      font-size: 16px; 
+      margin-bottom: 12px; 
+      width: 100%; 
+      border-radius: 10px; 
+      border: 1px solid var(--border-color); 
+      background-color: var(--btn-bg); 
+      color: var(--text-color); 
+      box-sizing: border-box; 
+      font-family: 'Rubik', sans-serif;
+    }
+    
+    .main-btn { 
+      cursor: pointer; 
+      font-weight: 500; 
+      transition: 0.3s; 
+    }
+    .main-btn:hover { opacity: 0.9; }
+
+    /* ग्रिड बटन - बिल्कुल पहले जैसे */
+    .button-grid { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 15px; 
+      margin-top: 15px; 
+    }
     
     .grid-card { 
       display: flex; 
@@ -144,103 +344,275 @@
     .card-title { font-weight: 600; font-size: 17px; }
     .card-sub { font-size: 11.5px; opacity: 0.8; margin-top: 5px; line-height: 1.3; }
 
-    .challenge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; background: var(--bg-color); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); }
-    .challenge-grid label { font-size: 13px; font-weight: bold; margin-bottom: 5px; display: block; }
+    /* चैलेंज ग्रिड */
+    .challenge-grid { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 10px; 
+      margin-bottom: 15px; 
+      background: var(--bg-color); 
+      padding: 15px; 
+      border-radius: 12px; 
+      border: 1px solid var(--border-color); 
+    }
+    .challenge-grid label { 
+      font-size: 13px; 
+      font-weight: bold; 
+      margin-bottom: 5px; 
+      display: block; 
+    }
+
+    /* क्विज एरिया */
+    .question-card { 
+      background: var(--question-bg); 
+      border-left: 6px solid var(--primary-color); 
+      padding: 20px; 
+      border-radius: 12px; 
+      margin-bottom: 20px; 
+      font-size: 22px; 
+      font-weight: 550; 
+      line-height: 1.5; 
+      position: relative; 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02); 
+    }
     
-    .question-card { background: var(--question-bg); border-left: 6px solid var(--primary-color); padding: 20px; border-radius: 12px; margin-bottom: 20px; font-size: 22px; font-weight: 550; line-height: 1.5; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-    .speak-btn { position: absolute; right: 10px; top: 10px; background: none; border: none; cursor: pointer; font-size: 20px; opacity: 0.6; }
+    .speak-btn { 
+      position: absolute; 
+      right: 10px; 
+      top: 10px; 
+      background: none; 
+      border: none; 
+      cursor: pointer; 
+      font-size: 20px; 
+      opacity: 0.6; 
+    }
+    .speak-btn:hover { opacity: 1; }
     
-    .option-btn { display: block; background: var(--card-bg); border: 2px solid var(--border-color); color: var(--text-color); padding: 14px; margin: 10px 0; border-radius: 10px; cursor: pointer; width: 100%; text-align: left; font-size: 19px; font-weight: 500; transition: 0.2s; }
-    .option-btn:hover { border-color: var(--primary-color); background: var(--btn-bg); }
+    .option-btn { 
+      display: block; 
+      background: var(--card-bg); 
+      border: 2px solid var(--border-color); 
+      color: var(--text-color); 
+      padding: 14px; 
+      margin: 10px 0; 
+      border-radius: 10px; 
+      cursor: pointer; 
+      width: 100%; 
+      text-align: left; 
+      font-size: 19px; 
+      font-weight: 500; 
+      transition: 0.2s; 
+    }
+    .option-btn:hover { 
+      border-color: var(--primary-color); 
+      background: var(--btn-bg); 
+    }
+    .option-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
     
-    .next-btn { display: none; background: #28a745 !important; color: white !important; border: none; text-align: center; margin-top: 15px; width: 100%; padding: 14px; border-radius: 10px; font-size: 18px; cursor: pointer; font-weight: 600; }
+    /* नेक्स्ट बटन - अब यह दिखेगा */
+    #nextBtn { 
+      display: none; 
+      background: #28a745 !important; 
+      color: white !important; 
+      border: none; 
+      text-align: center; 
+      margin: 15px 0; 
+      width: 100%; 
+      padding: 14px; 
+      border-radius: 10px; 
+      font-size: 18px; 
+      cursor: pointer; 
+      font-weight: 600;
+    }
     
-    .explanation-box { display: none; background: #eef2f7; border-left: 5px solid #3498db; padding: 15px; margin-top: 15px; border-radius: 8px; font-size: 16px; line-height: 1.6; color: var(--text-color); }
+    .explanation-box { 
+      display: none; 
+      background: #eef2f7; 
+      border-left: 5px solid #3498db; 
+      padding: 15px; 
+      margin-top: 15px; 
+      border-radius: 8px; 
+      font-size: 16px; 
+      line-height: 1.6; 
+      color: var(--text-color); 
+    }
     [data-theme="dark"] .explanation-box { background: #3a3a3a; border-left-color: #8da2b5; }
     
-    .exp-img { width: 100%; max-width: 100%; border-radius: 8px; margin-top: 10px; cursor: zoom-in; border: 1px solid var(--border-color); }
+    .exp-img { 
+      width: 100%; 
+      max-width: 100%; 
+      border-radius: 8px; 
+      margin-top: 10px; 
+      cursor: zoom-in; 
+      border: 1px solid var(--border-color); 
+    }
     
-    #imageModal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); text-align: center; }
-    #fullImage { max-width: 95%; max-height: 90%; margin-top: 50px; border-radius: 5px; }
-    .close-img-modal { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
-
-    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); }
-    .modal-content { background: var(--card-bg); margin: 5% auto; padding: 20px; border-radius: 15px; width: 90%; max-width: 550px; max-height: 80vh; overflow-y: auto; position: relative; border: 1px solid var(--border-color); }
-    .close-modal { position: sticky; top: 0; float: right; font-size: 28px; cursor: pointer; color: #e74c3c; font-weight: bold; background: var(--card-bg); width: 30px; text-align: center; border-radius: 50%; z-index: 10; }
-
-    .list-item { background: var(--bg-color); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--primary-color); position: relative; }
-    .list-q { font-weight: 600; display: block; margin-bottom: 5px; padding-right: 25px; }
-    .list-e { font-size: 14px; opacity: 0.8; border-top: 1px solid #ddd; padding-top: 5px; margin-top: 5px; }
+    /* ट्रैकर और कलेक्शन */
+    .tracker-card, .collection-card { 
+      display: none; 
+      margin-top: 15px; 
+      padding: 15px; 
+      background: var(--btn-bg); 
+      border-radius: 10px; 
+      border: 1px solid var(--border-color); 
+    }
     
-    .tracker-card, .collection-card { display: none; margin-top: 15px; padding: 10px; background: var(--btn-bg); border-radius: 10px; border: 1px solid var(--border-color); }
-    .subject-group { margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
-    .subject-title { background: var(--primary-color); color: white; padding: 8px; font-weight: bold; }
-    .chapter-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid var(--border-color); font-size: 14px; align-items: center; }
-    .status-badge { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+    .subject-group { 
+      margin-bottom: 15px; 
+      border: 1px solid var(--border-color); 
+      border-radius: 8px; 
+      overflow: hidden; 
+    }
+    .subject-title { 
+      background: var(--primary-color); 
+      color: white; 
+      padding: 8px; 
+      font-weight: bold; 
+    }
+    .chapter-row { 
+      display: flex; 
+      justify-content: space-between; 
+      padding: 8px; 
+      border-bottom: 1px solid var(--border-color); 
+      font-size: 14px; 
+      align-items: center; 
+    }
+    .status-badge { 
+      width: 12px; 
+      height: 12px; 
+      border-radius: 50%; 
+      display: inline-block; 
+      margin-right: 8px; 
+    }
     .status-green { background: #2ecc71; }
     .status-yellow { background: #f1c40f; }
     .status-red { background: #e74c3c; }
 
-    .backup-area { display: flex; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 2px dashed var(--border-color); }
-    .backup-btn { flex: 1; padding: 10px; font-size: 12px; background: #95a5a6; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    /* बैकअप एरिया */
+    .backup-area { 
+      display: flex; 
+      gap: 10px; 
+      margin-top: 20px; 
+      padding-top: 15px; 
+      border-top: 2px dashed var(--border-color); 
+    }
+    .backup-btn { 
+      flex: 1; 
+      padding: 10px; 
+      font-size: 12px; 
+      background: #95a5a6; 
+      color: white; 
+      border: none; 
+      border-radius: 8px; 
+      cursor: pointer; 
+    }
+    .backup-btn:hover { background: #7f8c8d; }
 
-    /* Mode Selection Buttons */
-    .mode-selection {
-      text-align: center;
-      margin: 30px 0;
+    /* मोडल */
+    .modal { 
+      display: none; 
+      position: fixed; 
+      z-index: 1000; 
+      left: 0; 
+      top: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0,0,0,0.6); 
+      backdrop-filter: blur(5px); 
     }
-    
-    .mode-buttons {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
+    .modal-content { 
+      background: var(--card-bg); 
+      margin: 5% auto; 
+      padding: 20px; 
+      border-radius: 15px; 
+      width: 90%; 
+      max-width: 550px; 
+      max-height: 80vh; 
+      overflow-y: auto; 
+      position: relative; 
+      border: 1px solid var(--border-color); 
     }
-    
-    .mode-btn {
-      padding: 20px 30px;
-      border: none;
-      border-radius: 15px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-      min-width: 200px;
+    .close-modal { 
+      position: sticky; 
+      top: 0; 
+      float: right; 
+      font-size: 28px; 
+      cursor: pointer; 
+      color: #e74c3c; 
+      font-weight: bold; 
+      background: var(--card-bg); 
+      width: 30px; 
+      text-align: center; 
+      border-radius: 50%; 
+      z-index: 10; 
     }
-    
-    .mode-btn.mcq {
-      background: linear-gradient(135deg, #3498db, #2980b9);
-      color: white;
+
+    .list-item { 
+      background: var(--bg-color); 
+      padding: 12px; 
+      border-radius: 8px; 
+      margin-bottom: 10px; 
+      border-left: 4px solid var(--primary-color); 
+      position: relative; 
     }
-    
-    .mode-btn.subjective {
-      background: linear-gradient(135deg, #e67e22, #d35400);
-      color: white;
+    .list-q { 
+      font-weight: 600; 
+      display: block; 
+      margin-bottom: 5px; 
+      padding-right: 25px; 
     }
-    
-    .mode-btn:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    .list-e { 
+      font-size: 14px; 
+      opacity: 0.8; 
+      border-top: 1px solid #ddd; 
+      padding-top: 5px; 
+      margin-top: 5px; 
     }
-    
-    .back-to-menu {
-      background: #95a5a6;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-bottom: 20px;
-      font-size: 14px;
+
+    /* इमेज मोडल */
+    #imageModal { 
+      display: none; 
+      position: fixed; 
+      z-index: 2000; 
+      left: 0; 
+      top: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0,0,0,0.9); 
+      text-align: center; 
     }
-    
-    .quiz-section {
-      display: none;
+    #fullImage { 
+      max-width: 95%; 
+      max-height: 90%; 
+      margin-top: 50px; 
+      border-radius: 5px; 
+    }
+    .close-img-modal { 
+      position: absolute; 
+      top: 20px; 
+      right: 30px; 
+      color: white; 
+      font-size: 40px; 
+      cursor: pointer; 
+    }
+
+    /* प्रिंट सेक्शन */
+    #printSection { 
+      display: none; 
+      padding: 20px; 
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     @media (max-width: 500px) {
       .button-grid { grid-template-columns: 1fr; }
-      .mode-btn { min-width: 150px; padding: 15px; }
+      .mode-cards { flex-direction: column; align-items: center; }
+      .mode-card { width: 100%; max-width: 280px; }
     }
   </style>
 </head>
@@ -253,15 +625,15 @@
   </div>
 
   <!-- प्रिंट सेक्शन -->
-  <div id="printSection" style="display:none; padding: 20px;">
-    <h2 style="text-align:center; border-bottom: 2px solid #333;">Saved Questions Bank</h2>
+  <div id="printSection">
+    <h2 style="text-align:center; border-bottom:2px solid #333;">Saved Questions Bank</h2>
     <div id="printBody"></div>
   </div>
 
   <!-- लॉगिन एरिया -->
   <div id="loginArea">
     <div class="login-glass-card">
-        <span class="login-brand-icon">📖</span>
+        <span class="login-brand-icon">📚</span>
         <h1>Combined Quiz Pro</h1>
         <div style="margin-top:20px;">
           <div class="input-group">
@@ -318,64 +690,94 @@
   <div class="container" id="mainContainer" style="display:none;">
     
     <!-- मोड सेलेक्शन स्क्रीन -->
-    <div id="modeSelectionArea" class="mode-selection">
-      <h2>🔥 कृपया क्विज़ का प्रकार चुनें</h2>
-      <div class="mode-buttons">
-        <button class="mode-btn mcq" onclick="selectMode('mcq')">📝 MCQ Quiz</button>
-        <button class="mode-btn subjective" onclick="selectMode('subjective')">✍️ Subjective Quiz</button>
+    <div id="modeSelection" class="mode-selection">
+      <h2>📚 कृपया क्विज़ का प्रकार चुनें</h2>
+      <div class="mode-cards">
+        <div class="mode-card" onclick="selectMode('mcq')">
+          <div class="mode-icon">📝</div>
+          <div class="mode-title">MCQ Quiz</div>
+          <div class="mode-desc">बहुविकल्पीय प्रश्न<br>Multiple Choice Questions</div>
+        </div>
+        
+        <div class="mode-card" onclick="selectMode('subjective')">
+          <div class="mode-icon">✍️</div>
+          <div class="mode-title">Subjective Quiz</div>
+          <div class="mode-desc">वर्णनात्मक प्रश्न<br>Descriptive Questions</div>
+        </div>
       </div>
     </div>
-
-    <!-- MCQ Section (Website 1 जैसा) -->
+    
+    <!-- MCQ सेक्शन - वेबसाइट 1 जैसा -->
     <div id="mcqSection" class="quiz-section">
-      <button class="back-to-menu" onclick="backToModeSelection()">← मुख्य मेनू में वापस</button>
+      <button class="back-btn" onclick="backToModeSelection()">← वापस मुख्य मेनू</button>
       
-      <div class="progress-container" id="mcqPCont"><div id="mcqProgressBar"></div></div>
-
+      <div class="progress-container" id="mcqPCont">
+        <div class="progress-bar" id="mcqProgressBar"></div>
+      </div>
+      
       <div id="mcqSetupArea">
         <h2>📝 MCQ Quiz</h2>
-        <button id="mcqResumeBtn" class="main-btn" style="background: #9b59b6; color: white; display: none;" onclick="resumeQuiz('mcq')">🕒 पिछला सेशन जारी रखें</button>
-        <select id="mcqSubjectSelect" onchange="updateChapters('mcq')"><option value="all">-- लोड हो रहा है --</option></select>
-        <select id="mcqChapterSelect"><option value="all">-- सभी अध्याय --</option></select>
+        
+        <button id="mcqResumeBtn" class="main-btn" style="background: #9b59b6; color: white; display: none;" onclick="resumeQuiz('mcq')">
+          🕒 पिछला सेशन जारी रखें
+        </button>
+        
+        <select id="mcqSubjectSelect" onchange="updateChapters('mcq')">
+          <option value="all">-- सभी विषय --</option>
+        </select>
+        
+        <select id="mcqChapterSelect">
+          <option value="all">-- सभी अध्याय --</option>
+        </select>
         
         <div class="challenge-grid">
-          <div><label style="font-size: 11px;">सवाल:</label><input type="number" id="mcqCustomLimit" placeholder="10" value="10"></div>
-          <div><label style="font-size: 11px;">मिनट:</label><input type="number" id="mcqCustomTime" placeholder="5" value="5"></div>
+          <div>
+            <label>सवाल:</label>
+            <input type="number" id="mcqCustomLimit" placeholder="10" value="5">
+          </div>
+          <div>
+            <label>मिनट:</label>
+            <input type="number" id="mcqCustomTime" placeholder="5" value="0">
+          </div>
         </div>
 
-        <button class="main-btn" onclick="startQuiz('mcq')" style="background: #5d6d7e; color: white;">🎯 MCQ शुरू करें</button>
+        <button class="main-btn" onclick="startQuiz('mcq')" style="background: #5d6d7e; color: white;">
+          🎯 MCQ शुरू करें
+        </button>
         
+        <!-- ग्रिड बटन -->
         <div class="button-grid">
-            <button id="mcqWeakAreasBtn" class="grid-card orange-card" style="display:none;" onclick="startWeakAreasQuiz('mcq')">
-                <div class="card-icon">🎯</div>
-                <div class="card-content">
-                    <div class="card-title">Weak Areas (<span id="mcqWeakCount">0</span>)</div>
-                    <div class="card-sub">Focus on your weak areas & improve them.</div>
-                </div>
-            </button>
-            <button id="mcqCollectionMainBtn" class="grid-card blue-card" style="display:none;" onclick="toggleCollection('mcq')">
-                <div class="card-icon">📚</div>
-                <div class="card-content">
-                    <div class="card-title">My Collections</div>
-                    <div class="card-sub">Organize & review questions by subject.</div>
-                </div>
-            </button>
-            <button class="grid-card red-card" onclick="toggleTracker('mcq')">
-                <div class="card-icon">📊</div>
-                <div class="card-content">
-                    <div class="card-title">Revision Tracker</div>
-                    <div class="card-sub">Monitor your scores and track progress.</div>
-                </div>
-            </button>
-            <button id="mcqSavedPracticeBtn" class="grid-card yellow-card" style="display:none;" onclick="startSavedPractice('mcq')">
-                <div class="card-icon">⭐</div>
-                <div class="card-content">
-                    <div class="card-title">Save Question</div>
-                    <div class="card-sub">Practice your bookmarked questions.</div>
-                </div>
-            </button>
+          <button id="mcqWeakAreasBtn" class="grid-card orange-card" style="display:none;" onclick="startWeakAreasQuiz('mcq')">
+            <div class="card-icon">🎯</div>
+            <div class="card-content">
+              <div class="card-title">Weak Areas (<span id="mcqWeakCount">0</span>)</div>
+              <div class="card-sub">Focus on your weak areas & improve them.</div>
+            </div>
+          </button>
+          <button id="mcqCollectionMainBtn" class="grid-card blue-card" style="display:none;" onclick="toggleCollection('mcq')">
+            <div class="card-icon">📚</div>
+            <div class="card-content">
+              <div class="card-title">My Collections</div>
+              <div class="card-sub">Organize & review questions by subject.</div>
+            </div>
+          </button>
+          <button class="grid-card red-card" onclick="toggleTracker('mcq')">
+            <div class="card-icon">📊</div>
+            <div class="card-content">
+              <div class="card-title">Revision Tracker</div>
+              <div class="card-sub">Monitor your scores and track progress.</div>
+            </div>
+          </button>
+          <button id="mcqSavedPracticeBtn" class="grid-card yellow-card" style="display:none;" onclick="startSavedPractice('mcq')">
+            <div class="card-icon">⭐</div>
+            <div class="card-content">
+              <div class="card-title">Save Question</div>
+              <div class="card-sub">Practice your bookmarked questions.</div>
+            </div>
+          </button>
         </div>
 
+        <!-- ट्रैकर और कलेक्शन एरिया -->
         <div id="mcqTrackerArea" class="tracker-card">
           <h3 style="text-align:center;">📅 रिवीजन स्टेटस (MCQ)</h3>
           <div id="mcqTrackerContent"></div>
@@ -383,65 +785,93 @@
 
         <div id="mcqCollectionArea" class="collection-card">
           <h3 style="text-align:center;">❤️ Collection Practice (MCQ)</h3>
-          <select id="mcqCollSubFilter" onchange="updateCollChapters('mcq')"><option value="all">-- विषय चुनें --</option></select>
-          <select id="mcqCollChFilter"><option value="all">-- अध्याय चुनें --</option></select>
-          <button class="main-btn" onclick="startCollectionPractice('mcq')" style="background: #27ae60; color: white; margin-top: 10px;">🚀 Practice Start</button>
+          <select id="mcqCollSubFilter" onchange="updateCollChapters('mcq')">
+            <option value="all">-- विषय चुनें --</option>
+          </select>
+          <select id="mcqCollChFilter">
+            <option value="all">-- अध्याय चुनें --</option>
+          </select>
+          <button class="main-btn" onclick="startCollectionPractice('mcq')" style="background: #27ae60; color: white; margin-top: 10px;">
+            🚀 Practice Start
+          </button>
         </div>
       </div>
-
+      
+      <!-- क्विज एरिया - इसमें नेक्स्ट बटन होगा -->
       <div id="mcqQuizArea" style="display:none;"></div>
     </div>
-
-    <!-- Subjective Section (Website 2 जैसा) -->
+    
+    <!-- Subjective सेक्शन - वेबसाइट 2 जैसा -->
     <div id="subjectiveSection" class="quiz-section">
-      <button class="back-to-menu" onclick="backToModeSelection()">← मुख्य मेनू में वापस</button>
+      <button class="back-btn" onclick="backToModeSelection()">← वापस मुख्य मेनू</button>
       
-      <div class="progress-container" id="subjPCont"><div id="subjProgressBar"></div></div>
-
+      <div class="progress-container" id="subjPCont">
+        <div class="progress-bar" id="subjProgressBar"></div>
+      </div>
+      
       <div id="subjSetupArea">
         <h2>✍️ Subjective Quiz</h2>
-        <button id="subjResumeBtn" class="main-btn" style="background: #9b59b6; color: white; display: none;" onclick="resumeQuiz('subj')">🕒 पिछला सेशन जारी रखें</button>
-        <select id="subjSubjectSelect" onchange="updateChapters('subj')"><option value="all">-- लोड हो रहा है --</option></select>
-        <select id="subjChapterSelect"><option value="all">-- सभी अध्याय --</option></select>
+        
+        <button id="subjResumeBtn" class="main-btn" style="background: #9b59b6; color: white; display: none;" onclick="resumeQuiz('subj')">
+          🕒 पिछला सेशन जारी रखें
+        </button>
+        
+        <select id="subjSubjectSelect" onchange="updateChapters('subj')">
+          <option value="all">-- सभी विषय --</option>
+        </select>
+        
+        <select id="subjChapterSelect">
+          <option value="all">-- सभी अध्याय --</option>
+        </select>
         
         <div class="challenge-grid">
-          <div><label style="font-size: 11px;">सवाल:</label><input type="number" id="subjCustomLimit" placeholder="10" value="10"></div>
-          <div><label style="font-size: 11px;">मिनट:</label><input type="number" id="subjCustomTime" placeholder="5" value="5"></div>
+          <div>
+            <label>सवाल:</label>
+            <input type="number" id="subjCustomLimit" placeholder="10" value="5">
+          </div>
+          <div>
+            <label>मिनट:</label>
+            <input type="number" id="subjCustomTime" placeholder="5" value="0">
+          </div>
         </div>
 
-        <button class="main-btn" onclick="startQuiz('subj')" style="background: #5d6d7e; color: white;">✍️ Subjective शुरू करें</button>
+        <button class="main-btn" onclick="startQuiz('subj')" style="background: #5d6d7e; color: white;">
+          ✍️ Subjective शुरू करें
+        </button>
         
+        <!-- ग्रिड बटन -->
         <div class="button-grid">
-            <button id="subjWeakAreasBtn" class="grid-card orange-card" style="display:none;" onclick="startWeakAreasQuiz('subj')">
-                <div class="card-icon">🎯</div>
-                <div class="card-content">
-                    <div class="card-title">Weak Areas (<span id="subjWeakCount">0</span>)</div>
-                    <div class="card-sub">Focus on your weak areas & improve them.</div>
-                </div>
-            </button>
-            <button id="subjCollectionMainBtn" class="grid-card blue-card" style="display:none;" onclick="toggleCollection('subj')">
-                <div class="card-icon">📚</div>
-                <div class="card-content">
-                    <div class="card-title">My Collections</div>
-                    <div class="card-sub">Organize & review questions by subject.</div>
-                </div>
-            </button>
-            <button class="grid-card red-card" onclick="toggleTracker('subj')">
-                <div class="card-icon">📊</div>
-                <div class="card-content">
-                    <div class="card-title">Revision Tracker</div>
-                    <div class="card-sub">Monitor your scores and track progress.</div>
-                </div>
-            </button>
-            <button id="subjSavedPracticeBtn" class="grid-card yellow-card" style="display:none;" onclick="startSavedPractice('subj')">
-                <div class="card-icon">⭐</div>
-                <div class="card-content">
-                    <div class="card-title">Save Question</div>
-                    <div class="card-sub">Practice your bookmarked questions.</div>
-                </div>
-            </button>
+          <button id="subjWeakAreasBtn" class="grid-card orange-card" style="display:none;" onclick="startWeakAreasQuiz('subj')">
+            <div class="card-icon">🎯</div>
+            <div class="card-content">
+              <div class="card-title">Weak Areas (<span id="subjWeakCount">0</span>)</div>
+              <div class="card-sub">Focus on your weak areas & improve them.</div>
+            </div>
+          </button>
+          <button id="subjCollectionMainBtn" class="grid-card blue-card" style="display:none;" onclick="toggleCollection('subj')">
+            <div class="card-icon">📚</div>
+            <div class="card-content">
+              <div class="card-title">My Collections</div>
+              <div class="card-sub">Organize & review questions by subject.</div>
+            </div>
+          </button>
+          <button class="grid-card red-card" onclick="toggleTracker('subj')">
+            <div class="card-icon">📊</div>
+            <div class="card-content">
+              <div class="card-title">Revision Tracker</div>
+              <div class="card-sub">Monitor your scores and track progress.</div>
+            </div>
+          </button>
+          <button id="subjSavedPracticeBtn" class="grid-card yellow-card" style="display:none;" onclick="startSavedPractice('subj')">
+            <div class="card-icon">⭐</div>
+            <div class="card-content">
+              <div class="card-title">Save Question</div>
+              <div class="card-sub">Practice your bookmarked questions.</div>
+            </div>
+          </button>
         </div>
 
+        <!-- ट्रैकर और कलेक्शन एरिया -->
         <div id="subjTrackerArea" class="tracker-card">
           <h3 style="text-align:center;">📅 रिवीजन स्टेटस (Subjective)</h3>
           <div id="subjTrackerContent"></div>
@@ -449,15 +879,22 @@
 
         <div id="subjCollectionArea" class="collection-card">
           <h3 style="text-align:center;">❤️ Collection Practice (Subjective)</h3>
-          <select id="subjCollSubFilter" onchange="updateCollChapters('subj')"><option value="all">-- विषय चुनें --</option></select>
-          <select id="subjCollChFilter"><option value="all">-- अध्याय चुनें --</option></select>
-          <button class="main-btn" onclick="startCollectionPractice('subj')" style="background: #27ae60; color: white; margin-top: 10px;">🚀 Practice Start</button>
+          <select id="subjCollSubFilter" onchange="updateCollChapters('subj')">
+            <option value="all">-- विषय चुनें --</option>
+          </select>
+          <select id="subjCollChFilter">
+            <option value="all">-- अध्याय चुनें --</option>
+          </select>
+          <button class="main-btn" onclick="startCollectionPractice('subj')" style="background: #27ae60; color: white; margin-top: 10px;">
+            🚀 Practice Start
+          </button>
         </div>
       </div>
-
+      
+      <!-- क्विज एरिया -->
       <div id="subjQuizArea" style="display:none;"></div>
     </div>
-
+    
     <!-- बैकअप बटन -->
     <div class="backup-area">
       <button class="backup-btn" onclick="exportData()">📤 Export Data</button>
@@ -470,7 +907,7 @@
   <div id="reviewModal" class="modal no-print">
     <div class="modal-content">
       <span class="close-modal" onclick="closeReview()">&times;</span>
-      <h3 style="text-align:center; color:#e67e22;">गलत सवालों की लिस्ट</h3>
+      <h3 style="text-align:center; color:#e67e22;">❌ गलत सवालों की लिस्ट</h3>
       <div id="reviewList"></div>
     </div>
   </div>
@@ -479,7 +916,7 @@
     <div class="modal-content">
       <span class="close-modal" onclick="closeSavedList()">&times;</span>
       <h3 style="text-align:center; color:#3498db;">⭐ सहेजे गए सवालों की लिस्ट</h3>
-      <button class="main-btn" style="background:#27ae60; color:white;" onclick="window.print()">🖨️ Download PDF / Print</button>
+      <button class="main-btn" style="background:#27ae60; color:white;" onclick="printSavedList()">🖨️ Download PDF / Print</button>
       <div id="savedListContent"></div>
     </div>
   </div>
@@ -493,8 +930,7 @@
       projectId: "mystudyquiz-ac0d9",
       storageBucket: "mystudyquiz-ac0d9.firebasestorage.app",
       messagingSenderId: "258779460797",
-      appId: "1:258779460797:web:2201be41a252ce0e53331b",
-      measurementId: "G-CLXDSVMG0"
+      appId: "1:258779460797:web:2201be41a252ce0e53331b"
     };
 
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -507,32 +943,50 @@
     
     // MCQ State
     let mcqState = {
-      savedList: [], revisionDates: {}, weakList: [], collections: {},
-      selectedQuestions: [], wrongQuestions: [], currentIdx: 0, score: 0,
-      questionsAttempted: 0, currentSub: "", currentCh: "", isWeakMode: false,
-      timerInterval: null, autoNextTimer: null
+      savedList: [],
+      revisionDates: {},
+      weakList: [],
+      collections: {},
+      selectedQuestions: [],
+      wrongQuestions: [],
+      currentIdx: 0,
+      score: 0,
+      questionsAttempted: 0,
+      currentSub: "",
+      currentCh: "",
+      isWeakMode: false,
+      timerInterval: null
     };
     
     // Subjective State
     let subjState = {
-      savedList: [], revisionDates: {}, weakList: [], collections: {},
-      selectedQuestions: [], wrongQuestions: [], currentIdx: 0, score: 0,
-      questionsAttempted: 0, currentSub: "", currentCh: "", isWeakMode: false,
+      savedList: [],
+      revisionDates: {},
+      weakList: [],
+      collections: {},
+      selectedQuestions: [],
+      wrongQuestions: [],
+      currentIdx: 0,
+      score: 0,
+      questionsAttempted: 0,
+      currentSub: "",
+      currentCh: "",
+      isWeakMode: false,
       timerInterval: null
     };
     
     let isGuest = false;
     let currentMode = null;
-    const STORAGE_PREFIX = 'combined_';
+    let autoNextTimer = null;
 
     // ========== ऑथ स्टेट लिसनर ==========
     auth.onAuthStateChanged((user) => {
         const up = document.getElementById("userProfile");
-        const guestStored = localStorage.getItem(STORAGE_PREFIX + 'guest_mode');
+        const guestStored = localStorage.getItem('combined_guest_mode');
 
         if (user) {
             isGuest = false;
-            localStorage.removeItem(STORAGE_PREFIX + 'guest_mode'); 
+            localStorage.removeItem('combined_guest_mode'); 
             document.getElementById("loginArea").style.display = "none";
             document.getElementById("mainContainer").style.display = "block";
             document.getElementById("mainHeader").style.display = "flex";
@@ -575,7 +1029,7 @@
     // ========== लॉगिन/लॉगआउट फंक्शन ==========
     function logoutUser() {
         if(confirm("Logout karein?")) {
-            localStorage.removeItem(STORAGE_PREFIX + 'guest_mode');
+            localStorage.removeItem('combined_guest_mode');
             auth.signOut().then(() => location.reload());
         }
     }
@@ -623,25 +1077,27 @@
 
     function continueAsGuest() {
         isGuest = true;
-        localStorage.setItem(STORAGE_PREFIX + 'guest_mode', "true");
+        localStorage.setItem('combined_guest_mode', "true");
         
-        const guestData = localStorage.getItem(STORAGE_PREFIX + 'guest_data');
+        const guestData = localStorage.getItem('combined_guest_data');
         if(guestData) {
             try {
                 const data = JSON.parse(guestData);
                 if(data.mcq) {
-                    mcqState.savedList = data.mcq.bookmarks || [];
-                    mcqState.revisionDates = data.mcq.revision || {};
-                    mcqState.weakList = data.mcq.weak || [];
+                    mcqState.savedList = data.mcq.savedList || [];
+                    mcqState.revisionDates = data.mcq.revisionDates || {};
+                    mcqState.weakList = data.mcq.weakList || [];
                     mcqState.collections = data.mcq.collections || {};
                 }
                 if(data.subj) {
-                    subjState.savedList = data.subj.bookmarks || [];
-                    subjState.revisionDates = data.subj.revision || {};
-                    subjState.weakList = data.subj.weak || [];
+                    subjState.savedList = data.subj.savedList || [];
+                    subjState.revisionDates = data.subj.revisionDates || {};
+                    subjState.weakList = data.subj.weakList || [];
                     subjState.collections = data.subj.collections || {};
                 }
-            } catch(e) { console.error("Guest data load error:", e); }
+            } catch(e) {
+                console.error("Error loading guest data:", e);
+            }
         }
 
         document.getElementById("loginArea").style.display = "none";
@@ -655,11 +1111,13 @@
                 <button onclick="clearGuestAndLogin()">✨ Sign Up / Login</button>
             </div>`;
         up.style.display = "flex";
+        
+        // Load JSON files
         loadJSONFiles();
     }
 
     function clearGuestAndLogin() {
-        localStorage.removeItem(STORAGE_PREFIX + 'guest_mode');
+        localStorage.removeItem('combined_guest_mode');
         location.reload();
     }
 
@@ -667,164 +1125,58 @@
     function loadJSONFiles() {
         console.log("Loading JSON files...");
         
-        // Load MCQ questions
+        // Load MCQ JSON
         fetch("mcq_questions.json?v=" + Math.random())
             .then(response => {
-                if(!response.ok) throw new Error("MCQ file not found");
+                if (!response.ok) throw new Error("MCQ file not found");
                 return response.json();
             })
             .then(data => {
                 console.log("MCQ data loaded:", data);
                 mcqData = data;
                 populateSubjects('mcq');
-                checkResumeStatus('mcq');
                 updateModeButtons('mcq');
+                checkResumeStatus('mcq');
             })
             .catch(error => {
                 console.error("MCQ JSON load error:", error);
-                alert("mcq_questions.json file nahi mili! Sample data use kar rahe hain.");
-                // Sample data for testing
-                mcqData = {
-                    "Science": {
-                        "Physics": [
-                            { "question": "प्रकाश की गति सबसे अधिक कहाँ होती है?", "options": ["हवा में", "पानी में", "कांच में", "निर्वात में"], "answer": "निर्वात में", "explanation": "निर्वात में प्रकाश की गति सबसे अधिक (3×10⁸ m/s) होती है।" }
-                        ]
-                    }
-                };
-                populateSubjects('mcq');
+                alert("mcq_questions.json file nahi mili. Please check file name.");
             });
         
-        // Load Subjective questions
+        // Load Subjective JSON
         fetch("subjective_questions.json?v=" + Math.random())
             .then(response => {
-                if(!response.ok) throw new Error("Subjective file not found");
+                if (!response.ok) throw new Error("Subjective file not found");
                 return response.json();
             })
             .then(data => {
                 console.log("Subjective data loaded:", data);
                 subjectiveData = data;
                 populateSubjects('subj');
-                checkResumeStatus('subj');
                 updateModeButtons('subj');
+                checkResumeStatus('subj');
             })
             .catch(error => {
                 console.error("Subjective JSON load error:", error);
-                alert("subjective_questions.json file nahi mili! Sample data use kar rahe hain.");
-                // Sample data for testing
-                subjectiveData = {
-                    "History": {
-                        "Ancient": [
-                            { "question": "सिंधु घाटी सभ्यता की प्रमुख विशेषताएं बताइए।", "explanation": "सिंधु घाटी सभ्यता की प्रमुख विशेषताएं: नियोजित नगर, जल निकासी व्यवस्था, स्नानागार, अन्नागार।" }
-                        ]
-                    }
-                };
-                populateSubjects('subj');
+                alert("subjective_questions.json file nahi mili. Please check file name.");
             });
         
-        document.getElementById("modeSelectionArea").style.display = "block";
+        // Show mode selection
+        document.getElementById("modeSelection").style.display = "block";
     }
 
-    // ========== फायरबेस/लोकल स्टोरेज सिंक ==========
-    function syncToFirebase() {
-        const dataToSave = {
-            mcq: {
-                bookmarks: mcqState.savedList,
-                revision: mcqState.revisionDates,
-                weak: mcqState.weakList,
-                collections: mcqState.collections
-            },
-            subj: {
-                bookmarks: subjState.savedList,
-                revision: subjState.revisionDates,
-                weak: subjState.weakList,
-                collections: subjState.collections
-            }
-        };
-
-        if(isGuest) {
-            localStorage.setItem(STORAGE_PREFIX + 'guest_data', JSON.stringify(dataToSave));
-        } else {
-            const user = auth.currentUser;
-            if (!user) return;
-            database.ref('users_combined/' + user.uid).set(dataToSave);
-        }
-        
-        updateModeButtons('mcq');
-        updateModeButtons('subj');
-    }
-
-    function syncFromFirebase(uid) {
-        database.ref('users_combined/' + uid).once('value').then((snapshot) => {
-            const data = snapshot.val() || {};
-            if(data.mcq) {
-                mcqState.savedList = data.mcq.bookmarks || [];
-                mcqState.revisionDates = data.mcq.revision || {};
-                mcqState.weakList = data.mcq.weak || [];
-                mcqState.collections = data.mcq.collections || {};
-            }
-            if(data.subj) {
-                subjState.savedList = data.subj.bookmarks || [];
-                subjState.revisionDates = data.subj.revision || {};
-                subjState.weakList = data.subj.weak || [];
-                subjState.collections = data.subj.collections || {};
-            }
-            loadJSONFiles();
-        }).catch(error => {
-            console.error("Firebase sync error:", error);
-            loadJSONFiles();
-        });
-    }
-
-    // ========== मोड सेलेक्शन ==========
-    function selectMode(mode) {
-        currentMode = mode;
-        document.getElementById("modeSelectionArea").style.display = "none";
-        
-        if(mode === 'mcq') {
-            document.getElementById("mcqSection").style.display = "block";
-            document.getElementById("subjectiveSection").style.display = "none";
-        } else {
-            document.getElementById("mcqSection").style.display = "none";
-            document.getElementById("subjectiveSection").style.display = "block";
-        }
-    }
-
-    function backToModeSelection() {
-        if(currentMode === 'mcq') {
-            if(mcqState.timerInterval) clearInterval(mcqState.timerInterval);
-            if(mcqState.autoNextTimer) clearTimeout(mcqState.autoNextTimer);
-            document.getElementById("mcqQuizArea").style.display = "none";
-            document.getElementById("mcqSetupArea").style.display = "block";
-            document.getElementById("mcqPCont").style.display = "none";
-        } else {
-            if(subjState.timerInterval) clearInterval(subjState.timerInterval);
-            document.getElementById("subjQuizArea").style.display = "none";
-            document.getElementById("subjSetupArea").style.display = "block";
-            document.getElementById("subjPCont").style.display = "none";
-        }
-        
-        window.speechSynthesis.cancel();
-        document.getElementById("modeSelectionArea").style.display = "block";
-        document.getElementById("mcqSection").style.display = "none";
-        document.getElementById("subjectiveSection").style.display = "none";
-        document.getElementById("quitBtn").style.display = "none";
-        document.getElementById("bookmarkActionBtn").style.display = "none";
-        document.getElementById("heartActionBtn").style.display = "none";
-        document.getElementById("timerDisplay").style.display = "none";
-        currentMode = null;
-    }
-
-    // ========== विषय और अध्याय अपडेट ==========
+    // ========== विषय अपडेट करें ==========
     function populateSubjects(mode) {
         const data = mode === 'mcq' ? mcqData : subjectiveData;
         const select = document.getElementById(mode + "SubjectSelect");
         
         select.innerHTML = "<option value='all'>-- सभी विषय --</option>";
-        if(data && Object.keys(data).length > 0) {
-            Object.keys(data).forEach(sub => {
+        
+        if (data && Object.keys(data).length > 0) {
+            Object.keys(data).forEach(subject => {
                 const option = document.createElement("option");
-                option.value = sub;
-                option.textContent = sub;
+                option.value = subject;
+                option.textContent = subject;
                 select.appendChild(option);
             });
         }
@@ -837,23 +1189,67 @@
         
         chapterSelect.innerHTML = "<option value='all'>-- सभी अध्याय --</option>";
         
-        if(subject !== "all" && data && data[subject]) {
-            Object.keys(data[subject]).forEach(ch => {
+        if (subject !== "all" && data && data[subject]) {
+            Object.keys(data[subject]).forEach(chapter => {
                 const option = document.createElement("option");
-                option.value = ch;
-                option.textContent = ch;
+                option.value = chapter;
+                option.textContent = chapter;
                 chapterSelect.appendChild(option);
             });
         }
+    }
+
+    // ========== मोड सेलेक्शन ==========
+    function selectMode(mode) {
+        currentMode = mode;
+        document.getElementById("modeSelection").style.display = "none";
+        
+        if (mode === 'mcq') {
+            document.getElementById("mcqSection").style.display = "block";
+            document.getElementById("subjectiveSection").style.display = "none";
+        } else {
+            document.getElementById("mcqSection").style.display = "none";
+            document.getElementById("subjectiveSection").style.display = "block";
+        }
+    }
+
+    function backToModeSelection() {
+        // Clear any ongoing quiz
+        if (currentMode === 'mcq') {
+            if (mcqState.timerInterval) clearInterval(mcqState.timerInterval);
+            document.getElementById("mcqQuizArea").style.display = "none";
+            document.getElementById("mcqSetupArea").style.display = "block";
+            document.getElementById("mcqPCont").style.display = "none";
+        } else {
+            if (subjState.timerInterval) clearInterval(subjState.timerInterval);
+            document.getElementById("subjQuizArea").style.display = "none";
+            document.getElementById("subjSetupArea").style.display = "block";
+            document.getElementById("subjPCont").style.display = "none";
+        }
+        
+        if(autoNextTimer) clearTimeout(autoNextTimer);
+        window.speechSynthesis.cancel();
+        
+        document.getElementById("modeSelection").style.display = "block";
+        document.getElementById("mcqSection").style.display = "none";
+        document.getElementById("subjectiveSection").style.display = "none";
+        document.getElementById("quitBtn").style.display = "none";
+        document.getElementById("bookmarkActionBtn").style.display = "none";
+        document.getElementById("heartActionBtn").style.display = "none";
+        currentMode = null;
     }
 
     // ========== बटन अपडेट ==========
     function updateModeButtons(mode) {
         const state = mode === 'mcq' ? mcqState : subjState;
         
+        // Saved questions button
         const savedBtn = document.getElementById(mode + "SavedPracticeBtn");
-        if(savedBtn) savedBtn.style.display = state.savedList.length > 0 ? "flex" : "none";
+        if(savedBtn) {
+            savedBtn.style.display = state.savedList.length > 0 ? "flex" : "none";
+        }
         
+        // Weak areas button
         const weakBtn = document.getElementById(mode + "WeakAreasBtn");
         if(weakBtn) {
             weakBtn.style.display = state.weakList.length > 0 ? "flex" : "none";
@@ -861,15 +1257,22 @@
             if(weakCount) weakCount.innerText = state.weakList.length;
         }
         
+        // Collections button
         const collBtn = document.getElementById(mode + "CollectionMainBtn");
-        if(collBtn) collBtn.style.display = Object.keys(state.collections).length > 0 ? "flex" : "none";
+        if(collBtn) {
+            const hasCollections = Object.keys(state.collections).length > 0;
+            collBtn.style.display = hasCollections ? "flex" : "none";
+        }
     }
 
-    // ========== ट्रैकर फंक्शन ==========
+    // ========== ट्रैकर ==========
     function toggleTracker(mode) {
         const area = document.getElementById(mode + "TrackerArea");
         area.style.display = area.style.display === "block" ? "none" : "block";
-        if(area.style.display === "block") renderTracker(mode);
+        
+        if(area.style.display === "block") {
+            renderTracker(mode);
+        }
     }
 
     function renderTracker(mode) {
@@ -879,57 +1282,76 @@
         const now = Date.now();
         
         content.innerHTML = "";
-        if(!data) return;
         
         Object.keys(data).forEach(subject => {
             let subHtml = `<div class="subject-group"><div class="subject-title">${subject}</div>`;
+            
             Object.keys(data[subject]).forEach(chapter => {
                 const key = subject + "_" + chapter;
                 const lastDate = state.revisionDates[key];
-                let statusClass = "status-red", dateText = "कभी नहीं";
+                let statusClass = "status-red";
+                let dateText = "कभी नहीं";
+                
                 if(lastDate) {
                     const diffDays = Math.floor((now - lastDate) / (1000 * 60 * 60 * 24));
                     dateText = new Date(lastDate).toLocaleDateString();
                     if(diffDays <= 15) statusClass = "status-green";
                     else if(diffDays <= 30) statusClass = "status-yellow";
                 }
-                subHtml += `<div class="chapter-row"><div><span class="status-badge ${statusClass}"></span>${chapter}</div><span style="font-size:11px; color:#888;">${dateText}</span></div>`;
+                
+                subHtml += `
+                    <div class="chapter-row">
+                        <div>
+                            <span class="status-badge ${statusClass}"></span>
+                            ${chapter}
+                        </div>
+                        <span style="font-size:11px; color:#888;">${dateText}</span>
+                    </div>`;
             });
+            
             content.innerHTML += subHtml + `</div>`;
         });
     }
 
-    // ========== कलेक्शन फंक्शन ==========
+    // ========== कलेक्शन ==========
     function toggleCollection(mode) {
         const area = document.getElementById(mode + "CollectionArea");
         area.style.display = area.style.display === "block" ? "none" : "block";
-        if(area.style.display === "block") fillCollFilters(mode);
+        
+        if(area.style.display === "block") {
+            fillCollFilters(mode);
+        }
     }
 
     function fillCollFilters(mode) {
         const state = mode === 'mcq' ? mcqState : subjState;
         const filter = document.getElementById(mode + "CollSubFilter");
-        filter.innerHTML = "<option value='all'>-- All Subjects --</option>";
-        Object.keys(state.collections).forEach(s => {
+        
+        filter.innerHTML = "<option value='all'>-- सभी विषय --</option>";
+        
+        Object.keys(state.collections).forEach(subject => {
             const option = document.createElement("option");
-            option.value = s;
-            option.textContent = s;
+            option.value = subject;
+            option.textContent = subject;
             filter.appendChild(option);
         });
+        
         updateCollChapters(mode);
     }
 
     function updateCollChapters(mode) {
         const state = mode === 'mcq' ? mcqState : subjState;
         const subject = document.getElementById(mode + "CollSubFilter").value;
-        const chFilter = document.getElementById(mode + "CollChFilter");
-        chFilter.innerHTML = "<option value='all'>-- All Chapters --</option>";
+        const chapterFilter = document.getElementById(mode + "CollChFilter");
+        
+        chapterFilter.innerHTML = "<option value='all'>-- सभी अध्याय --</option>";
+        
         if(subject !== "all" && state.collections[subject]) {
-            Object.keys(state.collections[subject]).forEach(ch => {
+            Object.keys(state.collections[subject]).forEach(chapter => {
                 const option = document.createElement("option");
-                option.value = ch;
-                option.textContent = ch;
-                chFilter.appendChild(option);
+                option.value = chapter;
+                option.textContent = chapter;
+                chapterFilter.appendChild(option);
             });
         }
     }
@@ -938,6 +1360,7 @@
         const state = mode === 'mcq' ? mcqState : subjState;
         const subject = document.getElementById(mode + "CollSubFilter").value;
         const chapter = document.getElementById(mode + "CollChFilter").value;
+        
         let questions = [];
         
         if(subject === "all") {
@@ -954,34 +1377,51 @@
             questions = state.collections[subject][chapter] || [];
         }
         
-        if(questions.length === 0) return alert("कोई सवाल नहीं मिला!");
+        if(questions.length === 0) {
+            alert("कोई सवाल नहीं मिला!");
+            return;
+        }
+        
         clearSession(mode);
         state.isWeakMode = false;
         state.selectedQuestions = [...questions].sort(() => Math.random() - 0.5);
+        
         initQuizUI(mode);
     }
 
     // ========== वीक एरिया ==========
     function startWeakAreasQuiz(mode) {
         const state = mode === 'mcq' ? mcqState : subjState;
-        if(state.weakList.length === 0) return alert("कोई weak area नहीं है!");
+        
+        if(state.weakList.length === 0) {
+            alert("कोई weak area नहीं है!");
+            return;
+        }
+        
         clearSession(mode);
         state.isWeakMode = true;
         state.selectedQuestions = [...state.weakList].sort(() => Math.random() - 0.5);
+        
         initQuizUI(mode);
     }
 
     // ========== सेव्ड प्रैक्टिस ==========
     function startSavedPractice(mode) {
         const state = mode === 'mcq' ? mcqState : subjState;
-        if(state.savedList.length === 0) return alert("कोई सहेजा हुआ सवाल नहीं है!");
+        
+        if(state.savedList.length === 0) {
+            alert("कोई सहेजा हुआ सवाल नहीं है!");
+            return;
+        }
+        
         clearSession(mode);
         state.isWeakMode = false;
         state.selectedQuestions = [...state.savedList].sort(() => Math.random() - 0.5);
+        
         initQuizUI(mode);
     }
 
-    // ========== क्विज शुरू ==========
+    // ========== क्विज शुरू करें ==========
     function startQuiz(mode) {
         const state = mode === 'mcq' ? mcqState : subjState;
         const data = mode === 'mcq' ? mcqData : subjectiveData;
@@ -992,12 +1432,14 @@
         const subject = document.getElementById(mode + "SubjectSelect").value;
         const chapter = document.getElementById(mode + "ChapterSelect").value;
         const limit = parseInt(document.getElementById(mode + "CustomLimit").value) || 5;
-        const minutes = parseInt(document.getElementById(mode + "CustomTime").value) || 0;
+        const time = parseInt(document.getElementById(mode + "CustomTime").value) || 0;
         
         state.currentSub = subject;
         state.currentCh = chapter;
         
+        // सवाल इकट्ठा करें
         let allQuestions = [];
+        
         if(subject === "all") {
             Object.keys(data).forEach(s => {
                 Object.keys(data[s]).forEach(c => {
@@ -1012,22 +1454,33 @@
             allQuestions = data[subject][chapter] || [];
         }
         
-        if(allQuestions.length === 0) return alert("सवाल नहीं मिले!");
+        if(allQuestions.length === 0) {
+            alert("कोई सवाल नहीं मिला!");
+            return;
+        }
         
-        state.selectedQuestions = allQuestions.sort(() => Math.random() - 0.5).slice(0, limit);
+        // शफल और लिमिट
+        state.selectedQuestions = allQuestions
+            .sort(() => Math.random() - 0.5)
+            .slice(0, Math.min(limit, allQuestions.length));
         
-        if(minutes > 0) startTimer(mode, minutes);
+        // टाइमर शुरू करें
+        if(time > 0) {
+            startTimer(mode, time);
+        }
         
         initQuizUI(mode);
     }
 
     function initQuizUI(mode) {
         const state = mode === 'mcq' ? mcqState : subjState;
+        
         state.currentIdx = 0;
         state.score = 0;
         state.questionsAttempted = 0;
         state.wrongQuestions = [];
         
+        // सेटअप छुपाएं, क्विज दिखाएं
         document.getElementById(mode + "SetupArea").style.display = "none";
         document.getElementById(mode + "PCont").style.display = "block";
         document.getElementById(mode + "QuizArea").style.display = "block";
@@ -1042,31 +1495,36 @@
     function renderQuizLayout(mode) {
         const quizArea = document.getElementById(mode + "QuizArea");
         
+        // दोनों मोड के लिए अलग-अलग लेआउट
         if(mode === 'mcq') {
+            // MCQ में ऑप्शन और नेक्स्ट बटन
             quizArea.innerHTML = `
                 <div id="mcqQCount" style="text-align:right; font-size:14px; font-weight:bold; margin-bottom:5px;"></div>
                 <div id="mcqQuestionBox" class="question-card"></div>
                 <div id="mcqOptionsBox"></div>
                 <div id="mcqResultBox" style="text-align:center; font-weight:bold; margin-top:10px;"></div>
-                <button id="mcqNextBtn" class="next-btn" onclick="nextQuestion('mcq')">➡️ अगला सवाल</button>
+                <button id="nextBtn" onclick="nextQuestion('mcq')">➡️ अगला सवाल</button>
                 <div id="mcqExplanationBox" class="explanation-box"></div>`;
         } else {
+            // Subjective में जवाब देखें बटन
             quizArea.innerHTML = `
                 <div id="subjQCount" style="text-align:right; font-size:14px; font-weight:bold; margin-bottom:5px;"></div>
                 <div id="subjQuestionBox" class="question-card"></div>
                 <div id="subjOptionsBox"></div>
                 <div id="subjResultBox" style="text-align:center; font-weight:bold; margin-top:10px;"></div>
+                <button id="nextBtn" onclick="nextQuestion('subj')">➡️ अगला सवाल</button>
                 <div id="subjExplanationBox" class="explanation-box"></div>`;
         }
     }
 
-    function findQuestionMeta(q, mode) {
+    function findQuestionMeta(question, mode) {
         const data = mode === 'mcq' ? mcqData : subjectiveData;
-        for(let s in data) {
-            for(let c in data[s]) {
-                if(data[s][c].some(item => item.question === q.question)) {
-                    q.sub = s;
-                    q.ch = c;
+        
+        for(let subject in data) {
+            for(let chapter in data[subject]) {
+                if(data[subject][chapter].some(q => q.question === question.question)) {
+                    question.sub = subject;
+                    question.ch = chapter;
                     return;
                 }
             }
@@ -1077,131 +1535,180 @@
         const state = mode === 'mcq' ? mcqState : subjState;
         const q = state.selectedQuestions[state.currentIdx];
         
-        if(!q.sub || !q.ch) findQuestionMeta(q, mode);
+        if(!q.sub || !q.ch) {
+            findQuestionMeta(q, mode);
+        }
         
-        document.getElementById(mode + "ProgressBar").style.width = (state.currentIdx / state.selectedQuestions.length) * 100 + "%";
+        // प्रोग्रेस अपडेट
+        const progress = ((state.currentIdx) / state.selectedQuestions.length) * 100;
+        document.getElementById(mode + "ProgressBar").style.width = progress + "%";
         document.getElementById(mode + "QCount").innerText = `सवाल: ${state.currentIdx + 1} / ${state.selectedQuestions.length}`;
         
-        document.getElementById(mode + "QuestionBox").innerHTML = `${q.question} <button class="speak-btn" onclick="readFullQuestion('${mode}')">🔊</button>`;
+        // सवाल दिखाएं
+        document.getElementById(mode + "QuestionBox").innerHTML = `
+            ${q.question}
+            <button class="speak-btn" onclick="readFullQuestion('${mode}')">🔊</button>
+        `;
         
-        if(document.getElementById("autoReadSwitch").checked) setTimeout(() => readFullQuestion(mode), 500);
+        // ऑटो रीड अगर चेक किया हो
+        if(document.getElementById("autoReadSwitch").checked) {
+            setTimeout(() => readFullQuestion(mode), 500);
+        }
         
-        // Bookmark button
+        // बुकमार्क बटन अपडेट
         const isBookmarked = state.savedList.some(item => item.question === q.question);
         document.getElementById("bookmarkActionBtn").classList.toggle("active", isBookmarked);
         
-        // Heart button
+        // हार्ट बटन अपडेट
         let isHearted = false;
         if(q.sub && q.ch && state.collections[q.sub] && state.collections[q.sub][q.ch]) {
             isHearted = state.collections[q.sub][q.ch].some(item => item.question === q.question);
         }
         document.getElementById("heartActionBtn").classList.toggle("active", isHearted);
         
-        const oBox = document.getElementById(mode + "OptionsBox");
-        const rBox = document.getElementById(mode + "ResultBox");
-        const nBtn = document.getElementById(mode + "NextBtn");
-        const eBox = document.getElementById(mode + "ExplanationBox");
+        const optionsBox = document.getElementById(mode + "OptionsBox");
+        const resultBox = document.getElementById(mode + "ResultBox");
+        const nextBtn = document.getElementById("nextBtn");
+        const explanationBox = document.getElementById(mode + "ExplanationBox");
         
-        oBox.innerHTML = "";
-        rBox.innerText = "";
-        if(nBtn) nBtn.style.display = "none";
-        eBox.style.display = "none";
+        optionsBox.innerHTML = "";
+        resultBox.innerText = "";
+        nextBtn.style.display = "none";
+        explanationBox.style.display = "none";
         
-        if(mode === 'mcq' && q.options && q.options.length > 0) {
-            // MCQ mode
-            q.options.forEach(opt => {
+        if(mode === 'mcq' && q.options) {
+            // MCQ मोड - ऑप्शन दिखाएं
+            q.options.forEach(option => {
                 const btn = document.createElement("button");
                 btn.className = "option-btn";
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    state.questionsAttempted++;
-                    document.querySelectorAll(".option-btn").forEach(b => b.style.pointerEvents = "none");
-                    
-                    if(opt === q.answer) {
-                        state.score++;
-                        rBox.innerHTML = "<span style='color:#27ae60'>✅ सही!</span>";
-                        if(state.isWeakMode) {
-                            state.weakList = state.weakList.filter(i => i.question !== q.question);
-                            syncToFirebase();
-                        }
-                    } else {
-                        rBox.innerHTML = `<span style='color:#e74c3c'>❌ गलत! सही: ${q.answer}</span>`;
-                        state.wrongQuestions.push(q);
-                        if(!state.weakList.some(i => i.question === q.question)) {
-                            state.weakList.push(q);
-                            syncToFirebase();
-                        }
-                    }
-                    
-                    if(q.explanation) {
-                        eBox.innerHTML = `<strong>💡 व्याख्या:</strong><br>${q.explanation}`;
-                        eBox.style.display = "block";
-                    }
-                    
-                    if(q.image) {
-                        eBox.innerHTML += `<img src="${q.image}" class="exp-img" onclick="openFullImg(this.src)">`;
-                    }
-                    
-                    if(nBtn) nBtn.style.display = "block";
-                    saveCurrentSession(mode);
-                };
-                oBox.appendChild(btn);
+                btn.innerText = option;
+                btn.onclick = () => handleMCQAnswer(mode, option, q);
+                optionsBox.appendChild(btn);
             });
         } else {
-            // Subjective mode
-            const viewAnsBtn = document.createElement("button");
-            viewAnsBtn.className = "main-btn";
-            viewAnsBtn.style.background = "#3498db";
-            viewAnsBtn.style.color = "#fff";
-            viewAnsBtn.innerText = "👁️ जवाब देखें";
-            viewAnsBtn.onclick = () => {
-                let expHTML = "";
-                if(q.explanation) expHTML += `<strong>💡 व्याख्या:</strong><br>${q.explanation}`;
-                if(q.image) expHTML += `<img src="${q.image}" class="exp-img" onclick="openFullImg(this.src)">`;
-                eBox.innerHTML = expHTML;
-                eBox.style.display = "block";
-                
-                oBox.innerHTML = `
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-                        <button onclick="handleSubjectiveResponse('${mode}', true)" class="main-btn" style="background:var(--progress-color); color:#fff;">✅ सही था</button>
-                        <button onclick="handleSubjectiveResponse('${mode}', false)" class="main-btn" style="background:#e67e22; color:#fff;">⚠️ सुधार चाहिए</button>
-                    </div>
-                `;
-            };
-            oBox.appendChild(viewAnsBtn);
+            // Subjective मोड - जवाब देखें बटन
+            const viewBtn = document.createElement("button");
+            viewBtn.className = "main-btn";
+            viewBtn.style.background = "#3498db";
+            viewBtn.style.color = "#fff";
+            viewBtn.innerText = "👁️ जवाब देखें";
+            viewBtn.onclick = () => showSubjectiveAnswer(mode, q);
+            optionsBox.appendChild(viewBtn);
         }
+    }
+
+    function handleMCQAnswer(mode, selected, question) {
+        const state = mode === 'mcq' ? mcqState : subjState;
+        
+        state.questionsAttempted++;
+        
+        // सारे ऑप्शन डिसेबल करें
+        document.querySelectorAll(".option-btn").forEach(btn => {
+            btn.style.pointerEvents = "none";
+            btn.style.opacity = "0.7";
+        });
+        
+        const resultBox = document.getElementById(mode + "ResultBox");
+        const nextBtn = document.getElementById("nextBtn");
+        const explanationBox = document.getElementById(mode + "ExplanationBox");
+        
+        if(selected === question.answer) {
+            state.score++;
+            resultBox.innerHTML = "<span style='color:#27ae60'>✅ सही! बहुत अच्छे!</span>";
+            
+            // वीक मोड में हो तो वीक लिस्ट से हटाएं
+            if(state.isWeakMode) {
+                state.weakList = state.weakList.filter(q => q.question !== question.question);
+                syncToFirebase();
+            }
+        } else {
+            resultBox.innerHTML = `<span style='color:#e74c3c'>❌ गलत! सही जवाब: ${question.answer}</span>`;
+            state.wrongQuestions.push(question);
+            
+            // वीक लिस्ट में ऐड करें
+            if(!state.weakList.some(q => q.question === question.question)) {
+                state.weakList.push(question);
+                syncToFirebase();
+            }
+        }
+        
+        // एक्सप्लेनेशन दिखाएं
+        let expHTML = "";
+        if(question.explanation) {
+            expHTML += `<strong>💡 व्याख्या:</strong><br>${question.explanation}`;
+        }
+        if(question.image) {
+            expHTML += `<img src="${question.image}" class="exp-img" onclick="openFullImg(this.src)">`;
+        }
+        explanationBox.innerHTML = expHTML;
+        explanationBox.style.display = expHTML ? "block" : "none";
+        
+        // नेक्स्ट बटन दिखाएं
+        nextBtn.style.display = "block";
+        
+        saveCurrentSession(mode);
+    }
+
+    function showSubjectiveAnswer(mode, question) {
+        const state = mode === 'mcq' ? mcqState : subjState;
+        const explanationBox = document.getElementById(mode + "ExplanationBox");
+        const optionsBox = document.getElementById(mode + "OptionsBox");
+        const nextBtn = document.getElementById("nextBtn");
+        
+        // एक्सप्लेनेशन दिखाएं
+        let expHTML = "";
+        if(question.explanation) {
+            expHTML += `<strong>💡 जवाब:</strong><br>${question.explanation}`;
+        }
+        if(question.image) {
+            expHTML += `<img src="${question.image}" class="exp-img" onclick="openFullImg(this.src)">`;
+        }
+        explanationBox.innerHTML = expHTML;
+        explanationBox.style.display = "block";
+        
+        // रिस्पॉन्स बटन दिखाएं
+        optionsBox.innerHTML = `
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+                <button onclick="handleSubjectiveResponse('${mode}', true)" class="main-btn" style="background:#27ae60; color:#fff;">
+                    ✅ सही था
+                </button>
+                <button onclick="handleSubjectiveResponse('${mode}', false)" class="main-btn" style="background:#e67e22; color:#fff;">
+                    ⚠️ सुधार चाहिए
+                </button>
+            </div>
+        `;
+        
+        nextBtn.style.display = "none";
     }
 
     function handleSubjectiveResponse(mode, isCorrect) {
         const state = mode === 'mcq' ? mcqState : subjState;
-        const q = state.selectedQuestions[state.currentIdx];
+        const question = state.selectedQuestions[state.currentIdx];
         
         state.questionsAttempted++;
         
         if(isCorrect) {
             if(state.isWeakMode) {
-                state.weakList = state.weakList.filter(i => i.question !== q.question);
+                state.weakList = state.weakList.filter(q => q.question !== question.question);
                 syncToFirebase();
             }
         } else {
-            state.wrongQuestions.push(q);
-            if(!state.weakList.some(i => i.question === q.question)) {
-                state.weakList.push(q);
+            state.wrongQuestions.push(question);
+            
+            if(!state.weakList.some(q => q.question === question.question)) {
+                state.weakList.push(question);
                 syncToFirebase();
             }
         }
         
         saveCurrentSession(mode);
-        nextQuestion(mode);
+        
+        // नेक्स्ट बटन दिखाएं
+        document.getElementById("nextBtn").style.display = "block";
     }
 
     function nextQuestion(mode) {
         const state = mode === 'mcq' ? mcqState : subjState;
-        
-        if(mode === 'mcq' && state.autoNextTimer) {
-            clearTimeout(state.autoNextTimer);
-            state.autoNextTimer = null;
-        }
         
         window.speechSynthesis.cancel();
         state.currentIdx++;
@@ -1218,32 +1725,60 @@
         const state = mode === 'mcq' ? mcqState : subjState;
         
         clearSession(mode);
-        if(state.timerInterval) clearInterval(state.timerInterval);
-        if(mode === 'mcq' && state.autoNextTimer) clearTimeout(state.autoNextTimer);
+        if(state.timerInterval) {
+            clearInterval(state.timerInterval);
+            state.timerInterval = null;
+        }
+        
         window.speechSynthesis.cancel();
         
         document.getElementById("timerDisplay").style.display = "none";
         document.getElementById("bookmarkActionBtn").style.display = "none";
         document.getElementById("heartActionBtn").style.display = "none";
         
-        if(!state.isWeakMode && state.questionsAttempted > 0 && 
-           (state.score / state.questionsAttempted) >= 0.8 && 
-           state.currentSub !== "all" && state.currentCh !== "all") {
+        // रिवीजन ट्रैकर अपडेट करें (80% या उससे अधिक स्कोर पर)
+        if(!state.isWeakMode && 
+           state.questionsAttempted > 0 &&
+           (state.score / state.questionsAttempted) >= 0.8 &&
+           state.currentSub !== "all" && 
+           state.currentCh !== "all") {
+            
             const key = state.currentSub + "_" + state.currentCh;
             state.revisionDates[key] = Date.now();
             syncToFirebase();
         }
         
-        let resultHTML = `<div style="text-align:center;"><h3>🏁 रिजल्ट: ${state.score}/${state.selectedQuestions.length}</h3>`;
+        const percentage = state.questionsAttempted > 0 
+            ? Math.round((state.score / state.questionsAttempted) * 100)
+            : 0;
+        
+        let resultHTML = `
+            <div style="text-align:center;">
+                <h3>🏁 क्विज़ समाप्त!</h3>
+                <p style="font-size:24px; margin:20px 0;">
+                    स्कोर: ${state.score}/${state.questionsAttempted} (${percentage}%)
+                </p>
+        `;
         
         if(state.wrongQuestions.length > 0) {
-            resultHTML += `<button class="main-btn" style="background:#f39c12; color:white; margin:10px;" onclick="retryWrong('${mode}')">🔄 गलत सुधारें (${state.wrongQuestions.length})</button>`;
-            resultHTML += `<button class="main-btn" style="background:#e67e22; color:white;" onclick="openReview('${mode}')">🔍 Review Wrong Questions</button>`;
+            resultHTML += `
+                <button class="main-btn" style="background:#f39c12; color:white; margin:10px 0;" 
+                        onclick="retryWrong('${mode}')">
+                    🔄 गलत सवाल दोबारा (${state.wrongQuestions.length})
+                </button>
+                <button class="main-btn" style="background:#e67e22; color:white; margin:10px 0;" 
+                        onclick="openReview('${mode}')">
+                    🔍 Review Wrong Questions
+                </button>
+            `;
         } else {
             resultHTML += `<p style="color:var(--progress-color); font-weight:bold;">🌟 जबरदस्त! सब सही था।</p>`;
         }
         
-        resultHTML += `<button class="main-btn" onclick="backToModeSelection()">🏠 मुख्य मेनू</button></div>`;
+        resultHTML += `
+                <button class="main-btn" onclick="backToModeSelection()">🏠 होम</button>
+            </div>
+        `;
         
         document.getElementById(mode + "QuizArea").innerHTML = resultHTML;
         document.getElementById("quitBtn").style.display = "none";
@@ -1253,15 +1788,49 @@
 
     function retryWrong(mode) {
         const state = mode === 'mcq' ? mcqState : subjState;
-        if(state.wrongQuestions.length === 0) return alert("कोई गलत सवाल नहीं!");
+        
+        if(state.wrongQuestions.length === 0) {
+            alert("कोई गलत सवाल नहीं है!");
+            return;
+        }
+        
         state.selectedQuestions = [...state.wrongQuestions];
         initQuizUI(mode);
+    }
+
+    function openReview(mode) {
+        const state = mode === 'mcq' ? mcqState : subjState;
+        const list = document.getElementById("reviewList");
+        
+        list.innerHTML = "";
+        
+        state.wrongQuestions.forEach((q, i) => {
+            let content = `<div class="list-item">
+                <span class="list-q">${i+1}. ${q.question}</span>`;
+            
+            if(q.explanation) {
+                content += `<div class="list-e">${q.explanation}</div>`;
+            }
+            if(q.image) {
+                content += `<img src="${q.image}" class="exp-img" style="max-height:100px; width:auto; cursor:pointer;" onclick="openFullImg('${q.image}')">`;
+            }
+            
+            content += `</div>`;
+            list.innerHTML += content;
+        });
+        
+        document.getElementById("reviewModal").style.display = "block";
+    }
+
+    function closeReview() {
+        document.getElementById("reviewModal").style.display = "none";
     }
 
     // ========== सेशन मैनेजमेंट ==========
     function saveCurrentSession(mode) {
         const state = mode === 'mcq' ? mcqState : subjState;
-        localStorage.setItem(STORAGE_PREFIX + 'session_' + mode, JSON.stringify({
+        
+        localStorage.setItem(`combined_session_${mode}`, JSON.stringify({
             selectedQuestions: state.selectedQuestions,
             currentIdx: state.currentIdx,
             score: state.score,
@@ -1273,24 +1842,29 @@
     }
 
     function clearSession(mode) {
-        localStorage.removeItem(STORAGE_PREFIX + 'session_' + mode);
+        localStorage.removeItem(`combined_session_${mode}`);
         checkResumeStatus(mode);
     }
 
     function checkResumeStatus(mode) {
-        const session = localStorage.getItem(STORAGE_PREFIX + 'session_' + mode);
+        const session = localStorage.getItem(`combined_session_${mode}`);
         const btn = document.getElementById(mode + "ResumeBtn");
+        
         if(session) {
             try {
                 const data = JSON.parse(session);
-                btn.innerText = `🕒 पिछला क्विज़ जारी रखें (Q. ${data.currentIdx + 1})`;
+                btn.innerText = `🕒 पिछला सेशन जारी रखें (Q. ${data.currentIdx + 1})`;
                 btn.style.display = "block";
-            } catch(e) { btn.style.display = "none"; }
-        } else btn.style.display = "none";
+            } catch(e) {
+                btn.style.display = "none";
+            }
+        } else {
+            btn.style.display = "none";
+        }
     }
 
     function resumeQuiz(mode) {
-        const session = localStorage.getItem(STORAGE_PREFIX + 'session_' + mode);
+        const session = localStorage.getItem(`combined_session_${mode}`);
         if(!session) return;
         
         try {
@@ -1307,38 +1881,139 @@
             state.wrongQuestions = [];
             
             initQuizUI(mode);
-        } catch(e) { console.error("Resume error:", e); }
+        } catch(e) {
+            console.error("Error resuming quiz:", e);
+        }
     }
 
     // ========== बुकमार्क और हार्ट ==========
     function handleBookmarkClick() {
         if(!currentMode) return;
+        
         const state = currentMode === 'mcq' ? mcqState : subjState;
         const q = state.selectedQuestions[state.currentIdx];
         
-        const idx = state.savedList.findIndex(i => i.question === q.question);
-        idx > -1 ? state.savedList.splice(idx, 1) : state.savedList.push(q);
+        const index = state.savedList.findIndex(item => item.question === q.question);
+        
+        if(index > -1) {
+            state.savedList.splice(index, 1);
+        } else {
+            state.savedList.push(q);
+        }
         
         syncToFirebase();
         document.getElementById("bookmarkActionBtn").classList.toggle("active");
+        updateModeButtons(currentMode);
     }
 
     function handleHeartClick() {
         if(!currentMode) return;
+        
         const state = currentMode === 'mcq' ? mcqState : subjState;
         const q = state.selectedQuestions[state.currentIdx];
         
-        if(!q.sub || !q.ch) findQuestionMeta(q, currentMode);
+        if(!q.sub || !q.ch) {
+            findQuestionMeta(q, currentMode);
+        }
+        
         if(!q.sub || !q.ch) return;
         
-        if(!state.collections[q.sub]) state.collections[q.sub] = {};
-        if(!state.collections[q.sub][q.ch]) state.collections[q.sub][q.ch] = [];
+        if(!state.collections[q.sub]) {
+            state.collections[q.sub] = {};
+        }
         
-        const idx = state.collections[q.sub][q.ch].findIndex(i => i.question === q.question);
-        idx > -1 ? state.collections[q.sub][q.ch].splice(idx, 1) : state.collections[q.sub][q.ch].push(q);
+        if(!state.collections[q.sub][q.ch]) {
+            state.collections[q.sub][q.ch] = [];
+        }
+        
+        const index = state.collections[q.sub][q.ch].findIndex(item => item.question === q.question);
+        
+        if(index > -1) {
+            state.collections[q.sub][q.ch].splice(index, 1);
+            
+            // खाली ऐरे हटाएं
+            if(state.collections[q.sub][q.ch].length === 0) {
+                delete state.collections[q.sub][q.ch];
+            }
+            if(Object.keys(state.collections[q.sub]).length === 0) {
+                delete state.collections[q.sub];
+            }
+        } else {
+            state.collections[q.sub][q.ch].push(q);
+        }
         
         syncToFirebase();
         document.getElementById("heartActionBtn").classList.toggle("active");
+        updateModeButtons(currentMode);
+    }
+
+    // ========== फायरबेस सिंक ==========
+    function syncToFirebase() {
+        if(isGuest) {
+            localStorage.setItem('combined_guest_data', JSON.stringify({
+                mcq: {
+                    savedList: mcqState.savedList,
+                    revisionDates: mcqState.revisionDates,
+                    weakList: mcqState.weakList,
+                    collections: mcqState.collections
+                },
+                subj: {
+                    savedList: subjState.savedList,
+                    revisionDates: subjState.revisionDates,
+                    weakList: subjState.weakList,
+                    collections: subjState.collections
+                }
+            }));
+        } else {
+            const user = auth.currentUser;
+            if(!user) return;
+            
+            database.ref('users_combined/' + user.uid).set({
+                mcq: {
+                    savedList: mcqState.savedList,
+                    revisionDates: mcqState.revisionDates,
+                    weakList: mcqState.weakList,
+                    collections: mcqState.collections
+                },
+                subjective: {
+                    savedList: subjState.savedList,
+                    revisionDates: subjState.revisionDates,
+                    weakList: subjState.weakList,
+                    collections: subjState.collections
+                }
+            });
+        }
+        
+        updateModeButtons('mcq');
+        updateModeButtons('subj');
+    }
+
+    function syncFromFirebase(uid) {
+        database.ref('users_combined/' + uid).once('value')
+            .then((snapshot) => {
+                const data = snapshot.val() || {};
+                
+                if(data.mcq) {
+                    mcqState.savedList = data.mcq.savedList || [];
+                    mcqState.revisionDates = data.mcq.revisionDates || {};
+                    mcqState.weakList = data.mcq.weakList || [];
+                    mcqState.collections = data.mcq.collections || {};
+                }
+                
+                if(data.subjective) {
+                    subjState.savedList = data.subjective.savedList || [];
+                    subjState.revisionDates = data.subjective.revisionDates || {};
+                    subjState.weakList = data.subjective.weakList || [];
+                    subjState.collections = data.subjective.collections || {};
+                }
+                
+                // JSON फाइल्स लोड करें
+                loadJSONFiles();
+            })
+            .catch(error => {
+                console.error("Error syncing from Firebase:", error);
+                loadJSONFiles();
+            });
     }
 
     // ========== टाइमर ==========
@@ -1347,143 +2022,203 @@
         let timeLeft = minutes * 60;
         
         document.getElementById("timerDisplay").style.display = "block";
-        if(state.timerInterval) clearInterval(state.timerInterval);
+        
+        if(state.timerInterval) {
+            clearInterval(state.timerInterval);
+        }
         
         state.timerInterval = setInterval(() => {
             const mins = Math.floor(timeLeft / 60);
             const secs = timeLeft % 60;
-            document.getElementById("timerDisplay").innerText = `⏳ ${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+            
+            document.getElementById("timerDisplay").innerText = 
+                `⏳ ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
             
             if(--timeLeft < 0) {
                 clearInterval(state.timerInterval);
+                alert("समय समाप्त!");
                 showFinalResult(mode);
             }
         }, 1000);
     }
 
     // ========== वॉयस ==========
-    function saveVoiceSpeed(val) { localStorage.setItem(STORAGE_PREFIX + 'voice_speed', val); }
+    function saveVoiceSpeed(speed) {
+        localStorage.setItem('combined_voice_speed', speed);
+    }
 
     function readFullQuestion(mode) {
         const state = mode === 'mcq' ? mcqState : subjState;
         const q = state.selectedQuestions[state.currentIdx];
+        
         let text = q.question;
-        if(mode === 'mcq' && q.options) text += ". विकल्प हैं: " + q.options.join(", ");
+        
+        if(mode === 'mcq' && q.options) {
+            text += ". विकल्प हैं: " + q.options.join(", ");
+        }
+        
         speak(text);
     }
 
     function speak(text) {
         window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.rate = parseFloat(localStorage.getItem(STORAGE_PREFIX + 'voice_speed')) || 1;
-        u.lang = 'hi-IN';
-        window.speechSynthesis.speak(u);
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = parseFloat(localStorage.getItem('combined_voice_speed')) || 1;
+        utterance.lang = 'hi-IN';
+        
+        window.speechSynthesis.speak(utterance);
     }
 
     // ========== क्विट ==========
     function quitQuiz() {
         if(!currentMode) return;
-        if(confirm("क्विज़ छोड़ें?")) showFinalResult(currentMode);
-    }
-
-    // ========== थीम ==========
-    function toggleTheme() {
-        document.body.hasAttribute("data-theme") ? document.body.removeAttribute("data-theme") : document.body.setAttribute("data-theme", "dark");
-    }
-
-    // ========== रिव्यू मोडल ==========
-    function openReview(mode) {
-        const state = mode === 'mcq' ? mcqState : subjState;
-        const list = document.getElementById("reviewList");
-        list.innerHTML = "";
         
-        state.wrongQuestions.forEach(q => {
-            let content = `<div class="list-item"><span class="list-q">${q.question}</span>`;
-            if(q.explanation) content += `<div class="list-e">${q.explanation}</div>`;
-            if(q.image) content += `<img src="${q.image}" class="exp-img" style="max-height:100px;" onclick="openFullImg('${q.image}')">`;
-            content += `</div>`;
-            list.innerHTML += content;
-        });
-        document.getElementById("reviewModal").style.display = "block";
-    }
-
-    function closeReview() { document.getElementById("reviewModal").style.display = "none"; }
-
-    // ========== सेव्ड लिस्ट मोडल ==========
-    function openSavedListModal(mode) {
-        const state = mode === 'mcq' ? mcqState : subjState;
-        const list = document.getElementById("savedListContent");
-        const printBody = document.getElementById("printBody");
-        list.innerHTML = "";
-        printBody.innerHTML = "";
-        
-        state.savedList.forEach((q, i) => {
-            let content = `<div class="list-item"><span class="list-q">${i+1}. ${q.question}</span>`;
-            if(q.explanation) content += `<div class="list-e">${q.explanation}</div>`;
-            if(q.image) content += `<img src="${q.image}" class="exp-img" style="max-height:80px;" onclick="openFullImg('${q.image}')">`;
-            content += `</div>`;
-            
-            list.innerHTML += content;
-            printBody.innerHTML += `<div class="print-box"><strong>Q${i+1}: ${q.question}</strong><p>Ans: ${q.explanation || '---'}</p>${q.image ? '<img src="'+q.image+'" style="max-width:200px;">' : ''}</div>`;
-        });
-        document.getElementById("savedListModal").style.display = "block";
-    }
-
-    function closeSavedList() { document.getElementById("savedListModal").style.display = "none"; }
-
-    // ========== इमेज ==========
-    function openFullImg(src) {
-        document.getElementById("fullImage").src = src;
-        document.getElementById("imageModal").style.display = "block";
+        if(confirm("क्या आप क्विज़ छोड़ना चाहते हैं?")) {
+            showFinalResult(currentMode);
+        }
     }
 
     // ========== एक्सपोर्ट/इम्पोर्ट ==========
     function exportData() {
         const data = {
             mcq: {
-                bookmarks: mcqState.savedList,
-                revision: mcqState.revisionDates,
-                weak: mcqState.weakList,
+                savedList: mcqState.savedList,
+                revisionDates: mcqState.revisionDates,
+                weakList: mcqState.weakList,
                 collections: mcqState.collections
             },
             subj: {
-                bookmarks: subjState.savedList,
-                revision: subjState.revisionDates,
-                weak: subjState.weakList,
+                savedList: subjState.savedList,
+                revisionDates: subjState.revisionDates,
+                weakList: subjState.weakList,
                 collections: subjState.collections
             }
         };
-        const blob = new Blob([JSON.stringify(data)], {type:"application/json"});
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
+        a.href = url;
         a.download = "combined_quiz_backup.json";
         a.click();
+        URL.revokeObjectURL(url);
     }
 
     function importData(event) {
         const file = event.target.files[0];
         if(!file) return;
+        
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
                 const data = JSON.parse(e.target.result);
+                
                 if(data.mcq) {
-                    mcqState.savedList = data.mcq.bookmarks || [];
-                    mcqState.revisionDates = data.mcq.revision || {};
-                    mcqState.weakList = data.mcq.weak || [];
+                    mcqState.savedList = data.mcq.savedList || [];
+                    mcqState.revisionDates = data.mcq.revisionDates || {};
+                    mcqState.weakList = data.mcq.weakList || [];
                     mcqState.collections = data.mcq.collections || {};
                 }
+                
                 if(data.subj) {
-                    subjState.savedList = data.subj.bookmarks || [];
-                    subjState.revisionDates = data.subj.revision || {};
-                    subjState.weakList = data.subj.weak || [];
+                    subjState.savedList = data.subj.savedList || [];
+                    subjState.revisionDates = data.subj.revisionDates || {};
+                    subjState.weakList = data.subj.weakList || [];
                     subjState.collections = data.subj.collections || {};
                 }
+                
                 syncToFirebase();
+                alert("डेटा सफलतापूर्वक आयात हो गया!");
                 location.reload();
-            } catch(err) { alert("गलत फाइल!"); }
+            } catch(err) {
+                alert("गलत फ़ाइल: " + err.message);
+            }
         };
         reader.readAsText(file);
+    }
+
+    // ========== सेव्ड लिस्ट प्रिंट ==========
+    function printSavedList() {
+        const printSection = document.getElementById("printSection");
+        const printBody = document.getElementById("printBody");
+        
+        printBody.innerHTML = "";
+        
+        const state = currentMode === 'mcq' ? mcqState : subjState;
+        
+        state.savedList.forEach((q, i) => {
+            printBody.innerHTML += `
+                <div class="print-box">
+                    <strong>Q${i+1}: ${q.question}</strong>
+                    <p>Ans: ${q.explanation || '---'}</p>
+                    ${q.image ? '<img src="'+q.image+'" style="max-width:200px;">' : ''}
+                </div>
+            `;
+        });
+        
+        window.print();
+    }
+
+    function openSavedListModal() {
+        const state = currentMode === 'mcq' ? mcqState : subjState;
+        const list = document.getElementById("savedListContent");
+        
+        list.innerHTML = "";
+        
+        state.savedList.forEach((q, i) => {
+            let content = `<div class="list-item">
+                <span class="list-q">${i+1}. ${q.question}</span>`;
+            
+            if(q.explanation) {
+                content += `<div class="list-e">${q.explanation}</div>`;
+            }
+            if(q.image) {
+                content += `<img src="${q.image}" class="exp-img" style="max-height:80px; width:auto;" onclick="openFullImg('${q.image}')">`;
+            }
+            
+            content += `</div>`;
+            list.innerHTML += content;
+        });
+        
+        document.getElementById("savedListModal").style.display = "block";
+    }
+
+    function closeSavedList() {
+        document.getElementById("savedListModal").style.display = "none";
+    }
+
+    // ========== इमेज मोडल ==========
+    function openFullImg(src) {
+        document.getElementById("fullImage").src = src;
+        document.getElementById("imageModal").style.display = "block";
+    }
+
+    // ========== थीम ==========
+    function toggleTheme() {
+        if(document.body.hasAttribute("data-theme")) {
+            document.body.removeAttribute("data-theme");
+            document.getElementById("themeBtn").innerText = "🌙";
+        } else {
+            document.body.setAttribute("data-theme", "dark");
+            document.getElementById("themeBtn").innerText = "☀️";
+        }
+    }
+
+    // ========== प्रोफाइल मेनू क्लिक ==========
+    window.onclick = function(event) {
+        const menu = document.getElementById("profileDropdown");
+        if(menu && !event.target.closest('#userProfile')) {
+            menu.style.display = "none";
+        }
+        
+        const modal = document.getElementById("reviewModal");
+        const savedModal = document.getElementById("savedListModal");
+        const imgModal = document.getElementById("imageModal");
+        
+        if(event.target === modal) modal.style.display = "none";
+        if(event.target === savedModal) savedModal.style.display = "none";
+        if(event.target === imgModal) imgModal.style.display = "none";
     }
   </script>
 </body>
